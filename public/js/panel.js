@@ -42,7 +42,7 @@ function opcionesBase({ dinero = true, horizontal = false } = {}) {
 function grafico(id, config) {
   const lienzo = document.getElementById(id);
   if (!lienzo || !window.Chart) return;
-  Chart.defaults.font.family = '"Archivo", system-ui, sans-serif';
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
   graficos.push(new Chart(lienzo, config));
 }
 

@@ -35,6 +35,7 @@ Everything on screen is real and working, not a slideshow: the AI answers from t
 
 ## Brand Commitments
 
+- Main typeface: SF Pro (requested by Jorge, 29/10/2026), served as the system font on Apple devices; Inter is the bundled fallback elsewhere.
 - The fictional company's own name stays. The page must not impersonate BHD, Trust, or any real brand.
 
 ## Evidence on Hand

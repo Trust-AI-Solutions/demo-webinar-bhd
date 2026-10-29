@@ -26,38 +26,35 @@ colors:
   baja: "#a3301f"
 typography:
   display:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(40px, 5.2vw, 72px)"
-    fontWeight: 800
-    lineHeight: 0.98
-    letterSpacing: "-0.035em"
-    fontVariation: "'wdth' 115"
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(42px, 5.6vw, 80px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "-0.04em"
   headline:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
     fontSize: "30px"
-    fontWeight: 800
+    fontWeight: 700
     lineHeight: 1.05
-    fontVariation: "'wdth' 112"
   title:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
     fontSize: "17px"
-    fontWeight: 800
-    fontVariation: "'wdth' 112"
+    fontWeight: 700
   figure:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(20px, 14cqi, 36px)"
-    fontWeight: 800
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(19px, 12cqi, 34px)"
+    fontWeight: 700
+    letterSpacing: "-0.025em"
     lineHeight: 1
     fontFeature: "'tnum'"
-    fontVariation: "'wdth' 75"
   body:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.45
     fontFeature: "'tnum'"
   label:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, SF Pro Display, Inter Sitio, Segoe UI, system-ui, sans-serif"
     fontSize: "11px"
     fontWeight: 700
     letterSpacing: "0.07em"
@@ -114,7 +111,7 @@ It is built for screen sharing in a webinar: high contrast, large figures, one o
 **Key Characteristics:**
 - Saturated chip fields with white label strips; no gradients.
 - Warm grey card-stock ground; near-black ink.
-- One typeface (Archivo) used at different widths: wide for headings, narrow for figures.
+- One typeface: SF Pro on Apple devices, Inter (bundled, near-identical) everywhere else; bold with tightened spacing for titles and figures.
 - Small, crisp corners (4px), soft paper shadows.
 - Colour identifies sections and states; it is always paired with text.
 
@@ -150,20 +147,21 @@ A full palette of named paint chips on a neutral card-stock ground. Each colour 
 
 ## Typography
 
-**Font:** Archivo variable (self-hosted, `public/fuentes/archivo-variable.woff2`, SIL OFL), with system-ui fallback.
+**Font:** SF Pro, the system font on Mac, iPhone and iPad (`-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display"`). Apple's licence does not allow embedding SF Pro in a website, so it is requested from the system. Everywhere else the page uses **Inter** (variable, with optical sizes, self-hosted at `public/fuentes/inter-variable.woff2`, SIL OFL), which is designed to look very close to SF Pro. Then Segoe UI, then system-ui.
 
-**Character:** One grotesque used like shop signage. Stretched wide and heavy for headings, compressed for figures so long peso amounts fit inside a chip.
+**Character:** Clean and familiar, like a well-made app. Titles and figures are bold (700) with tightened letter-spacing; body text is regular with tabular figures so columns of pesos line up.
 
 ### Hierarchy
-- **Display** (800, clamp(40px, 5.2vw, 72px), line-height 0.98, width 115%): start-page headline only.
-- **Headline** (800, 30px, width 112%): page title in the top bar.
-- **Title** (800, 17px, width 112%): card titles, preceded by a 14px colour square in the section colour.
-- **Figure** (800, clamp(20px, 14cqi, 36px), width 75%, tabular): the number inside a chip. Sized from the chip's width so it never truncates.
+- **Display** (700, clamp(42px, 5.6vw, 80px), line-height 1, -0.04em): start-page headline only.
+- **Headline** (700, 30px, -0.02em): page title in the top bar.
+- **Title** (700, 17px, -0.02em): card titles, preceded by a 14px colour square in the section colour.
+- **Figure** (700, clamp(19px, 12cqi, 34px), -0.025em, tabular): the number inside a chip, sized from the chip's width so it never truncates.
 - **Body** (400, 15px, 1.45, tabular figures everywhere).
 - **Label** (700, 11px, uppercase, 0.07em tracking): table column headers only.
 
 ### Named Rules
 **The No-Kicker Rule.** Nothing sits above a figure or a heading: no colour names, codes or eyebrow labels. The figure leads the chip; the label strip below names it.
+**The System-Font Rule.** Never embed SF Pro files; ask the system for it and keep Inter as the bundled fallback.
 
 ## Layout
 
@@ -214,7 +212,7 @@ Three chips (WhatsApp, Panel, Los dos a la vez) rotate on a drawn pivot (an SVG 
 
 ### Do:
 - **Do** give every new section or state a chip from the palette, and pair it with a written word.
-- **Do** keep figures in Archivo at narrow width (75%) and sized to the chip, so peso amounts never truncate.
+- **Do** size figures from the chip width (12cqi) so peso amounts never truncate, on SF Pro and on Inter.
 - **Do** keep "Datos ficticios" visible on every view.
 - **Do** keep one motion moment per surface (the fan opening, the new order sliding in) and respect reduced motion.
 
