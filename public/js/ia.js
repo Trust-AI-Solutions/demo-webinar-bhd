@@ -4,6 +4,7 @@
 
 import { ejecutarHerramienta, etiquetaHerramienta } from "./herramientas.js";
 import { hoy } from "./negocio.js";
+import { pedirClave } from "./clave.js";
 
 const MAX_PASOS = 8;
 const CLAVE_ACCESO = "demo-los-pinos-clave";
@@ -11,7 +12,9 @@ const CLAVE_ACCESO = "demo-los-pinos-clave";
 function leerClave() { try { return localStorage.getItem(CLAVE_ACCESO) ?? ""; } catch { return ""; } }
 function guardarClave(v) { try { localStorage.setItem(CLAVE_ACCESO, v); } catch { /* ignorar */ } }
 
-async function llamarServidor(modo, mensajes, intentoClave = false) {
+const MAX_INTENTOS_CLAVE = 3;
+
+async function llamarServidor(modo, mensajes, intento = 0) {
   const ahora = new Date();
   const r = await fetch("/api/ia", {
     method: "POST",
@@ -20,9 +23,14 @@ async function llamarServidor(modo, mensajes, intentoClave = false) {
   });
   let cuerpo = {};
   try { cuerpo = await r.json(); } catch { /* respuesta vacía */ }
-  if (r.status === 401 && cuerpo.codigo === "clave" && !intentoClave) {
-    const clave = window.prompt("Escribe la clave de acceso de la demo:");
-    if (clave) { guardarClave(clave.trim()); return llamarServidor(modo, mensajes, true); }
+  if (r.status === 401 && cuerpo.codigo === "clave") {
+    // Si ya había una clave guardada (o se acaba de escribir) y no sirvió, se avisa.
+    const habiaClave = intento > 0 || leerClave() !== "";
+    if (intento < MAX_INTENTOS_CLAVE) {
+      const clave = await pedirClave(habiaClave ? "La clave no es correcta. Inténtelo de nuevo." : "");
+      if (clave) { guardarClave(clave); return llamarServidor(modo, mensajes, intento + 1); }
+    }
+    throw new Error("Se necesita la clave de la demo para usar el asistente.");
   }
   if (!r.ok) throw new Error(cuerpo.error || (r.status === 429 ? "Demasiadas consultas seguidas. Espera un momento." : `Error del servidor (${r.status}).`));
   return cuerpo;

@@ -17,6 +17,7 @@ const CAPTURAS = fileURLToPath(new URL("./capturas/", import.meta.url));
 const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".md": "text/plain" };
 
 let id = 0;
+let exigirClave = false; // simula CLAVE_DEMO="pinos" en Netlify
 const uso = (name, input) => ({ type: "tool_use", id: `toolu_${++id}`, name, input });
 const ultimoResultado = (mensajes) => {
   const u = mensajes.at(-1);
@@ -43,6 +44,11 @@ function claudeDeGuion({ modo, mensajes }) {
 }
 
 const servidor = http.createServer(async (req, res) => {
+  if (req.url === "/api/ia" && req.method === "POST" && exigirClave && req.headers["x-clave-demo"] !== "pinos") {
+    for await (const c of req) { /* descartar cuerpo */ }
+    res.writeHead(401, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ error: "Clave de la demo incorrecta.", codigo: "clave" }));
+  }
   if (req.url === "/api/ia" && req.method === "POST") {
     let cuerpo = "";
     for await (const c of req) cuerpo += c;
@@ -135,6 +141,32 @@ try {
   await pagina.click("#restablecer");
   await pagina.waitForTimeout(500);
   verificar(await panel.locator(`.pedido:has-text("${numeroPedido}")`).count() === 0, "restablecer borra el pedido de la demo");
+
+  // Clave de la demo: se escribe oculta, avisa si es incorrecta y luego deja pasar
+  exigirClave = true;
+  const conClave = await navegador.newPage({ viewport: { width: 1280, height: 800 } });
+  await conClave.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  await conClave.goto(`${base}/whatsapp.html`);
+  await conClave.evaluate(() => localStorage.clear());
+  await conClave.fill("#mensaje", "¿Tienen cemento gris?");
+  await conClave.press("#mensaje", "Enter");
+  const campo = conClave.locator(".clave-dialogo input");
+  await campo.waitFor();
+  verificar(await campo.getAttribute("type") === "password", "la clave se escribe oculta (••••)");
+  await campo.fill("equivocada");
+  await conClave.screenshot({ path: `${CAPTURAS}clave-oculta.png` });
+  await conClave.click(".clave-dialogo .entrar");
+  await conClave.locator(".clave-dialogo .error:not([hidden])").waitFor();
+  verificar((await conClave.locator(".clave-dialogo .error").innerText()).includes("no es correcta"), "una clave incorrecta lo dice y vuelve a pedirla");
+  await conClave.click(".clave-dialogo .ojo");
+  verificar(await conClave.locator(".clave-dialogo input").getAttribute("type") === "text", "el ojo muestra la clave al pedirlo");
+  await conClave.fill(".clave-dialogo input", "pinos");
+  await conClave.click(".clave-dialogo .entrar");
+  await conClave.locator(".wa-msj.tienda").nth(1).waitFor();
+  verificar(await conClave.locator(".clave-dialogo").count() === 0, "con la clave correcta el asistente responde");
+  verificar(await conClave.evaluate(() => localStorage.getItem("demo-los-pinos-clave")) === "pinos", "la clave queda recordada en el navegador");
+  await conClave.close();
+  exigirClave = false;
 
   // Teléfono
   const movil = await navegador.newPage({ viewport: { width: 390, height: 844 } });

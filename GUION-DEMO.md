@@ -6,7 +6,7 @@ que también se pueden tomar preguntas del público.
 ## Antes del webinar (el mismo día)
 
 - [ ] Abrir el sitio publicado y pulsar **Restablecer la demo** en la portada.
-- [ ] Si se configuró `CLAVE_DEMO`, escribirla una vez cuando la pida (queda guardada en ese navegador).
+- [ ] Escribir la clave de la demo (`CLAVE_DEMO`) en la computadora que va a presentar, **antes** de compartir pantalla: se escribe oculta (••••) y queda guardada en ese navegador, así que no se vuelve a pedir durante el webinar.
 - [ ] Hacer una pregunta de prueba en el panel y otra en WhatsApp, y luego **Restablecer** de nuevo.
 - [ ] Zoom del navegador al 100 % o 110 % y pantalla completa (F11) para compartir.
 - [ ] Tener abierta `en-vivo.html` en una pestaña y `panel.html` en otra.
