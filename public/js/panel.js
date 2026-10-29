@@ -25,8 +25,8 @@ function variacion(actual, previo, sufijo = "") {
 function destruirGraficos() { while (graficos.length) graficos.pop().destroy(); }
 
 function opcionesBase({ dinero = true, horizontal = false } = {}) {
-  const ejeValor = { grid: { color: "#eef1ee" }, border: { display: false }, ticks: { color: "#7a877f", font: { size: 11 }, maxTicksLimit: horizontal ? 5 : 7, maxRotation: 0, callback: (v) => (dinero ? `RD$${num(v / 1000)}k` : num(v)) } };
-  const ejeCat = { grid: { display: false }, border: { color: "#e1e7e2" }, ticks: { color: "#7a877f", font: { size: 11 }, autoSkip: true, maxRotation: 0 } };
+  const ejeValor = { grid: { color: "#eef1ee" }, border: { display: false }, ticks: { color: "#5f6c64", font: { size: 11 }, maxTicksLimit: horizontal ? 5 : 7, maxRotation: 0, callback: (v) => (dinero ? `RD$${num(v / 1000)}k` : num(v)) } };
+  const ejeCat = { grid: { display: false }, border: { color: "#e1e7e2" }, ticks: { color: "#5f6c64", font: { size: 11 }, autoSkip: true, maxRotation: 0 } };
   return {
     responsive: true, maintainAspectRatio: false, animation: { duration: 350 },
     indexAxis: horizontal ? "y" : "x",
@@ -62,7 +62,10 @@ const VISTAS = {
 function mostrar(vista) {
   if (!VISTAS[vista]) vista = "inicio";
   vistaActual = vista;
-  document.querySelectorAll("#nav [data-vista]").forEach((b) => b.classList.toggle("activo", b.dataset.vista === vista));
+  document.querySelectorAll("#nav [data-vista]").forEach((b) => {
+    b.classList.toggle("activo", b.dataset.vista === vista);
+    if (b.dataset.vista === vista) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+  });
   $("#titulo").textContent = VISTAS[vista].titulo;
   destruirGraficos();
   $("#vista").innerHTML = "";
@@ -77,17 +80,17 @@ function pintarInicio(raiz) {
   const i = N.indicadoresInicio();
   raiz.innerHTML = `
     <div class="indicadores">
-      <div class="indicador"><span class="nombre">Ventas de hoy (hasta ahora)</span><span class="valor">${rd(i.hoyV.ventas_sin_itbis)}</span><span class="nota">${i.hoyV.facturas} facturas · el mismo día de la semana pasada cerró en ${rd(i.mismoDiaSemanaPasada.ventas_sin_itbis)}</span></div>
+      <div class="indicador"><span class="nombre">Ventas de hoy</span><span class="valor">${rd(i.hoyV.ventas_sin_itbis)}</span><span class="nota">Hasta ahora, ${i.hoyV.facturas} facturas. Hace una semana cerró en ${rd(i.mismoDiaSemanaPasada.ventas_sin_itbis)}</span></div>
       <div class="indicador"><span class="nombre">Ventas de ${nombreMes(d.hoy)}</span><span class="valor">${rd(i.mes.ventas_sin_itbis)}</span>${variacion(i.mes.ventas_sin_itbis, i.mesAnt.ventas_sin_itbis, "vs. el mismo corte del mes pasado")}</div>
       <div class="indicador"><span class="nombre">Margen bruto del mes</span><span class="valor">${porcentaje(i.mes.margen_pct)}</span><span class="nota">${rd(i.mes.margen_bruto)} de ganancia bruta</span></div>
       <div class="indicador"><span class="nombre">Por cobrar</span><span class="valor">${rd(i.cxc.total_por_cobrar)}</span><span class="nota"><span class="baja">${rd(i.cxc.total_vencido)}</span> vencido</span></div>
-      <div class="indicador"><span class="nombre">Productos bajo el mínimo</span><span class="valor">${i.bajoMinimo}</span><span class="nota">en al menos una sucursal</span></div>
+      <div class="indicador"><span class="nombre">Bajo el mínimo</span><span class="valor">${i.bajoMinimo}</span><span class="nota">productos, en al menos una sucursal</span></div>
       <div class="indicador"><span class="nombre">Pedidos abiertos</span><span class="valor">${i.abiertos}</span><span class="nota">${N.todosLosPedidos().filter((p) => p.canal === "WhatsApp" && p.fecha === d.hoy).length} por WhatsApp hoy</span></div>
     </div>
     <div class="fila">
       <div class="tarjeta"><h2>Ventas por día</h2><p class="sub">Últimos 30 días, sin ITBIS</p><div class="grafico"><canvas id="g-dias"></canvas></div></div>
       <div class="tarjeta"><h2>Ventas por semana y sucursal</h2><p class="sub">Últimas 12 semanas completas, sin ITBIS</p>
-        <div class="leyenda"><span><i style="background:var(--serie-1)"></i>Herrera</span><span><i style="background:var(--serie-2)"></i>Villa Mella</span></div>
+        <div class="leyenda"><span><i class="serie-1"></i>Herrera</span><span><i class="serie-2"></i>Villa Mella</span></div>
         <div class="grafico"><canvas id="g-sucursales"></canvas></div></div>
     </div>
     <div class="fila tres">
@@ -183,10 +186,11 @@ function pintarInventario(raiz) {
       <select id="inv-cat" aria-label="Categoría"><option value="">Todas las categorías</option>${N.CATEGORIAS.map((c) => `<option ${c === filtroInv.categoria ? "selected" : ""}>${c}</option>`).join("")}</select>
       <label class="interruptor"><input type="checkbox" id="inv-bajo" ${filtroInv.bajo ? "checked" : ""}> Solo bajo el mínimo</label>
     </div>
-    <div class="tarjeta"><div class="tabla-envoltura" id="t-inv"></div></div>`;
+    <div class="tarjeta"><div class="tabla-envoltura sin-recorte" id="t-inv"></div></div>`;
   const dibujar = () => {
     const r = N.buscarProductos({ texto: filtroInv.texto || undefined, categoria: filtroInv.categoria || undefined, soloBajoMinimo: filtroInv.bajo, limite: 400 });
-    $("#t-inv").innerHTML = `<p class="sub">${r.encontrados} productos</p><table><thead><tr><th>Producto</th><th class="n">Herrera</th><th class="n">Villa Mella</th><th class="n">Vendidas 30 días</th><th class="n">Días de inventario</th><th class="n">Precio</th><th class="n">Margen</th></tr></thead><tbody>${r.productos.map((p) => {
+    if (!r.encontrados) { $("#t-inv").innerHTML = `<p class="vacio">Ningún producto coincide con la búsqueda. Pruebe con otra palabra o quite los filtros.</p>`; return; }
+    $("#t-inv").innerHTML = `<p class="sub">${r.encontrados} productos</p><table class="tabla-fija"><thead><tr><th>Producto</th><th class="n">Herrera</th><th class="n">Villa Mella</th><th class="n">Vendidas 30 días</th><th class="n">Días de inventario</th><th class="n">Precio</th><th class="n">Margen</th></tr></thead><tbody>${r.productos.map((p) => {
       const bajoH = p.stock.Herrera < p.minimo_herrera, bajoV = p.stock["Villa Mella"] < p.minimo_villa_mella;
       const dias = p.dias_de_inventario;
       return `<tr><td>${escapar(p.nombre)}<span class="detalle">${p.codigo} · ${escapar(p.categoria)}</span></td>
@@ -203,6 +207,8 @@ function pintarInventario(raiz) {
   $("#inv-bajo").addEventListener("change", (e) => { filtroInv.bajo = e.target.checked; dibujar(); });
 }
 
+const TIPOS = { constructora: "Constructora", contratista: "Contratista", taller: "Taller", revendedor: "Revendedor", institucion: "Institución", condominio: "Condominio", maestro: "Maestro constructor", particular: "Particular" };
+
 function pintarCobros(raiz) {
   const c = N.cuentasPorCobrar({ limite: 200 });
   const t = c.tramos_por_dias_de_atraso;
@@ -212,11 +218,11 @@ function pintarCobros(raiz) {
       <div class="indicador"><span class="nombre">Al día</span><span class="valor">${rd(t.al_dia)}</span><span class="nota">aún no vence</span></div>
       <div class="indicador"><span class="nombre">Vencido 1 a 30 días</span><span class="valor">${rd(t["1_30"])}</span></div>
       <div class="indicador"><span class="nombre">Vencido 31 a 60 días</span><span class="valor">${rd(t["31_60"])}</span></div>
-      <div class="indicador"><span class="nombre">Vencido más de 60 días</span><span class="valor baja">${rd(t.mas_60)}</span></div>
+      <div class="indicador"><span class="nombre">Vencido más de 60 días</span><span class="valor alerta">${rd(t.mas_60)}</span></div>
     </div>
     <div class="tarjeta"><h2>Clientes con saldo</h2><p class="sub">Ordenados por monto vencido</p><div class="tabla-envoltura">
       <table><thead><tr><th>Cliente</th><th class="n">Saldo</th><th class="n">Vencido</th><th class="n">Atraso mayor</th><th class="n">Límite de crédito</th><th>Situación</th></tr></thead><tbody>
-      ${c.clientes.map((x) => `<tr><td>${escapar(x.cliente)}<span class="detalle">${escapar(x.tipo)} · ${x.telefono} · ${x.sucursal}</span></td><td class="n">${rd(x.saldo)}</td><td class="n">${rd(x.vencido)}</td><td class="n">${x.dias_mayor_atraso ? `${x.dias_mayor_atraso} días` : "—"}</td><td class="n">${rd(x.limite_credito)}</td>
+      ${c.clientes.map((x) => `<tr><td>${escapar(x.cliente)}<span class="detalle">${TIPOS[x.tipo] ?? escapar(x.tipo)} · ${x.telefono} · ${x.sucursal}</span></td><td class="n">${rd(x.saldo)}</td><td class="n">${rd(x.vencido)}</td><td class="n">${x.dias_mayor_atraso ? `${x.dias_mayor_atraso} días` : "—"}</td><td class="n">${rd(x.limite_credito)}</td>
         <td>${x.sobre_limite ? '<span class="insignia alta">Sobre el límite</span>' : x.dias_mayor_atraso > 30 ? '<span class="insignia media">Atrasado</span>' : x.dias_mayor_atraso > 0 ? '<span class="insignia baja">Vencido reciente</span>' : '<span class="insignia ok">Al día</span>'}</td></tr>`).join("")}
       </tbody></table></div></div>`;
 }
@@ -228,13 +234,13 @@ function pintarPedidos(raiz) {
   const pedidos = N.todosLosPedidos();
   const atenciones = leerEstado().atenciones.filter((a) => !a.atendida);
   raiz.innerHTML = `
-    ${atenciones.length ? `<div class="tarjeta"><h2>Clientes de WhatsApp que esperan a una persona</h2><p class="sub">El asistente los pasó al equipo</p><ul class="lista-alertas">${atenciones.map((a) => `<li><span class="insignia whatsapp">WhatsApp</span><div style="flex:1"><b>${escapar(a.nombre || "Cliente sin nombre")} · ${a.hora}</b><span>${escapar(a.motivo)}</span></div><button class="boton secundario pequeno" data-atender="${a.id}">Marcar atendido</button></li>`).join("")}</ul></div>` : ""}
+    ${atenciones.length ? `<div class="tarjeta"><h2>Clientes de WhatsApp que esperan a una persona</h2><p class="sub">El asistente los pasó al equipo</p><ul class="lista-alertas">${atenciones.map((a) => `<li><span class="insignia whatsapp">WhatsApp</span><div class="crece"><b>${escapar(a.nombre || "Cliente sin nombre")} · ${a.hora}</b><span>${escapar(a.motivo)}</span></div><button class="boton secundario pequeno" data-atender="${a.id}">Marcar atendido</button></li>`).join("")}</ul></div>` : ""}
     <div class="tablero">${ESTADOS.map((e) => {
       const lista = pedidos.filter((p) => p.estado === e && (e !== "entregado" || p.fecha === d.hoy));
-      return `<div class="columna"><h3><span>${e[0].toUpperCase() + e.slice(1)}${e === "entregado" ? " hoy" : ""}</span><span>${lista.length}</span></h3>${lista.map((p) => `
+      return `<div class="columna"><h3><span>${e[0].toUpperCase() + e.slice(1)}${e === "entregado" ? " hoy" : ""}</span><span>${lista.length}</span></h3>${lista.length ? "" : `<p class="vacio">Sin pedidos</p>`}${lista.map((p) => `
         <div class="pedido ${p.id === ultimoPedidoNuevo ? "nuevo-llegado" : ""}">
           <div class="arriba"><b>${p.id}</b>${insigniaCanal(p.canal)}</div>
-          <div>${escapar(p.cliente)}<span class="detalle" style="display:block;color:var(--tinta-3);font-size:12px">${p.fecha === d.hoy ? "Hoy" : fechaCorta(p.fecha)} ${p.hora} · ${escapar(p.entrega)}${p.direccion ? ` · ${escapar(p.direccion)}` : ""}</span></div>
+          <div>${escapar(p.cliente)}<span class="cuando">${p.fecha === d.hoy ? "Hoy" : fechaCorta(p.fecha)} ${p.hora} · ${escapar(p.entrega)}${p.direccion ? ` · ${escapar(p.direccion)}` : ""}</span></div>
           <div class="articulos">${p.items.map((i) => `${num(i.cantidad)} × ${escapar(i.nombre)}`).join("<br>")}</div>
           <div class="arriba"><span class="total">${rd(p.total)}</span>${e !== "entregado" ? `<button class="boton secundario pequeno" data-avanzar="${p.id}">Avanzar</button>` : ""}</div>
         </div>`).join("")}</div>`;
@@ -334,8 +340,10 @@ async function enviarPregunta(texto) {
 function iniciar() {
   pintarIconos();
   $("#fecha").textContent = fechaLarga(N.hoy()).replace(/^./, (c) => c.toUpperCase());
-  document.querySelectorAll("#nav [data-vista]").forEach((b) => b.addEventListener("click", () => mostrar(b.dataset.vista)));
-  $("#vista").addEventListener("click", (e) => { const b = e.target.closest("[data-ir]"); if (b) mostrar(b.dataset.ir); });
+  const ir = (vista) => { if (location.hash === `#${vista}`) mostrar(vista); else location.hash = vista; };
+  document.querySelectorAll("#nav [data-vista]").forEach((b) => b.addEventListener("click", () => ir(b.dataset.vista)));
+  $("#vista").addEventListener("click", (e) => { const b = e.target.closest("[data-ir]"); if (b) ir(b.dataset.ir); });
+  window.addEventListener("hashchange", () => { const v = location.hash.slice(1) || "inicio"; if (v !== vistaActual) mostrar(v); });
   $("#abrir-asistente").addEventListener("click", () => abrirAsistente(!$("#asistente").classList.contains("abierto")));
   $("#asistente-cerrar").addEventListener("click", () => abrirAsistente(false));
   $("#asistente-ampliar").addEventListener("click", () => $("#asistente").classList.toggle("amplio"));

@@ -9,7 +9,7 @@ export const rd2 = (n) => `RD$${numero2.format(n ?? 0)}`;
 export const num = (n) => numero.format(n ?? 0);
 export const porcentaje = (n) => (n === null || n === undefined ? "—" : `${Math.round(n * 10) / 10} %`);
 
-const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const MESES = ["ene.", "feb.", "mar.", "abr.", "may.", "jun.", "jul.", "ago.", "sep.", "oct.", "nov.", "dic."];
 const MESES_LARGOS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 

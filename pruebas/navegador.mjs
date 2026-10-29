@@ -79,12 +79,23 @@ try {
   await pagina.goto(`${base}/index.html`);
   await pagina.screenshot({ path: `${CAPTURAS}portada.png` });
 
-  for (const vista of ["inicio", "ventas", "inventario", "cobros", "pedidos", "alertas"]) {
-    await pagina.goto(`${base}/panel.html#${vista}`);
+  await pagina.goto(`${base}/panel.html`);
+  const titulos = { inicio: "Inicio", ventas: "Ventas", inventario: "Inventario", cobros: "Clientes y cobros", pedidos: "Pedidos", alertas: "Alertas" };
+  for (const [vista, titulo] of Object.entries(titulos)) {
+    await pagina.click(`#nav [data-vista=${vista}]`);
     await pagina.waitForTimeout(700);
-    await pagina.screenshot({ path: `${CAPTURAS}panel-${vista}.png`, fullPage: true });
+    verificar((await pagina.locator("#titulo").innerText()) === titulo && pagina.url().endsWith(`#${vista}`), `el menú abre ${titulo}`);
+    await pagina.screenshot({ path: `${CAPTURAS}panel-${vista}.png`, fullPage: vista !== "inventario" });
   }
-  verificar(await pagina.locator("canvas").count() === 0 || true, "pantallas del panel cargan");
+  await pagina.goBack();
+  await pagina.waitForTimeout(300);
+  verificar((await pagina.locator("#titulo").innerText()) === "Pedidos", "el botón Atrás vuelve a la pantalla anterior");
+  await pagina.evaluate(() => { location.hash = "cobros"; });
+  await pagina.waitForTimeout(300);
+  verificar((await pagina.locator("#titulo").innerText()) === "Clientes y cobros", "un enlace con #pantalla abre esa pantalla");
+  await pagina.click("#nav [data-vista=inventario]");
+  await pagina.fill("#inv-texto", "televisor plasma");
+  verificar(await pagina.locator("#t-inv .vacio").count() === 1, "la búsqueda sin resultados lo dice");
   await pagina.goto(`${base}/panel.html#inicio`);
   verificar((await pagina.locator(".indicador").count()) === 6, "inicio muestra 6 indicadores");
   verificar((await pagina.locator("#inicio-alertas li").count()) === 5, "inicio muestra 5 alertas");
