@@ -5,33 +5,58 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Demo · Ferretería Los Pinos</title>
 <meta name="description" content="Demostración de un panel de negocio y un asistente de WhatsApp con IA, con una empresa y datos ficticios.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="fuentes/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
+<!--
+THESIS: la portada es la carta de colores en la mano: tres muestras abiertas en abanico sobre un remache, cada una es una forma de ver la demo. Rechaza la portada de tres tarjetas iguales.
+OWN-WORLD: cartón gris cálido, muestras Verde Pino, Azul Ozama y verde WhatsApp con etiqueta blanca, remache dibujado sobre el que gira el abanico, Archivo ancho.
+STORY: el público entiende que es una ferretería como la de ellos y que todo lo que verá funciona; quien presenta escoge una muestra.
+FIRST VIEWPORT: a la izquierda el titular grande y el lema; a la derecha el abanico de tres muestras que se abre al cargar. La acción es tocar una muestra.
+FORM: carta de colores de pintura, candidato 4 de 7, semilla 5e3cd307 (tirada degradada, sin retadores).
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
 <div class="portada">
   <header>
-    <div class="marca-logo"><div class="icono" data-icono="pino"></div><div><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></div></div>
-    <span class="etiqueta-ficticia">Demostración con datos ficticios</span>
+    <span class="marca"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></span></span>
+    <span class="ficticio">Demostración con datos ficticios</span>
   </header>
-  <h1>Así trabaja la IA en una empresa como la suya</h1>
-  <p class="lema">Una ferretería con dos sucursales, 145 productos y seis meses de ventas. El dueño le pregunta a su negocio en sus palabras, y los clientes cotizan y piden por WhatsApp a cualquier hora.</p>
-  <div class="opciones">
-    <a class="opcion" href="en-vivo.html"><span class="icono" data-icono="pantalla"></span><h2>Los dos a la vez</h2><p>WhatsApp y panel lado a lado: el pedido que hace el cliente aparece en el panel en el momento.</p><span class="ir">Abrir →</span></a>
-    <a class="opcion" href="panel.html"><span class="icono" data-icono="ventas"></span><h2>Panel del negocio</h2><p>Ventas, inventario, cobros, pedidos y alertas, con un asistente que responde preguntas sobre las cifras.</p><span class="ir">Abrir →</span></a>
-    <a class="opcion" href="whatsapp.html"><span class="icono" data-icono="whatsapp"></span><h2>Asistente de WhatsApp</h2><p>Precios, disponibilidad, cotizaciones y pedidos. Pasa a una persona cuando hace falta.</p><span class="ir">Abrir →</span></a>
-  </div>
-  <div class="pie">
+
+  <section class="escena">
+    <div>
+      <h1>Así trabaja la IA en una empresa como la suya</h1>
+      <p class="lema">Una ferretería con dos sucursales, 145 productos y seis meses de ventas. El dueño le pregunta a su negocio en sus palabras, y los clientes cotizan y piden por WhatsApp a cualquier hora.</p>
+      <p class="instruccion">Escoja una muestra de la carta</p>
+    </div>
+    <nav class="abanico cerrado" id="abanico" aria-label="Vistas de la demo">
+      <svg class="remache" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#8f8b80"/><circle cx="12" cy="12" r="7.5" fill="#c9c6bd"/><circle cx="12" cy="12" r="3.5" fill="#5d655f"/></svg>
+      <a href="whatsapp.html" data-chip="whatsapp">
+        <span class="campo"><span data-icono="whatsapp"></span><h2>WhatsApp</h2></span>
+        <span class="etiqueta"><p><b>Asistente de WhatsApp.</b> Precios, disponibilidad, cotizaciones y pedidos. Pasa a una persona cuando hace falta.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
+      </a>
+      <a href="panel.html" data-chip="ozama">
+        <span class="campo"><span data-icono="ventas"></span><h2>Panel</h2></span>
+        <span class="etiqueta"><p><b>Panel del negocio.</b> Ventas, inventario, cobros, pedidos y alertas, con un asistente que responde sobre las cifras.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
+      </a>
+      <a href="en-vivo.html" data-chip="pino">
+        <span class="campo"><span data-icono="pantalla"></span><h2>Los dos a la vez</h2></span>
+        <span class="etiqueta"><p><b>En vivo.</b> WhatsApp y panel lado a lado: el pedido del cliente aparece en el panel en el momento.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
+      </a>
+    </nav>
+  </section>
+
+  <footer>
     <button class="boton secundario pequeno" id="restablecer" type="button">Restablecer la demo</button>
     <span id="restablecido">Borra los pedidos, cotizaciones y avisos creados durante la demo.</span>
-  </div>
+  </footer>
 </div>
 <script type="module">
   import { ICONOS } from "./js/iconos.js";
   import { restablecerDemo } from "./js/estado.js";
   document.querySelectorAll("[data-icono]").forEach((el) => { el.innerHTML = ICONOS[el.dataset.icono] ?? ""; });
+  // El abanico se abre una vez al cargar (el único movimiento de la portada).
+  requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById("abanico").classList.remove("cerrado")));
   document.getElementById("restablecer").addEventListener("click", () => {
     restablecerDemo();
     document.getElementById("restablecido").textContent = "Listo: la demo volvió a su estado inicial.";

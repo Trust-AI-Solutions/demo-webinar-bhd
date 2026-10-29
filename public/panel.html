@@ -5,33 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panel · Ferretería Los Pinos</title>
 <meta name="description" content="Panel de negocio de una ferretería ficticia, con asistente de IA. Demostración con datos ficticios.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="fuentes/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/estilos.css">
 <script src="vendor/chart-4.4.1.umd.js"></script>
 </head>
 <body>
+<!--
+THESIS: el panel es la carta de colores del mostrador de la ferretería: cada cifra es una muestra de pintura (campo de color + etiqueta blanca). Rechaza el panel SaaS de tarjetas blancas iguales.
+OWN-WORLD: cartón gris cálido, muestras saturadas con nombre (Verde Pino, Azul Ozama, Terracota, Turquesa Caribe, Rojo Óxido, Malva, Amarillo Cemento, Negro Carbón), tinta casi negra, esquinas de 4px, cuadritos de muestra; Archivo con ancho variable (ancho para títulos, estrecho para cifras).
+STORY: el dueño reconoce su negocio, ve qué atender hoy y le pregunta al panel en sus palabras; el pedido de WhatsApp entra como una muestra nueva.
+FIRST VIEWPORT: menú a la izquierda como tiras de la carta, la sección activa sale de la carta en su color; arriba, seis muestras grandes con la cifra en su campo de color y la etiqueta blanca debajo; debajo, gráficos y alertas como muestras que se sacan. La acción principal, la muestra negra "Pregúntale a tu negocio", en el menú.
+FORM: carta de colores de pintura, candidato 4 de 7, semilla 5e3cd307 (tirada degradada, sin retadores).
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
 <div class="panel">
   <aside class="lateral">
-    <div class="marca-logo"><div class="icono" data-icono="pino"></div><div><b>Ferretería Los Pinos</b><small>Panel del negocio</small></div></div>
-    <nav class="nav" id="nav">
-      <button data-vista="inicio" class="activo"><span data-icono="inicio"></span>Inicio</button>
-      <button data-vista="ventas"><span data-icono="ventas"></span>Ventas</button>
-      <button data-vista="inventario"><span data-icono="inventario"></span>Inventario</button>
-      <button data-vista="cobros"><span data-icono="clientes"></span>Clientes y cobros</button>
-      <button data-vista="pedidos"><span data-icono="pedidos"></span>Pedidos <span class="contador oculto" id="contador-pedidos"></span></button>
-      <button data-vista="alertas"><span data-icono="alertas"></span>Alertas <span class="contador oculto" id="contador-alertas"></span></button>
-      <button class="ia" id="abrir-asistente"><span data-icono="chispa"></span>Pregúntale a tu negocio</button>
+    <a class="marca" href="index.html"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Panel del negocio</small></span></a>
+    <nav class="carta" id="nav" aria-label="Secciones del panel">
+      <button data-vista="inicio" data-chip="pino" class="activo"><span class="cuadro" aria-hidden="true"></span><span data-icono="inicio"></span><span class="txt">Inicio</span></button>
+      <button data-vista="ventas" data-chip="ozama"><span class="cuadro" aria-hidden="true"></span><span data-icono="ventas"></span><span class="txt">Ventas</span></button>
+      <button data-vista="inventario" data-chip="cemento"><span class="cuadro" aria-hidden="true"></span><span data-icono="inventario"></span><span class="txt">Inventario</span></button>
+      <button data-vista="cobros" data-chip="terracota"><span class="cuadro" aria-hidden="true"></span><span data-icono="clientes"></span><span class="txt">Clientes y cobros</span></button>
+      <button data-vista="pedidos" data-chip="turquesa"><span class="cuadro" aria-hidden="true"></span><span data-icono="pedidos"></span><span class="txt">Pedidos</span> <span class="contador oculto" id="contador-pedidos"></span></button>
+      <button data-vista="alertas" data-chip="oxido"><span class="cuadro" aria-hidden="true"></span><span data-icono="alertas"></span><span class="txt">Alertas</span> <span class="contador oculto" id="contador-alertas"></span></button>
     </nav>
+    <button class="boton-ia" id="abrir-asistente" type="button"><span class="campo"><span data-icono="chispa"></span>Pregúntale a tu negocio</span><span class="rotulo">Responde con las cifras del panel</span></button>
     <div class="pie">Empresa y datos ficticios, creados para una demostración. Cualquier parecido con una empresa real es coincidencia.</div>
   </aside>
 
-  <main class="principal">
+  <main class="principal" id="principal" data-chip="pino">
     <div class="barra">
+      <span class="muestra-seccion" aria-hidden="true"></span>
       <div><h1 id="titulo">Inicio</h1><div class="fecha" id="fecha"></div></div>
       <div class="espacio"></div>
-      <span class="etiqueta-ficticia">Datos ficticios</span>
+      <span class="ficticio">Datos ficticios</span>
     </div>
     <div class="contenido" id="vista"></div>
   </main>
@@ -39,17 +46,17 @@
 
 <section class="asistente" id="asistente" aria-label="Asistente del negocio">
   <header>
-    <div class="marca-logo"><div class="icono" data-icono="chispa"></div></div>
+    <span class="chispa" data-icono="chispa"></span>
     <div><h2>Pregúntale a tu negocio</h2><small>Responde con las cifras del panel</small></div>
     <div class="espacio"></div>
-    <button class="icono-boton" id="asistente-nuevo" title="Nueva conversación" data-icono="reiniciar"></button>
-    <button class="icono-boton" id="asistente-ampliar" title="Ampliar" data-icono="ampliar"></button>
-    <button class="icono-boton" id="asistente-cerrar" title="Cerrar" data-icono="cerrar"></button>
+    <button class="icono-boton" id="asistente-nuevo" title="Nueva conversación" aria-label="Nueva conversación" data-icono="reiniciar"></button>
+    <button class="icono-boton" id="asistente-ampliar" title="Ampliar" aria-label="Ampliar" data-icono="ampliar"></button>
+    <button class="icono-boton" id="asistente-cerrar" title="Cerrar" aria-label="Cerrar" data-icono="cerrar"></button>
   </header>
   <div class="chat" id="chat"></div>
   <div class="sugerencias" id="sugerencias"></div>
   <form class="entrada" id="formulario">
-    <textarea id="pregunta" rows="1" placeholder="Escribe tu pregunta…" aria-label="Pregunta"></textarea>
+    <textarea id="pregunta" rows="1" placeholder="Escriba su pregunta…" aria-label="Pregunta"></textarea>
     <button class="boton" type="submit" id="enviar">Preguntar</button>
   </form>
 </section>

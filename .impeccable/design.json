@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T19:14:02.807195Z",
+  "title": "Design System: Ferretería Los Pinos · Carta de colores",
+  "extensions": {
+    "colorMeta": {
+      "pino": {
+        "role": "primary",
+        "displayName": "Verde Pino"
+      },
+      "ozama": {
+        "role": "secondary",
+        "displayName": "Azul Ozama"
+      },
+      "cemento": {
+        "role": "tertiary",
+        "displayName": "Amarillo Cemento"
+      },
+      "terracota": {
+        "role": "secondary",
+        "displayName": "Terracota"
+      },
+      "turquesa": {
+        "role": "secondary",
+        "displayName": "Turquesa Caribe"
+      },
+      "oxido": {
+        "role": "secondary",
+        "displayName": "Rojo Óxido"
+      },
+      "malva": {
+        "role": "secondary",
+        "displayName": "Malva Atardecer"
+      },
+      "carbon": {
+        "role": "secondary",
+        "displayName": "Negro Carbón"
+      },
+      "perla": {
+        "role": "neutral",
+        "displayName": "Gris Perla"
+      },
+      "whatsapp": {
+        "role": "secondary",
+        "displayName": "Verde WhatsApp"
+      },
+      "carton": {
+        "role": "neutral",
+        "displayName": "Cartón"
+      },
+      "papel": {
+        "role": "neutral",
+        "displayName": "Papel"
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta"
+      }
+    },
+    "shadows": [
+      {
+        "name": "muestra",
+        "value": "0 1px 0 rgba(28,31,29,.06), 0 10px 18px -10px rgba(28,31,29,.35)",
+        "purpose": "Chips, order cards, active nav strip."
+      },
+      {
+        "name": "tarjeta",
+        "value": "0 1px 2px rgba(28,31,29,.05), 0 12px 28px -18px rgba(28,31,29,.3)",
+        "purpose": "White content cards."
+      }
+    ],
+    "motion": [
+      {
+        "name": "salida",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "All state transitions; the fan opening; the new order sliding in."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "portada-apilada",
+        "value": "900px"
+      },
+      {
+        "name": "panel-movil",
+        "value": "980px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "KPI chip",
+      "kind": "card",
+      "refersTo": "kpi-muestra",
+      "description": "A paint chip: colour field with the figure, white label strip with the metric name.",
+      "html": "<div class=\"ds-muestra\"><div class=\"ds-campo\"><span class=\"ds-valor\">RD$67,675</span></div><div class=\"ds-etiqueta\"><b>Ventas de hoy</b><span>Hasta ahora, 15 facturas</span></div></div>",
+      "css": ".ds-muestra{width:200px;border-radius:4px;overflow:hidden;font-family:Archivo,system-ui,sans-serif;box-shadow:0 1px 0 rgba(28,31,29,.06),0 10px 18px -10px rgba(28,31,29,.35)}.ds-campo{background:#1d5c47;color:#fff;padding:16px 14px 18px;min-height:96px;display:flex;align-items:flex-end}.ds-valor{font-size:30px;font-weight:800;font-stretch:75%;line-height:1}.ds-etiqueta{background:#fff;border:1px solid #dedcd5;border-top:0;border-radius:0 0 4px 4px;padding:10px 14px 12px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:#4a524d}.ds-etiqueta b{font-size:13.5px;color:#1c1f1d}"
+    },
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Negro Carbón action.",
+      "html": "<button class=\"ds-btn\">Preguntar</button>",
+      "css": ".ds-btn{background:#1c1f1d;color:#fff;border:0;border-radius:4px;padding:10px 16px;font:700 14px Archivo,system-ui,sans-serif;transition:background .15s}.ds-btn:hover{background:#333833}.ds-btn:focus-visible{outline:3px solid #f0bf2e;outline-offset:2px}"
+    },
+    {
+      "name": "Nav strip",
+      "kind": "nav",
+      "refersTo": "carta",
+      "description": "Strip of the deck; active strip is pulled out in its colour.",
+      "html": "<div class=\"ds-carta\"><button class=\"ds-tira\"><i style=\"background:#1d4f8f\"></i>Ventas</button><button class=\"ds-tira ds-activa\">Inicio</button></div>",
+      "css": ".ds-carta{display:flex;flex-direction:column;gap:5px;width:220px;font-family:Archivo,system-ui,sans-serif}.ds-tira{display:flex;align-items:center;gap:12px;min-height:46px;border:1px solid #dedcd5;border-right:0;background:#fff;padding:0 14px 0 12px;border-radius:4px 0 0 4px;font-size:14.5px;font-weight:600;color:#4a524d;text-align:left;transition:transform .35s cubic-bezier(.16,1,.3,1)}.ds-tira i{width:16px;height:16px;border-radius:2px}.ds-tira:hover{transform:translateX(6px)}.ds-activa{background:#1d5c47;color:#fff;border-color:transparent;transform:translateX(16px);font-weight:700}"
+    },
+    {
+      "name": "Datos ficticios tag",
+      "kind": "chip",
+      "refersTo": "tag-ficticio",
+      "description": "Price-sticker tag shown on every view.",
+      "html": "<span class=\"ds-ficticio\">Datos ficticios</span>",
+      "css": ".ds-ficticio{display:inline-flex;align-items:center;gap:7px;background:#f0bf2e;color:#1c1f1d;font:700 12.5px Archivo,system-ui,sans-serif;padding:6px 11px 6px 9px;border-radius:3px}.ds-ficticio::before{content:\"\";width:7px;height:7px;border-radius:50%;background:#1c1f1d}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La carta de colores",
+    "rules": [
+      {
+        "name": "The Chip Rule",
+        "body": "Colour lives in whole fields (a chip, a column header, an order band), never as a thin coloured edge on a white box.",
+        "section": "colors"
+      },
+      {
+        "name": "The Label Rule",
+        "body": "Every colour carries a written label next to it. Colour never carries meaning alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-on-Light Rule",
+        "body": "Amarillo Cemento and Gris Perla take Tinta text; every other chip takes white.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Kicker Rule",
+        "body": "Nothing sits above a figure or a heading: no colour names, codes or eyebrow labels.",
+        "section": "typography"
+      }
+    ]
+  }
+}

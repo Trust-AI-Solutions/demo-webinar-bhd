@@ -15,5 +15,8 @@ export const ICONOS = {
   reiniciar: t('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
   enviar: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>`,
   whatsapp: t('<path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.3-4.3a8.5 8.5 0 1 1 15.7-4.4z"/><path d="M8.8 8.6c.3 2.9 2.7 5.4 5.6 5.8l1.2-1.3 2 .8-.3 1.8c-4.4.4-9-4-8.6-8.6l1.8-.3.8 2z"/>'),
+  flecha: t('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  sube: `<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 2 11 10H1z"/></svg>`,
+  baja: `<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 10 1 2h10z"/></svg>`,
   pantalla: t('<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'),
 };
