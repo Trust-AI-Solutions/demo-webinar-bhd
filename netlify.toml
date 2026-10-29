@@ -1,0 +1,16 @@
+# Netlify publica la carpeta public/ y la función netlify/functions/ia (ruta /api/ia).
+# La clave de Anthropic NO va aquí: se carga en Netlify como variable de entorno
+# ANTHROPIC_API_KEY (ver README.md).
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Robots-Tag = "noindex"

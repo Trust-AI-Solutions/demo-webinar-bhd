@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp · Ferretería Los Pinos</title>
+<meta name="description" content="Asistente de WhatsApp de una ferretería ficticia. Demostración con datos ficticios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<div class="wa-pagina" id="pagina">
+  <div class="telefono">
+    <div class="wa">
+      <div class="wa-cabecera">
+        <div class="foto" data-icono="pino"></div>
+        <div><b>Ferretería Los Pinos</b><small id="estado-linea">en línea</small></div>
+        <div class="espacio"></div>
+        <button type="button" id="reiniciar" title="Empezar una conversación nueva">Nueva conversación</button>
+      </div>
+      <div class="wa-chat" id="chat" aria-live="polite"></div>
+      <div class="wa-sugerencias" id="sugerencias"></div>
+      <form class="wa-entrada" id="formulario">
+        <textarea id="mensaje" rows="1" placeholder="Escribe un mensaje" aria-label="Mensaje"></textarea>
+        <button type="submit" id="enviar" aria-label="Enviar" data-icono="enviar"></button>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="module" src="js/whatsapp.js"></script>
+</body>
+</html>

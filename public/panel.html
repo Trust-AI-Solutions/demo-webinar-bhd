@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel · Ferretería Los Pinos</title>
+<meta name="description" content="Panel de negocio de una ferretería ficticia, con asistente de IA. Demostración con datos ficticios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+<script src="vendor/chart-4.4.1.umd.js"></script>
+</head>
+<body>
+<div class="panel">
+  <aside class="lateral">
+    <div class="marca-logo"><div class="icono" data-icono="pino"></div><div><b>Ferretería Los Pinos</b><small>Panel del negocio</small></div></div>
+    <nav class="nav" id="nav">
+      <button data-vista="inicio" class="activo"><span data-icono="inicio"></span>Inicio</button>
+      <button data-vista="ventas"><span data-icono="ventas"></span>Ventas</button>
+      <button data-vista="inventario"><span data-icono="inventario"></span>Inventario</button>
+      <button data-vista="cobros"><span data-icono="clientes"></span>Clientes y cobros</button>
+      <button data-vista="pedidos"><span data-icono="pedidos"></span>Pedidos <span class="contador oculto" id="contador-pedidos"></span></button>
+      <button data-vista="alertas"><span data-icono="alertas"></span>Alertas <span class="contador oculto" id="contador-alertas"></span></button>
+      <button class="ia" id="abrir-asistente"><span data-icono="chispa"></span>Pregúntale a tu negocio</button>
+    </nav>
+    <div class="pie">Empresa y datos ficticios, creados para una demostración. Cualquier parecido con una empresa real es coincidencia.</div>
+  </aside>
+
+  <main class="principal">
+    <div class="barra">
+      <div><h1 id="titulo">Inicio</h1><div class="fecha" id="fecha"></div></div>
+      <div class="espacio"></div>
+      <span class="etiqueta-ficticia">Datos ficticios</span>
+    </div>
+    <div class="contenido" id="vista"></div>
+  </main>
+</div>
+
+<section class="asistente" id="asistente" aria-label="Asistente del negocio">
+  <header>
+    <div class="marca-logo"><div class="icono" data-icono="chispa" style="color:#fff"></div></div>
+    <div><h2>Pregúntale a tu negocio</h2><small>Responde con las cifras del panel</small></div>
+    <div class="espacio"></div>
+    <button class="icono-boton" id="asistente-nuevo" title="Nueva conversación" data-icono="reiniciar"></button>
+    <button class="icono-boton" id="asistente-ampliar" title="Ampliar" data-icono="ampliar"></button>
+    <button class="icono-boton" id="asistente-cerrar" title="Cerrar" data-icono="cerrar"></button>
+  </header>
+  <div class="chat" id="chat"></div>
+  <div class="sugerencias" id="sugerencias"></div>
+  <form class="entrada" id="formulario">
+    <textarea id="pregunta" rows="1" placeholder="Escribe tu pregunta…" aria-label="Pregunta"></textarea>
+    <button class="boton" type="submit" id="enviar">Preguntar</button>
+  </form>
+</section>
+
+<div class="aviso-flotante" id="avisos" aria-live="polite"></div>
+<script type="module" src="js/panel.js"></script>
+</body>
+</html>

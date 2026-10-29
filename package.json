@@ -1,0 +1,13 @@
+{
+  "name": "demo-webinar-bhd",
+  "private": true,
+  "type": "module",
+  "description": "Demo para el webinar con BHD: panel de negocio y asistente de WhatsApp de una ferreteria ficticia, conectados a Claude.",
+  "scripts": {
+    "pruebas": "node --test pruebas/*.prueba.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.135.0"
+  },
+  "engines": { "node": ">=20" }
+}
