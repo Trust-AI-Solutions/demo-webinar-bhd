@@ -114,6 +114,7 @@ try {
   const wa = pagina.frameLocator('iframe[title="Asistente de WhatsApp"]');
   const panel = pagina.frameLocator('iframe[title="Panel del negocio"]');
   await wa.locator(".wa-msj.tienda").first().waitFor();
+  verificar(!(await wa.locator(".volver").isVisible()), "en la vista en vivo no aparece el botón Volver del WhatsApp");
   await wa.locator("#mensaje").fill("¿Tienen cemento gris?");
   await wa.locator("#mensaje").press("Enter");
   await wa.locator(".wa-msj.tienda").nth(1).waitFor();
@@ -140,6 +141,9 @@ try {
   await movil.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   await movil.goto(`${base}/whatsapp.html`);
   await movil.screenshot({ path: `${CAPTURAS}whatsapp-movil.png` });
+  await movil.click(".volver");
+  await movil.waitForURL(/index\.html$/);
+  verificar(true, "el botón Volver al inicio de WhatsApp lleva a la portada");
   await movil.goto(`${base}/panel.html`);
   await movil.waitForTimeout(600);
   const anchoMovil = await movil.evaluate(() => document.documentElement.scrollWidth);
