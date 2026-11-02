@@ -154,7 +154,7 @@ html { scrollbar-color: var(--linea-2) transparent; }
 .indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
 .indicador { border-radius: var(--radio-muestra); overflow: hidden; box-shadow: var(--sombra-muestra); background: var(--papel); display: flex; flex-direction: column; min-width: 0; container-type: inline-size; }
 .indicador .campo { background: var(--chip); color: var(--chip-tinta); padding: 16px 14px 18px; min-height: 96px; display: flex; flex-direction: column; justify-content: flex-end; }
-.indicador .valor { font-size: clamp(19px, 12cqi, 34px); font-weight: 700; letter-spacing: -.025em; line-height: 1; white-space: nowrap; }
+.indicador .valor { font-size: clamp(15px, 9.5cqi, 34px); font-weight: 700; letter-spacing: -.025em; line-height: 1; white-space: nowrap; }
 .indicador .etiqueta { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 3px; border: 1px solid var(--linea); border-top: 0; border-radius: 0 0 var(--radio-muestra) var(--radio-muestra); flex: 1; }
 .indicador .nombre { font-size: 13.5px; font-weight: 700; }
 .indicador .nota { font-size: 12px; color: var(--tinta-2); }

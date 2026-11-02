@@ -152,7 +152,8 @@
 /* Muestras: campo de color y etiqueta blanca */
 .lp .lp-kpis {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* La muestra con palabras ("Pedidos abiertos") es la más ancha: el texto nunca toca el borde */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1fr);
   gap: 12px;
 }
 
