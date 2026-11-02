@@ -5,6 +5,9 @@ Muestra dos herramientas conectadas a Claude (Anthropic) sobre una empresa **inv
 
 - **Panel del negocio** (`panel.html`): ventas, inventario, clientes y cobros, pedidos y alertas,
   más "Pregúntale a tu negocio", un asistente que responde preguntas consultando las cifras.
+  En **Pedidos**: "Nuevo pedido" (a mano, con el total calculado) e "Importar PDF o foto": la IA lee
+  una orden de compra o el reporte del chofer y propone el pedido o los cambios; una persona revisa
+  y aplica.
 - **Asistente de WhatsApp** (`whatsapp.html`): precios, disponibilidad, cotizaciones y pedidos.
   Pasa a una persona cuando hay descuentos, crédito o reclamos.
 - **Los dos a la vez** (`en-vivo.html`): el pedido que hace el cliente por WhatsApp aparece en el
@@ -32,7 +35,11 @@ public/*.html ── conversación ──▶ /api/ia (netlify/functions/ia) ─�
   comparte entre las ventanas abiertas. "Restablecer la demo" lo borra.
 - La clave de Anthropic solo existe en Netlify. El navegador nunca la ve.
 - Modelo: `claude-opus-5-5` con esfuerzo `low` (respuestas rápidas). Se puede cambiar con las
-  variables `MODELO_IA` y `ESFUERZO_IA` sin tocar el código.
+  variables `MODELO_IA` y `ESFUERZO_IA` sin tocar el código. Leer un PDF o una foto usa esfuerzo
+  `medium` (variable `ESFUERZO_DOCUMENTO`).
+- "Importar PDF o foto" hace una sola consulta: envía el archivo (las fotos se reducen a 1600 px en
+  el navegador; PDF de hasta 4 MB) con el catálogo, los clientes y los pedidos abiertos, y la IA
+  responde con la herramienta `proponer_resultado`. Nada se aplica sin aprobarlo en pantalla.
 
 ### Situaciones sembradas en los datos (para que la IA las encuentre)
 
@@ -68,6 +75,13 @@ npm run intro
 
 El resultado compilado se sube al repo, así que Netlify no compila nada. "Comenzar" muestra la portada con el abanico; al volver desde otra vista se va directo a la portada, y "Ver la introducción" la repite. Notas del ensayo: `intro/REHEARSAL.md`.
 
+## PDF de ejemplo
+
+`public/ejemplos/` trae dos PDF ficticios para la demo: una orden de compra de Edificaciones Brisa
+Norte (con un producto que no está en el catálogo) y la hoja de ruta del camión 2 (con un número de
+pedido que no existe). Se generan con `node ejemplos/generar.mjs`. Los pedidos de esa ruta
+(P-1302, P-1305, P-1306 y P-1307) son fijos en `datos.js`, así que el PDF coincide cualquier día.
+
 ## Probar sin gastar la clave
 
 ```bash
@@ -92,9 +106,13 @@ public/                  sitio estático
   js/datos.js            empresa y datos ficticios
   js/negocio.js          consultas (las usan el panel y la IA)
   js/herramientas.js     herramientas que la IA puede usar
-  js/ia.js               conversación con /api/ia
+  js/ia.js               conversación con /api/ia y lectura de documentos
+  js/pedidos.js          crear y actualizar pedidos (WhatsApp, formulario y documentos)
+  js/pedidos-ui.js       ventanas "Nuevo pedido" e "Importar PDF o foto"
+  ejemplos/              PDF ficticios de ejemplo
   vendor/                Chart.js 4.4.1 (licencia MIT), incluido para no depender de un CDN
 netlify/functions/ia/    función que llama a Claude (instrucciones y herramientas en config.mjs)
+ejemplos/generar.mjs     genera los PDF de ejemplo
 pruebas/                 pruebas automáticas
 GUION-DEMO.md            guion sugerido para el webinar
 ```

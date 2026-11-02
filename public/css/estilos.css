@@ -378,3 +378,72 @@ td .detalle { display: block; font-size: 12px; color: var(--tinta-3); }
 @media (max-width: 900px) {
   .intro { padding: 20px 16px 28px; }
 }
+
+/* ---------- Pedidos: nuevo pedido e importar PDF o foto ---------- */
+.acciones-pedidos { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.acciones-pedidos .ayuda { font-size: 13px; color: var(--tinta-3); }
+.pedido .nota-pedido { font-size: 12px; color: var(--tinta-2); background: var(--papel-2); border-radius: 3px; padding: 5px 7px; }
+.pedido .novedad { font-size: 12px; color: var(--tinta); background: #fbecc0; border-radius: 3px; padding: 5px 7px; }
+
+dialog.hoja { border: 0; padding: 0; border-radius: var(--radio); width: min(760px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); background: var(--papel); color: var(--tinta); box-shadow: 0 30px 70px -24px rgba(28, 31, 29, .55); display: flex; flex-direction: column; overflow: hidden; }
+dialog.hoja:not([open]) { display: none; }
+dialog.hoja::backdrop { background: rgba(28, 31, 29, .5); }
+.hoja-franja { background: var(--chip); color: var(--chip-tinta); padding: 14px 12px 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none; }
+.hoja-franja h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.hoja-franja .icono-boton { font-size: 24px; line-height: 1; }
+.hoja-franja .icono-boton:hover { background: rgba(0, 0, 0, .1); }
+.hoja-cuerpo { padding: 18px 20px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.hoja-cuerpo h3 { margin: 4px 0 0; font-size: 14px; font-weight: 700; }
+.hoja .error { margin: 0; color: var(--oxido); font-weight: 600; font-size: 14px; }
+.hoja .pie-hoja { margin: 0; font-size: 13px; color: var(--tinta-3); }
+.acciones-hoja { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; padding-top: 4px; }
+
+.formulario-pedido { display: flex; flex-direction: column; gap: 14px; }
+.formulario-pedido .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.formulario-pedido label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 700; color: var(--tinta-2); min-width: 0; }
+.formulario-pedido .ancho { grid-column: 1 / -1; }
+.formulario-pedido label[hidden] { display: none; }
+.hoja input, .hoja select { font: inherit; font-size: 15px; font-weight: 400; color: var(--tinta); border: 1px solid var(--linea-2); background: var(--papel); border-radius: var(--radio-muestra); padding: 9px 11px; min-width: 0; width: 100%; }
+.hoja input:focus-visible, .hoja select:focus-visible { outline: 3px solid var(--cemento); outline-offset: 1px; border-color: var(--tinta); }
+.lineas-pedido { display: flex; flex-direction: column; gap: 8px; }
+.linea-pedido { display: grid; grid-template-columns: minmax(0, 1fr) 84px 110px 36px; gap: 8px; align-items: center; }
+.linea-pedido .importe { text-align: right; font-weight: 700; white-space: nowrap; }
+.linea-pedido .quitar { border: 1px solid var(--linea-2); background: var(--papel); border-radius: var(--radio-muestra); height: 38px; font-size: 20px; color: var(--tinta-2); }
+.linea-pedido.sin-producto .producto { border-color: var(--oxido); background: #fdf1ee; }
+.formulario-pedido #agregar-linea { align-self: flex-start; }
+.totales { margin: 0; display: flex; justify-content: flex-end; gap: 8px 22px; flex-wrap: wrap; border-top: 1px solid var(--linea); padding-top: 12px; }
+.totales div { display: flex; flex-direction: column; align-items: flex-end; }
+.totales dt { font-size: 12px; color: var(--tinta-3); }
+.totales dd { margin: 0; font-weight: 700; font-size: 15px; white-space: nowrap; }
+.totales .total dd { font-size: 20px; letter-spacing: -.02em; }
+
+.soltar { border: 2px dashed var(--linea-2); border-radius: var(--radio); padding: 26px 18px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; cursor: pointer; background: var(--papel-2); transition: border-color .15s, background .15s; }
+.soltar b { font-size: 16px; }
+.soltar span { font-size: 13.5px; color: var(--tinta-2); max-width: 46ch; }
+.soltar:hover, .soltar.encima, .soltar:focus-visible { border-color: var(--turquesa); background: #e8f3f2; outline: none; }
+.ejemplos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ejemplos li { display: flex; align-items: center; gap: 10px; border: 1px solid var(--linea); border-radius: var(--radio-muestra); padding: 10px 12px; flex-wrap: wrap; }
+.ejemplos li div { flex: 1 1 220px; display: flex; flex-direction: column; min-width: 0; }
+.ejemplos li span { font-size: 13px; color: var(--tinta-3); }
+.leyendo { display: flex; gap: 14px; align-items: center; padding: 22px 4px; }
+.leyendo div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.leyendo b { overflow-wrap: anywhere; }
+.leyendo span { font-size: 13.5px; color: var(--tinta-2); }
+.punto-carga { width: 26px; height: 26px; flex: none; border-radius: 50%; border: 3px solid var(--perla); border-top-color: var(--turquesa); animation: girar 0.9s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.vista-foto { max-width: 100%; max-height: 260px; object-fit: contain; align-self: flex-start; border-radius: var(--radio-muestra); border: 1px solid var(--linea); }
+.resumen-documento { margin: 0; font-size: 15px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.datos-cliente { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px 16px; background: var(--papel-2); border-radius: var(--radio-muestra); padding: 12px 14px; }
+.datos-cliente dt { font-size: 12px; color: var(--tinta-3); }
+.datos-cliente dd { margin: 0; font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
+.tabla-documento td { font-size: 13.5px; }
+.tabla-documento .detalle { display: block; font-size: 12px; color: var(--tinta-3); }
+.tabla-documento tr.sin-catalogo td { background: #fdf1ee; }
+.tabla-documento .n { text-align: right; white-space: nowrap; }
+.dudas { background: #fbecc0; border-radius: var(--radio-muestra); padding: 10px 14px; font-size: 13.5px; }
+.dudas ul { margin: 4px 0 0; padding-left: 18px; }
+@media (max-width: 600px) {
+  .hoja-cuerpo { padding: 14px; }
+  .linea-pedido { grid-template-columns: minmax(0, 1fr) 70px 36px; }
+  .linea-pedido .importe { grid-column: 1 / 3; grid-row: 2; text-align: left; font-size: 13px; color: var(--tinta-2); }
+}

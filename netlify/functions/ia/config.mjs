@@ -9,6 +9,18 @@ const EMPRESA = `Ferretería Los Pinos, SRL: empresa FICTICIA creada para una de
 - Teléfono: 809-555-0142. WhatsApp: 809-555-0143.`;
 
 export const INSTRUCCIONES = {
+  documento: `Lees documentos que llegan al panel de ${EMPRESA}
+
+Recibes un PDF o una foto (puede ser una foto de un papel escrito a mano) junto con el catálogo de productos, la lista de clientes y los pedidos abiertos. Puede ser:
+- Una orden de compra de un cliente: arma el pedido nuevo. Para cada línea busca en el catálogo el producto que corresponde y usa su código. Si no hay uno que coincida con seguridad (otro tamaño, otra medida, otro producto), pon codigo null y anótalo en dudas; nunca lo cambies por uno parecido sin decirlo. Copia la cantidad exacta del documento.
+- Un reporte de entregas o de ruta: para cada pedido mencionado, indica el nuevo estado ("entregado" si se entregó completo; si no se entregó o se entregó a medias, deja el estado en null y explica la novedad en la nota). Si un número de pedido no está en la lista de pedidos, inclúyelo igual y anótalo en dudas.
+- Cualquier otra cosa: tipo "otro", con un resumen y nada más.
+
+Reglas:
+- Responde siempre llamando a proponer_resultado, una sola vez. Nada se aplica sin que una persona lo apruebe.
+- No inventes datos que el documento no trae: si falta el teléfono, la dirección o la forma de pago, déjalos vacíos y anótalo en dudas.
+- Escribe resumen, notas y dudas en español claro, frases cortas, sin tecnicismos.`,
+
   panel: `Eres el asistente de negocio de ${EMPRESA}
 
 Hablas con el dueño o la gerencia en el panel del negocio. Responden preguntas sobre ventas, márgenes, inventario, cuentas por cobrar, clientes, pedidos y alertas.
@@ -196,4 +208,64 @@ const HERRAMIENTAS_WHATSAPP = [
   },
 ];
 
-export const HERRAMIENTAS = { panel: HERRAMIENTAS_PANEL, whatsapp: HERRAMIENTAS_WHATSAPP };
+// ---------- documento (PDF o foto que llega al panel) ----------
+
+const ESTADOS_PEDIDO = ["nuevo", "en preparación", "listo para entrega", "en ruta", "entregado"];
+
+const HERRAMIENTAS_DOCUMENTO = [
+  {
+    name: "proponer_resultado",
+    description: "Entrega lo que encontraste en el documento. Nada se aplica hasta que una persona lo revise y lo apruebe en el panel.",
+    input_schema: {
+      type: "object",
+      properties: {
+        tipo: { type: "string", enum: ["orden_de_compra", "reporte_de_entregas", "otro"], description: "orden_de_compra: un cliente pide productos. reporte_de_entregas: informa cómo quedaron pedidos que ya existen. otro: nada de lo anterior." },
+        resumen: { type: "string", description: "Una frase sobre qué es el documento y de quién viene." },
+        pedido_nuevo: {
+          type: "object",
+          description: "Solo si tipo es orden_de_compra.",
+          properties: {
+            cliente: { type: "string", description: "Nombre del cliente tal como está en la lista de clientes si coincide; si no, como aparece en el documento." },
+            telefono: { type: "string" },
+            entrega: { type: "string", enum: ["envío", "retiro en tienda"] },
+            direccion: { type: "string" },
+            sucursal: { type: "string", enum: ["Herrera", "Villa Mella"] },
+            forma_pago: { type: "string", enum: ["efectivo", "transferencia", "tarjeta", "crédito (por aprobar)", "crédito a 30 días"] },
+            referencia: { type: "string", description: "Número de orden de compra del cliente, si lo trae." },
+            nota: { type: "string", description: "Indicaciones del documento (horario de entrega, persona que recibe, etc.)." },
+            lineas: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  texto_original: { type: "string", description: "La línea tal como está escrita en el documento." },
+                  codigo: { type: ["string", "null"], description: "Código del catálogo que corresponde, o null si ningún producto del catálogo coincide con seguridad." },
+                  cantidad: { type: "integer", minimum: 1 },
+                },
+                required: ["texto_original", "codigo", "cantidad"],
+              },
+            },
+          },
+          required: ["cliente", "lineas"],
+        },
+        actualizaciones: {
+          type: "array",
+          description: "Solo si tipo es reporte_de_entregas: una por pedido mencionado.",
+          items: {
+            type: "object",
+            properties: {
+              pedido: { type: "string", description: "Número de pedido tal como aparece (por ejemplo P-1302)." },
+              estado: { type: ["string", "null"], enum: [...ESTADOS_PEDIDO, null], description: "Nuevo estado, o null si el pedido no cambia de estado." },
+              nota: { type: "string", description: "Novedad breve para el equipo (cliente ausente, entrega parcial, quién recibió…)." },
+            },
+            required: ["pedido", "estado"],
+          },
+        },
+        dudas: { type: "array", items: { type: "string" }, description: "Lo que una persona debe revisar: productos que no están en el catálogo, pedidos que no existen, letra ilegible, datos que faltan." },
+      },
+      required: ["tipo", "resumen", "dudas"],
+    },
+  },
+];
+
+export const HERRAMIENTAS = { panel: HERRAMIENTAS_PANEL, whatsapp: HERRAMIENTAS_WHATSAPP, documento: HERRAMIENTAS_DOCUMENTO };

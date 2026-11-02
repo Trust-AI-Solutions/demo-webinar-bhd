@@ -1,4 +1,4 @@
-# Guion sugerido para la demo en vivo (unos 8 minutos)
+# Guion sugerido para la demo en vivo (unos 10 minutos)
 
 Para quien presenta. Las preguntas son sugerencias: la IA responde a lo que se le escriba, así
 que también se pueden tomar preguntas del público.
@@ -7,7 +7,8 @@ que también se pueden tomar preguntas del público.
 
 - [ ] Abrir el sitio publicado y pulsar **Restablecer la demo** en la portada.
 - [ ] Escribir la clave de la demo (`CLAVE_DEMO`) en la computadora que va a presentar, **antes** de compartir pantalla: se escribe oculta (••••) y queda guardada en ese navegador, así que no se vuelve a pedir durante el webinar.
-- [ ] Hacer una pregunta de prueba en el panel y otra en WhatsApp, y luego **Restablecer** de nuevo.
+- [ ] Hacer una pregunta de prueba en el panel y otra en WhatsApp, leer un PDF de ejemplo en
+      **Pedidos → Importar PDF o foto**, y luego **Restablecer** de nuevo.
 - [ ] Zoom del navegador al 100 % o 110 % y pantalla completa (F11) para compartir.
 - [ ] Tener abierta `en-vivo.html` en una pestaña y `panel.html` en otra.
 
@@ -58,9 +59,26 @@ Recorrer rápido la pantalla de inicio (indicadores, gráficos, alertas). Luego 
 Mensaje clave: el dueño pregunta en sus palabras y la respuesta sale de sus propios números,
 no de suposiciones.
 
+## 4. Los pedidos que no llegan por WhatsApp (2 minutos), en `panel.html` → Pedidos
+
+1. **Nuevo pedido:** "Así se anota un pedido de mostrador o de teléfono." Escribir `Constructora`
+   y escoger un cliente (se llena el teléfono), buscar `cemento`, poner la cantidad. El total con
+   ITBIS y envío sale solo. Guardar: aparece en "Nuevo", marcado "a mano".
+2. **Importar PDF o foto → Orden de compra → Ver PDF:** mostrar el papel del cliente. Volver y
+   pulsar **Leer con IA**. La IA relaciona cada línea con el catálogo y marca la malla
+   electrosoldada, que la ferretería no vende. **Crear el pedido**.
+3. **Importar PDF o foto → Reporte del chofer → Leer con IA:** la IA pasa los pedidos entregados a
+   "Entregado", anota que un cliente no estaba y avisa que el P-1319 no existe. **Aplicar**.
+4. Opcional, con foto: llevar una lista de materiales escrita a mano (inventada, sin datos reales
+   de nadie), tomarle una foto y subirla con **Arrastre aquí un PDF o una foto**.
+
+Mensaje clave: nadie vuelve a digitar lo que ya está en un papel, y la IA propone pero una persona
+aprueba.
+
 ## Si algo falla
 
-- **La respuesta tarda:** es normal que tome entre 5 y 20 segundos cuando consulta varias cosas.
+- **La respuesta tarda:** es normal que tome entre 5 y 20 segundos cuando consulta varias cosas,
+  y entre 10 y 40 segundos al leer un PDF.
   Mientras tanto se ven los pasos ("Revisando las ventas…"). Se puede ir comentando lo que hace.
 - **Aparece un error:** volver a enviar la misma pregunta. Si sigue, usar "Nueva conversación".
 - **"Demasiadas consultas seguidas":** esperar un minuto.

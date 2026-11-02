@@ -220,7 +220,7 @@ export function todosLosPedidos() {
   const d = datos();
   const estado = leerEstado();
   return [...estado.pedidos, ...d.pedidos]
-    .map((p) => ({ ...p, estado: estado.cambiosEstado[p.id] ?? p.estado }))
+    .map((p) => ({ ...p, estado: estado.cambiosEstado[p.id] ?? p.estado, novedad: estado.notas?.[p.id], cambioEnLaDemo: p.id in estado.cambiosEstado }))
     .sort((a, b) => (b.fecha + b.hora.padStart(5, "0")).localeCompare(a.fecha + a.hora.padStart(5, "0")));
 }
 
@@ -232,7 +232,7 @@ export function verPedidos({ estado, canal, limite = 15 } = {}) {
   return {
     pedidos_abiertos: abiertos.length,
     encontrados: lista.length,
-    pedidos: lista.slice(0, limite).map((p) => ({ id: p.id, fecha: p.fecha, hora: p.hora, cliente: p.cliente, canal: p.canal, estado: p.estado, entrega: p.entrega, total_con_itbis: p.total, articulos: p.items.map((i) => `${i.cantidad} x ${i.nombre}`).join("; ") })),
+    pedidos: lista.slice(0, limite).map((p) => ({ id: p.id, fecha: p.fecha, hora: p.hora, cliente: p.cliente, canal: p.canal, estado: p.estado, entrega: p.entrega, total_con_itbis: p.total, articulos: p.items.map((i) => `${i.cantidad} x ${i.nombre}`).join("; "), ...(p.novedad ? { novedad: p.novedad } : {}) })),
   };
 }
 

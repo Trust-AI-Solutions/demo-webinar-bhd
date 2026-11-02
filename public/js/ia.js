@@ -83,3 +83,22 @@ export class Conversacion {
     }
   }
 }
+
+// Lee un PDF o una foto en una sola consulta. archivo: { tipo: "document" | "image",
+// media_type, datos (base64), nombre }. contexto: catálogo, clientes y pedidos en texto.
+// Devuelve lo que propone la IA (tipo, resumen, pedido_nuevo, actualizaciones, dudas);
+// nada se aplica hasta que una persona lo apruebe en el panel.
+export async function leerDocumento(archivo, contexto) {
+  const mensajes = [{
+    role: "user",
+    content: [
+      { type: archivo.tipo, source: { type: "base64", media_type: archivo.media_type, data: archivo.datos } },
+      { type: "text", text: `Archivo recibido: ${archivo.nombre}\n\n${contexto}\n\nLee el documento y entrega el resultado con proponer_resultado.` },
+    ],
+  }];
+  const r = await llamarServidor("documento", mensajes);
+  if (r.stop_reason === "refusal") throw new Error(r.aviso || "No se pudo leer este documento.");
+  const uso = r.content?.find((b) => b.type === "tool_use" && b.name === "proponer_resultado");
+  if (!uso) throw new Error("No se pudo leer el documento. Pruebe de nuevo o con una foto más nítida.");
+  return uso.input;
+}

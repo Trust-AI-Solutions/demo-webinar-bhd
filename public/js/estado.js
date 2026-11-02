@@ -1,5 +1,6 @@
 // Lo que cambia durante la demo: pedidos y cotizaciones creados por el asistente de
-// WhatsApp, conversaciones que piden a una persona y cambios de estado de pedidos.
+// WhatsApp o desde el panel, conversaciones que piden a una persona, y cambios de estado
+// y notas de pedidos.
 // Vive en el navegador (localStorage) y se avisa a las otras ventanas abiertas de la
 // demo (panel y WhatsApp lado a lado) con BroadcastChannel y el evento "storage".
 
@@ -9,7 +10,7 @@ const oyentes = new Set();
 let memoria = null; // respaldo si el navegador bloquea localStorage
 
 function vacio() {
-  return { pedidos: [], cotizaciones: [], atenciones: [], cambiosEstado: {}, secuencia: 1500 };
+  return { pedidos: [], cotizaciones: [], atenciones: [], cambiosEstado: {}, notas: {}, secuencia: 1500 };
 }
 
 export function leerEstado() {

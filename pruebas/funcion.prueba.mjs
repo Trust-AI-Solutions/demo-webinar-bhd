@@ -60,3 +60,32 @@ test("arma la solicitud a Claude con instrucciones, herramientas y respaldo", as
   assert.match(c.system[0].text, /asistente de WhatsApp/);
   assert.match(c.system[1].text, /2026-11-10/);
 });
+
+test("modo documento: un solo PDF o foto, con más espacio y esfuerzo medio", async () => {
+  const pdf = { type: "document", source: { type: "base64", media_type: "application/pdf", data: "JVBERi0x" } };
+  const doc = { ...valido, modo: "documento", mensajes: [{ role: "user", content: [pdf, { type: "text", text: "CATÁLOGO…" }] }] };
+  assert.equal(validarSolicitud(doc, JSON.stringify(doc)), null);
+  assert.ok(validarSolicitud({ ...doc, mensajes: [{ role: "user", content: [pdf, pdf] }] }), "dos archivos");
+  assert.ok(validarSolicitud({ ...doc, mensajes: [{ role: "user", content: [{ type: "image", source: { type: "url", url: "https://x" } }] }] }), "imagen por URL");
+  assert.ok(validarSolicitud({ ...valido, mensajes: [{ role: "user", content: [pdf] }] }), "archivos fuera del modo documento");
+  assert.ok(validarSolicitud(doc, "x".repeat(5_600_000)), "demasiado grande");
+  assert.equal(validarSolicitud(doc, "x".repeat(2_000_000)), null);
+
+  process.env.ANTHROPIC_API_KEY = "clave-de-prueba";
+  const original = globalThis.fetch;
+  let capturada;
+  globalThis.fetch = async (url, init) => {
+    capturada = JSON.parse(init.body);
+    return Response.json({ id: "msg_2", type: "message", role: "assistant", model: "claude-opus-5-5", stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "proponer_resultado", input: { tipo: "otro", resumen: "x", dudas: [] } }], usage: { input_tokens: 1, output_tokens: 1 } });
+  };
+  try {
+    const r = await funcion(solicitud(doc), {});
+    assert.equal(r.status, 200);
+  } finally {
+    globalThis.fetch = original;
+  }
+  assert.equal(capturada.output_config.effort, "medium");
+  assert.deepEqual(capturada.tools.map((t) => t.name), ["proponer_resultado"]);
+  assert.match(capturada.system[0].text, /Lees documentos/);
+  assert.equal(capturada.messages[0].content[0].type, "document");
+});

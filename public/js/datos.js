@@ -511,6 +511,15 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
     });
   }
 
+  // La ruta del camión 2 (el PDF de ejemplo public/ejemplos/reporte-de-entregas-camion-2.pdf)
+  // siempre tiene los mismos pedidos y clientes, sea cual sea la fecha.
+  const RUTA_CAMION_2 = { "P-1302": "C006", "P-1305": "C004", "P-1306": "C008", "P-1307": "C011" };
+  for (const p of pedidos) {
+    const c = clientes.find((x) => x.id === RUTA_CAMION_2[p.id]);
+    if (!c) continue;
+    Object.assign(p, { cliente: c.nombre, telefono: c.telefono, sucursal: c.sucursal, estado: "en ruta", entrega: "envío" });
+  }
+
   cache = { hoy: hoyISO, productos, porCodigo, clientes, facturas, lineas, pedidos, vendedores: VENDEDORES, sucursales: SUCURSALES };
   return cache;
 }

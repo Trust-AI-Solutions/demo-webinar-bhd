@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 const RAIZ = fileURLToPath(new URL("../public/", import.meta.url));
 const CAPTURAS = fileURLToPath(new URL("./capturas/", import.meta.url));
-const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".md": "text/plain" };
+const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".md": "text/plain", ".pdf": "application/pdf" };
 
 let id = 0;
 let exigirClave = false; // simula CLAVE_DEMO="pinos" en Netlify
@@ -26,6 +26,24 @@ const ultimoResultado = (mensajes) => {
 
 // Guion: decide la siguiente respuesta según el modo y cuántos pasos lleva el turno.
 function claudeDeGuion({ modo, mensajes }) {
+  if (modo === "documento") {
+    // Lo que respondería Claude al leer cada PDF de ejemplo.
+    const bloques = mensajes[0].content;
+    const archivo = bloques.find((b) => b.type === "document" || b.type === "image");
+    const texto = bloques.find((b) => b.type === "text").text;
+    if (!archivo?.source?.data?.length || !/CATÁLOGO/.test(texto)) return { stop_reason: "end_turn", content: [{ type: "text", text: "falta el documento o el contexto" }] };
+    if (/reporte/.test(texto)) {
+      return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "reporte_de_entregas", resumen: "Hoja de ruta del camión 2 con cinco entregas.", actualizaciones: [
+        { pedido: "P-1302", estado: "entregado", nota: "Recibió Ing. Pérez en obra" },
+        { pedido: "P-1305", estado: null, nota: "Cliente ausente; volver mañana" },
+        { pedido: "P-1319", estado: "entregado", nota: "Sr. Tavárez" },
+      ], dudas: ["El pedido P-1319 no existe en el panel."] })] };
+    }
+    return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "orden_de_compra", resumen: "Orden de compra OC-2026-0418 de Edificaciones Brisa Norte para la obra en Villa Mella.", pedido_nuevo: {
+      cliente: "Edificaciones Brisa Norte, SRL", telefono: "809-555-1007", entrega: "envío", direccion: "Av. Hermanas Mirabal km 9, Villa Mella", sucursal: "Villa Mella", forma_pago: "crédito a 30 días", referencia: "OC-2026-0418", nota: "Entregar de 8:00 a 12:00",
+      lineas: [{ texto_original: "Cemento gris Portland 42.5 kg", codigo: "CEM-001", cantidad: 40 }, { texto_original: "Varilla corrugada 3/8\" x 20'", codigo: "ACE-001", cantidad: 60 }, { texto_original: "Malla electrosoldada 6x6 (rollo)", codigo: null, cantidad: 4 }],
+    }, dudas: ["La malla electrosoldada no está en el catálogo."] })] };
+  }
   const pregunta = [...mensajes].reverse().find((m) => m.role === "user" && typeof m.content === "string").content;
   const resultado = ultimoResultado(mensajes);
   const pasos = mensajes.length - mensajes.findLastIndex((m) => m.role === "user" && typeof m.content === "string") - 1;
@@ -141,6 +159,46 @@ try {
   await pagina.click("#restablecer");
   await pagina.waitForTimeout(500);
   verificar(await panel.locator(`.pedido:has-text("${numeroPedido}")`).count() === 0, "restablecer borra el pedido de la demo");
+
+  // Pedidos: nuevo pedido a mano e importar PDF
+  await pagina.goto(`${base}/panel.html#pedidos`);
+  await pagina.click("#nuevo-pedido");
+  const hoja = pagina.locator("dialog.hoja");
+  await hoja.locator("input[name=cliente]").fill("Constructora Ozama");
+  await hoja.locator("input[name=cliente]").dispatchEvent("change");
+  verificar(await hoja.locator("input[name=telefono]").inputValue() === "809-555-1000", "al escoger un cliente existente se llena su teléfono");
+  await hoja.locator(".linea-pedido .producto").fill("CEM-001 · Cemento gris tipo Portland 42.5 kg · RD$640/saco");
+  await hoja.locator(".linea-pedido .cantidad").fill("10");
+  verificar(/RD\$7,552/.test(await hoja.locator(".totales").innerText()), "el formulario calcula el total con ITBIS (10 sacos = RD$7,552)");
+  await hoja.locator("select[name=entrega]").selectOption("envío");
+  await hoja.locator("button[type=submit]").click();
+  verificar(/dirección/.test(await hoja.locator(".error").innerText()), "para envío pide la dirección");
+  await hoja.locator("input[name=direccion]").fill("Av. Luperón 100");
+  await pagina.screenshot({ path: `${CAPTURAS}nuevo-pedido.png` });
+  await hoja.locator("button[type=submit]").click();
+  await pagina.locator('.columna[data-chip=cemento] .pedido:has-text("Constructora Ozama")').waitFor({ timeout: 3000 });
+  verificar(/a mano/.test(await pagina.locator('.pedido:has-text("Constructora Ozama")').first().innerText()), "el pedido a mano entra en Nuevo, marcado como hecho a mano");
+
+  await pagina.click("#importar-documento");
+  await pagina.click("dialog.hoja [data-ejemplo='0']");
+  await pagina.locator("dialog.hoja [data-aplicar]").waitFor();
+  verificar(await pagina.locator("dialog.hoja tr.sin-catalogo").count() === 1, "la línea que no está en el catálogo se marca");
+  await pagina.screenshot({ path: `${CAPTURAS}importar-orden.png` });
+  await pagina.click("dialog.hoja [data-aplicar]");
+  await pagina.locator('.pedido:has-text("Brisa Norte")').waitFor({ timeout: 3000 });
+  verificar(/Cotizar aparte: 4 × Malla/.test(await pagina.locator('.pedido:has-text("Brisa Norte")').innerText()), "la orden de compra crea el pedido y anota lo que falta cotizar");
+
+  await pagina.click("#importar-documento");
+  await pagina.click("dialog.hoja [data-ejemplo='1']");
+  await pagina.locator("dialog.hoja [data-aplicar]").waitFor();
+  verificar(/Aplicar 2 cambios/.test(await pagina.locator("dialog.hoja [data-aplicar]").innerText()), "el reporte del chofer ignora el pedido que no existe");
+  await pagina.screenshot({ path: `${CAPTURAS}importar-reporte.png` });
+  await pagina.click("dialog.hoja [data-aplicar]");
+  await pagina.waitForTimeout(300);
+  verificar(await pagina.locator('.columna[data-chip=perla] .pedido:has-text("P-1302")').count() === 1, "P-1302 pasa a Entregado");
+  verificar(/Novedad: Cliente ausente/.test(await pagina.locator('.pedido:has-text("P-1305")').innerText()), "P-1305 muestra la novedad del chofer");
+  await pagina.screenshot({ path: `${CAPTURAS}pedidos-actualizados.png`, fullPage: true });
+  await pagina.evaluate(() => localStorage.removeItem("demo-los-pinos-v1"));
 
   // Clave de la demo: se escribe oculta, avisa si es incorrecta y luego deja pasar
   exigirClave = true;

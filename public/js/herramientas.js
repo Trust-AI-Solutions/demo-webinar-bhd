@@ -4,6 +4,7 @@
 
 import * as N from "./negocio.js";
 import { modificarEstado, siguienteNumero } from "./estado.js";
+import { calcularLineas, costoEnvio, crearPedido } from "./pedidos.js";
 
 const ETIQUETAS = {
   resumen_ventas: "Revisando las ventas",
@@ -35,28 +36,6 @@ const PANEL = {
 
 // ---------- WhatsApp (cliente de la ferretería) ----------
 
-function lineasDeCotizacion(items) {
-  const d = N.datos();
-  if (!Array.isArray(items) || items.length === 0) return { error: "La lista de artículos está vacía." };
-  const lineas = [], noEncontrados = [];
-  for (const it of items) {
-    const p = d.porCodigo[String(it?.codigo ?? "").toUpperCase()];
-    const cantidad = numero(it?.cantidad, 0);
-    if (!p || !cantidad) { noEncontrados.push(it?.codigo ?? "(sin código)"); continue; }
-    const disponible = Object.values(p.stock).reduce((a, b) => a + b, 0);
-    lineas.push({ codigo: p.codigo, nombre: p.nombre, unidad: p.unidad, cantidad, precio: p.precio, importe: Math.round(p.precio * cantidad * 100) / 100, disponible: disponible >= cantidad ? "sí" : `solo hay ${disponible}` });
-  }
-  if (noEncontrados.length) return { error: `Estos códigos no existen o la cantidad no es válida: ${noEncontrados.join(", ")}. Busca el producto con buscar_productos y usa su código.` };
-  const subtotal = Math.round(lineas.reduce((a, l) => a + l.importe, 0) * 100) / 100;
-  const itbis = Math.round(subtotal * N.EMPRESA.itbis * 100) / 100;
-  return { lineas, subtotal, itbis, total: Math.round((subtotal + itbis) * 100) / 100 };
-}
-
-function costoEnvio(subtotal, tipoEntrega) {
-  if (tipoEntrega !== "envío") return 0;
-  return subtotal >= 15000 ? 0 : 500;
-}
-
 const WHATSAPP = {
   buscar_productos: (e) => {
     const r = N.buscarProductos({ texto: texto(e.texto), categoria: texto(e.categoria), limite: numero(e.limite, 8) });
@@ -70,7 +49,7 @@ const WHATSAPP = {
     };
   },
   crear_cotizacion: (e) => {
-    const c = lineasDeCotizacion(e.items);
+    const c = calcularLineas(e.items);
     if (c.error) return c;
     const entrega = e.tipo_entrega === "envío" ? "envío" : "retiro en tienda";
     const envio = costoEnvio(c.subtotal, entrega);
@@ -86,21 +65,12 @@ const WHATSAPP = {
     if (!nombre || !telefono) return { error: "Falta el nombre o el teléfono del cliente. Pídeselos antes de registrar el pedido." };
     const entrega = e.tipo_entrega === "envío" ? "envío" : "retiro en tienda";
     if (entrega === "envío" && !texto(e.direccion)) return { error: "Para envío hace falta la dirección. Pídesela al cliente." };
-    const c = lineasDeCotizacion(e.items);
-    if (c.error) return c;
-    const envio = costoEnvio(c.subtotal, entrega);
+    const pedido = crearPedido({
+      cliente: nombre, telefono, canal: "WhatsApp", sucursal: texto(e.sucursal), entrega, direccion: texto(e.direccion),
+      forma_pago: texto(e.forma_pago), nota: texto(e.nota), items: e.items, origen: "asistente",
+    });
+    if (pedido.error) return pedido;
     const ahora = new Date();
-    const pedido = modificarEstado((estado) => {
-      const p = {
-        id: `P-${siguienteNumero(estado)}`, fecha: N.hoy(), hora: `${ahora.getHours()}:${String(ahora.getMinutes()).padStart(2, "0")}`,
-        cliente: nombre, telefono, canal: "WhatsApp", sucursal: texto(e.sucursal) === "Villa Mella" ? "villa-mella" : "herrera",
-        estado: "nuevo", entrega, direccion: texto(e.direccion), forma_pago: texto(e.forma_pago) ?? "por confirmar", nota: texto(e.nota),
-        items: c.lineas.map((l) => ({ codigo: l.codigo, nombre: l.nombre, cantidad: l.cantidad, precio: l.precio })),
-        subtotal: c.subtotal, itbis: c.itbis, envio, total: Math.round((c.total + envio) * 100) / 100, origen: "asistente",
-      };
-      estado.pedidos.unshift(p);
-      return p;
-    }, { tipo: "pedido" });
     const salida = entrega === "envío" ? (ahora.getHours() < 14 ? "hoy en la tarde" : "mañana") : "listo para retirar en unas 2 horas";
     return { pedido: pedido.id, total_a_pagar: pedido.total, subtotal: pedido.subtotal, itbis: pedido.itbis, envio: pedido.envio, entrega: pedido.entrega, cuando: salida, estado: "registrado; el equipo lo verá en el panel ahora mismo" };
   },

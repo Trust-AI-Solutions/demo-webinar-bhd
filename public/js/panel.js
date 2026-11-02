@@ -4,6 +4,8 @@ import * as N from "./negocio.js";
 import { modificarEstado, alCambiar, leerEstado } from "./estado.js";
 import { Conversacion } from "./ia.js";
 import { ICONOS } from "./iconos.js";
+import { ESTADOS } from "./pedidos.js";
+import { barraPedidos, conectarBarra, configurarPedidos } from "./pedidos-ui.js";
 import { rd, num, porcentaje, fechaCorta, fechaLarga, nombreMes, escapar, textoEnriquecido } from "./formato.js";
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -239,7 +241,6 @@ function pintarCobros(raiz) {
       </tbody></table></div></div>`;
 }
 
-const ESTADOS = ["nuevo", "en preparación", "listo para entrega", "en ruta", "entregado"];
 const CHIP_ESTADO = { nuevo: "cemento", "en preparación": "ozama", "listo para entrega": "pino", "en ruta": "malva", entregado: "perla" };
 const CHIP_CANAL = { WhatsApp: "whatsapp", "Teléfono": "ozama", Mostrador: "perla", Correo: "malva" };
 let ultimoPedidoNuevo = null;
@@ -247,20 +248,25 @@ function pintarPedidos(raiz) {
   const d = N.datos();
   const pedidos = N.todosLosPedidos();
   const atenciones = leerEstado().atenciones.filter((a) => !a.atendida);
-  raiz.innerHTML = `
+  const ORIGEN = { manual: "a mano", documento: "desde documento" };
+  raiz.innerHTML = `${barraPedidos()}
     ${atenciones.length ? `<div class="tarjeta"><h2 class="muestra-titulo">Clientes de WhatsApp que esperan a una persona</h2><p class="sub">El asistente los pasó al equipo</p><ul class="lista-alertas">${atenciones.map((a) => `<li data-chip="whatsapp"><span class="campo">WhatsApp</span><div class="texto"><b>${escapar(a.nombre || "Cliente sin nombre")} · ${a.hora}</b><span>${escapar(a.motivo)}</span></div><div class="accion"><button class="boton secundario pequeno" data-atender="${a.id}">Marcar atendido</button></div></li>`).join("")}</ul></div>` : ""}
     <div class="tablero">${ESTADOS.map((e) => {
-      const lista = pedidos.filter((p) => p.estado === e && (e !== "entregado" || p.fecha === d.hoy));
+      // "Entregado hoy": los de hoy y los que se entregaron durante la demo.
+      const lista = pedidos.filter((p) => p.estado === e && (e !== "entregado" || p.fecha === d.hoy || p.cambioEnLaDemo));
       return `<div class="columna" data-chip="${CHIP_ESTADO[e]}"><h3><span>${e[0].toUpperCase() + e.slice(1)}${e === "entregado" ? " hoy" : ""}</span><span>${lista.length}</span></h3>${lista.length ? "" : `<p class="vacio">Sin pedidos</p>`}${lista.map((p) => `
         <div class="pedido ${p.id === ultimoPedidoNuevo ? "nuevo-llegado" : ""}" data-chip="${CHIP_CANAL[p.canal] ?? "perla"}">
-          <div class="franja"><b>${p.id}</b><small>${escapar(p.canal)}</small></div>
+          <div class="franja"><b>${p.id}</b><small>${escapar(p.canal)}${ORIGEN[p.origen] ? ` · ${ORIGEN[p.origen]}` : ""}</small></div>
           <div class="cuerpo">
             <div class="cliente">${escapar(p.cliente)}<span class="cuando">${p.fecha === d.hoy ? "Hoy" : fechaCorta(p.fecha)} ${p.hora} · ${escapar(p.entrega)}${p.direccion ? ` · ${escapar(p.direccion)}` : ""}</span></div>
             <div class="articulos">${p.items.map((i) => `${num(i.cantidad)} × ${escapar(i.nombre)}`).join("<br>")}</div>
+            ${p.nota ? `<div class="nota-pedido">${escapar(p.nota)}</div>` : ""}
+            ${p.novedad ? `<div class="novedad"><b>Novedad:</b> ${escapar(p.novedad)}</div>` : ""}
             <div class="pie-pedido"><span class="total">${rd(p.total)}</span>${e !== "entregado" ? `<button class="boton secundario pequeno" data-avanzar="${p.id}">Avanzar</button>` : ""}</div>
           </div>
         </div>`).join("")}</div>`;
     }).join("")}</div>`;
+  conectarBarra(raiz);
   raiz.querySelectorAll("[data-avanzar]").forEach((b) => b.addEventListener("click", () => {
     const p = pedidos.find((x) => x.id === b.dataset.avanzar);
     const siguiente = ESTADOS[Math.min(ESTADOS.length - 1, ESTADOS.indexOf(p.estado) + 1)];
@@ -373,12 +379,14 @@ function iniciar() {
   $("#formulario").addEventListener("submit", (e) => { e.preventDefault(); enviarPregunta($("#pregunta").value); });
   $("#pregunta").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); enviarPregunta($("#pregunta").value); } });
   reiniciarChat();
+  configurarPedidos({ aviso });
 
   alCambiar((evento) => {
     if (evento.tipo === "pedido") {
-      const p = N.todosLosPedidos().find((x) => x.origen === "asistente");
+      const p = leerEstado().pedidos[0];
       ultimoPedidoNuevo = p?.id ?? null;
-      if (p) aviso(`Nuevo pedido por WhatsApp: ${p.id} de ${p.cliente}, ${rd(p.total)}`);
+      const como = { manual: "Pedido registrado", documento: "Pedido creado desde el documento" }[p?.origen] ?? "Nuevo pedido por WhatsApp";
+      if (p) aviso(`${como}: ${p.id} de ${p.cliente}, ${rd(p.total)}`);
     }
     if (evento.tipo === "atencion") aviso("Un cliente de WhatsApp pide hablar con una persona");
     if (evento.tipo === "restablecido") ultimoPedidoNuevo = null;
