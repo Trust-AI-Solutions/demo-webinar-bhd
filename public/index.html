@@ -7,6 +7,7 @@
 <meta name="description" content="Demostración de un panel de negocio y un asistente de WhatsApp con IA, con una empresa y datos ficticios.">
 <link rel="preload" href="fuentes/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="intro/intro.css">
 </head>
 <body>
 <!--
@@ -17,7 +18,19 @@ FIRST VIEWPORT: a la izquierda el titular grande y el lema; a la derecha el aban
 FORM: carta de colores de pintura, candidato 4 de 7, semilla 5e3cd307 (tirada degradada, sin retadores).
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 -->
-<div class="portada">
+<section class="intro" id="intro" aria-label="Introducción">
+  <header>
+    <span class="marca"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></span></span>
+    <span class="ficticio">Demostración con datos ficticios</span>
+  </header>
+  <div class="intro__escena" id="intro-escena"></div>
+  <div class="intro__acciones">
+    <button class="boton intro__comenzar" id="comenzar" type="button">Comenzar <span data-icono="flecha"></span></button>
+    <button class="boton secundario pequeno" id="ver-de-nuevo" type="button">Ver de nuevo</button>
+  </div>
+</section>
+
+<div class="portada" id="portada" hidden>
   <header>
     <span class="marca"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></span></span>
     <span class="ficticio">Demostración con datos ficticios</span>
@@ -49,18 +62,44 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <footer>
     <button class="boton secundario pequeno" id="restablecer" type="button">Restablecer la demo</button>
     <span id="restablecido">Borra los pedidos, cotizaciones y avisos creados durante la demo.</span>
+    <button class="boton secundario pequeno" id="ver-intro" type="button">Ver la introducción</button>
   </footer>
 </div>
 <script type="module">
   import { ICONOS } from "./js/iconos.js";
   import { restablecerDemo } from "./js/estado.js";
   document.querySelectorAll("[data-icono]").forEach((el) => { el.innerHTML = ICONOS[el.dataset.icono] ?? ""; });
-  // El abanico se abre una vez al cargar (el único movimiento de la portada).
-  requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById("abanico").classList.remove("cerrado")));
+  // Primero la introducción animada; "Comenzar" muestra la portada y abre el abanico.
+  // Si ya se vio en esta pestaña (por ejemplo, al volver desde el panel), se va directo a la portada.
+  const intro = document.getElementById("intro");
+  const portada = document.getElementById("portada");
+  const abrirAbanico = () => requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById("abanico").classList.remove("cerrado")));
+  const vista = () => { try { return sessionStorage.getItem("demo-intro-vista") === "1"; } catch { return false; } };
+  const marcarVista = (v) => { try { v ? sessionStorage.setItem("demo-intro-vista", "1") : sessionStorage.removeItem("demo-intro-vista"); } catch { /* ignorar */ } };
+  const mostrarPortada = () => {
+    marcarVista(true);
+    intro.hidden = true;
+    portada.hidden = false;
+    document.getElementById("abanico").classList.add("cerrado");
+    abrirAbanico();
+    portada.querySelector("a")?.focus({ preventScroll: true });
+  };
+  const mostrarIntro = () => {
+    marcarVista(false);
+    portada.hidden = true;
+    intro.hidden = false;
+    window.repetirIntro?.();
+    document.getElementById("comenzar").focus({ preventScroll: true });
+  };
+  document.getElementById("comenzar").addEventListener("click", mostrarPortada);
+  document.getElementById("ver-de-nuevo").addEventListener("click", () => window.repetirIntro?.());
+  document.getElementById("ver-intro").addEventListener("click", mostrarIntro);
+  if (vista()) mostrarPortada();
   document.getElementById("restablecer").addEventListener("click", () => {
     restablecerDemo();
     document.getElementById("restablecido").textContent = "Listo: la demo volvió a su estado inicial.";
   });
 </script>
+<script type="module" src="intro/intro.js"></script>
 </body>
 </html>

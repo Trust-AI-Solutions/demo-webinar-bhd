@@ -57,6 +57,17 @@ public/*.html ── conversación ──▶ /api/ia (netlify/functions/ia) ─�
 Protecciones incluidas: límite de 40 consultas por minuto por visitante (`rateLimit` en la
 función), conversaciones de hasta 90 mensajes, y `noindex` para que los buscadores no lo listen.
 
+## Intro animada de la portada
+
+La portada abre con una animación de unos 15 segundos (pedido por WhatsApp → panel → pregunta y respuesta), hecha con el kit de stageshow (React). El código está en `intro/` y se compila a `public/intro/` con:
+
+```bash
+npm install
+npm run intro
+```
+
+El resultado compilado se sube al repo, así que Netlify no compila nada. "Comenzar" muestra la portada con el abanico; al volver desde otra vista se va directo a la portada, y "Ver la introducción" la repite. Notas del ensayo: `intro/REHEARSAL.md`.
+
 ## Probar sin gastar la clave
 
 ```bash

@@ -1,0 +1,381 @@
+/* Intro de Ferretería Los Pinos: el mundo "Carta de colores" (muestras de
+   pintura con su etiqueta blanca) sobre el cartón de la página. La página es
+   el fondo: sin placa. Un margen de 40px. */
+@font-face {
+  font-family: "Inter Intro";
+  font-style: normal;
+  font-display: block;
+  font-weight: 100 900;
+  src: url("./inter-variable.woff2") format("woff2");
+}
+
+.lp {
+  --lp-pino: #1d5c47;
+  --lp-ozama: #1d4f8f;
+  --lp-terracota: #a8461f;
+  --lp-turquesa: #0e6f6c;
+  --lp-oxido: #9b2b1f;
+  --lp-cemento: #f0bf2e;
+  --lp-tinta: #1c1f1d;
+  --lp-tinta-2: #4a524d;
+  --lp-linea: #dedcd5;
+  --lp-wa: #128c4a;
+}
+
+.lp .ss-stage {
+  --gutter: 40px;
+  --ss-accent: var(--lp-pino);
+  --ss-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Intro", "Segoe UI", system-ui, sans-serif;
+  font-family: var(--ss-font);
+  overflow: hidden;
+  background: transparent;
+}
+
+.lp [data-chip="pino"] { --chip: var(--lp-pino); --chip-ink: #fff; }
+.lp [data-chip="ozama"] { --chip: var(--lp-ozama); --chip-ink: #fff; }
+.lp [data-chip="terracota"] { --chip: var(--lp-terracota); --chip-ink: #fff; }
+.lp [data-chip="turquesa"] { --chip: var(--lp-turquesa); --chip-ink: #fff; }
+.lp [data-chip="oxido"] { --chip: var(--lp-oxido); --chip-ink: #fff; }
+.lp [data-chip="cemento"] { --chip: var(--lp-cemento); --chip-ink: var(--lp-tinta); }
+
+/* ---------- El panel: arriba a la izquierda, sale por abajo ---------- */
+.lp .lp-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 760px;
+  height: 560px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.lp .lp-body {
+  display: flex;
+  height: 100%;
+  background: #fff;
+}
+
+.lp .lp-carta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: none;
+  width: 168px;
+  padding: 16px 0 16px 14px;
+  border-right: 1px solid var(--lp-linea);
+  background: #f8f7f4;
+}
+
+.lp .lp-marca {
+  margin: 0 14px 12px 2px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--lp-tinta);
+}
+
+.lp .lp-tira {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--lp-linea);
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+  background: #fff;
+}
+
+.lp .lp-tira[data-on] {
+  background: var(--chip);
+  border-color: transparent;
+  transform: translateX(10px);
+  box-shadow: 0 1px 0 rgba(28, 31, 29, 0.06), 0 10px 18px -10px rgba(28, 31, 29, 0.35);
+}
+
+.lp .lp-tira__txt {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lp .lp-swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--chip);
+}
+
+.lp .lp-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 404px;
+  padding: 20px;
+}
+
+/* La pregunta: un campo; la respuesta se abre debajo, sobre las muestras */
+.lp .lp-ask {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.lp .lp-answer {
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid var(--lp-linea);
+}
+
+.lp .lp-answer__band {
+  padding: 7px 14px;
+  background: var(--lp-pino);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.lp .lp-answer__body {
+  padding: 12px 14px 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--lp-tinta);
+}
+
+.lp .lp-thinking {
+  color: var(--lp-tinta-2);
+}
+
+/* Muestras: campo de color y etiqueta blanca */
+.lp .lp-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lp .lp-kpi {
+  overflow: hidden;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(28, 31, 29, 0.06), 0 10px 18px -10px rgba(28, 31, 29, 0.35);
+}
+
+.lp .lp-kpi__campo {
+  display: flex;
+  align-items: flex-end;
+  height: 66px;
+  padding: 12px;
+  background: var(--chip);
+  color: var(--chip-ink);
+}
+
+.lp .lp-kpi__ph {
+  display: block;
+  height: 12px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.lp .lp-kpi__valor {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.lp .lp-kpi__etiqueta {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--lp-linea);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+
+.lp .lp-kpi__nombre {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lp-tinta);
+  white-space: nowrap;
+}
+
+/* Lista de pedidos */
+.lp .lp-card {
+  border: 1px solid var(--lp-linea);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.lp .lp-card__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+}
+
+.lp .lp-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lp-tinta);
+}
+
+.lp .lp-list {
+  padding: 0 8px 8px;
+}
+
+.lp .lp-row {
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 8px;
+  border-top: 1px solid var(--lp-linea);
+}
+
+.lp .lp-row--new {
+  position: relative;
+  border-top: 0;
+  border-radius: 4px;
+  background: #e9f6ee;
+}
+
+.lp .lp-band {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--lp-wa);
+}
+
+.lp .lp-row__id {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lp-tinta);
+}
+
+.lp .lp-row__name {
+  font-size: 13px;
+  color: var(--lp-tinta-2);
+  white-space: nowrap;
+}
+
+.lp .lp-tag {
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--lp-wa);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.lp .lp-pill {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--lp-tinta);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hasta que la muestra aterriza, la fila nueva espera sin su contenido */
+.lp .lp-row--new > * {
+  transition: opacity 0.3s ease;
+}
+.lp .lp-row--new:not([data-landed]) > * {
+  opacity: 0;
+}
+
+.lp .lp-pill--chip {
+  display: inline-block;
+  margin: 0;
+  box-shadow: 0 10px 22px -8px rgba(28, 31, 29, 0.5);
+}
+
+/* ---------- WhatsApp en el teléfono: cruza el borde derecho del panel ---------- */
+.lp .lp-phone {
+  position: absolute;
+  top: 64px;
+  right: var(--gutter);
+}
+
+.lp .lp-wa-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 66px;
+  padding: 0 18px;
+  color: #fff;
+}
+
+.lp .lp-wa-foto {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--lp-pino);
+}
+
+.lp .lp-wa-name {
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.lp .lp-wa-name small {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+.lp .ss-phone .lp-thread {
+  --ss-me: #d9fdd3;
+  --ss-me-text: #111b21;
+  --ss-them: #ffffff;
+  --ss-them-text: #111b21;
+  height: 318px;
+  padding: 12px 14px 0;
+}
+
+.lp .lp-order {
+  display: inline-block;
+  font-weight: 700;
+  transition: opacity 0.3s ease;
+}
+
+.lp .lp-order[data-gone] {
+  opacity: 0.45;
+}
+
+/* ---------- Teléfono angosto: el teléfono y la tarjeta de pedidos ---------- */
+.lp .ss-stage[data-layout="compact"] .lp-phone {
+  top: 24px;
+  right: 29px;
+}
+
+.lp .ss-stage[data-layout="compact"] .lp-row__name {
+  display: none;
+}
+
+.lp .lp-mini {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3;
+}
+
+.lp .lp-mini .lp-card {
+  box-shadow: var(--ss-shadow-satellite);
+}

@@ -486,7 +486,13 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
   const canales = ["Mostrador", "Teléfono", "Teléfono", "WhatsApp", "Correo"];
   const pedidos = [];
   for (let i = 0; i < 16; i++) {
-    const diasAtras = i < 7 ? 0 : i < 12 ? 1 : 2;
+    // Los pedidos de "hoy" nunca quedan en el futuro: su hora va de las 7:30 a. m. hasta
+    // unos minutos antes de ahora. Antes de abrir (7:40 a. m.) pasan a ser de ayer.
+    const ahora = new Date();
+    const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
+    const hayHoy = minutosAhora >= 460;
+    const diasAtras = i < 7 ? (hayHoy ? 0 : 1) : i < 12 ? 1 : 2;
+    const minutoPedido = diasAtras === 0 ? entre(450, Math.max(450, minutosAhora - 5)) : entre(480, 1019);
     const c = elegir(clientes.slice(0, 60));
     const items = [];
     const n = entre(1, 4);
@@ -497,7 +503,7 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
     }
     const subtotal = items.reduce((a, x) => a + x.cantidad * x.precio, 0);
     pedidos.push({
-      id: `P-${1300 + i}`, fecha: sumarDias(hoyISO, -diasAtras), hora: `${entre(8, 16)}:${String(entre(0, 59)).padStart(2, "0")}`,
+      id: `P-${1300 + i}`, fecha: sumarDias(hoyISO, -diasAtras), hora: `${Math.floor(minutoPedido / 60)}:${String(minutoPedido % 60).padStart(2, "0")}`,
       cliente: c.nombre, telefono: c.telefono, canal: elegir(canales), sucursal: c.sucursal,
       estado: diasAtras === 0 ? estados[entre(0, 3)] : diasAtras === 1 ? estados[entre(2, 4)] : "entregado",
       entrega: azar() < 0.6 ? "envío" : "retiro en tienda", items,

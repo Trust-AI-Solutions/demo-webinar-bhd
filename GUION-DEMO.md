@@ -14,6 +14,10 @@ que también se pueden tomar preguntas del público.
 Las cifras cambian cada día porque los 6 meses de ventas terminan siempre "hoy". Las cinco
 situaciones de abajo aparecen siempre.
 
+## 0. Intro animada (15 segundos)
+
+Al abrir el sitio se ve una animación: un cliente pide por WhatsApp, el pedido llega al panel y el dueño le pregunta al panel qué reponer. Dejarla correr una vez mientras se presenta, y pulsar **Comenzar** para ir a la portada. "Ver de nuevo" la repite.
+
 ## 1. Presentar la empresa (30 segundos)
 
 "Esta es Ferretería Los Pinos, una empresa inventada para esta demostración: dos sucursales en
