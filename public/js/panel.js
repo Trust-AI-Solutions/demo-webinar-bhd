@@ -5,7 +5,7 @@ import { modificarEstado, alCambiar, leerEstado } from "./estado.js";
 import { Conversacion } from "./ia.js";
 import { ICONOS } from "./iconos.js";
 import { ESTADOS } from "./pedidos.js";
-import { barraPedidos, conectarBarra, configurarPedidos } from "./pedidos-ui.js";
+import { barraPedidos, conectarBarra, configurarPedidos, abrirImportar } from "./pedidos-ui.js";
 import { rd, num, porcentaje, fechaCorta, fechaLarga, nombreMes, escapar, textoEnriquecido } from "./formato.js";
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -27,15 +27,15 @@ function variacion(actual, previo, sufijo = "") {
 function destruirGraficos() { while (graficos.length) graficos.pop().destroy(); }
 
 function opcionesBase({ dinero = true, horizontal = false } = {}) {
-  const ejeValor = { grid: { color: "#e7e5df" }, border: { display: false }, ticks: { color: "#5d655f", font: { size: 11 }, maxTicksLimit: horizontal ? 5 : 7, maxRotation: 0, callback: (v) => (dinero ? `RD$${num(v / 1000)}k` : num(v)) } };
-  const ejeCat = { grid: { display: false }, border: { color: "#c9c6bd" }, ticks: { color: "#5d655f", font: { size: 11 }, autoSkip: true, maxRotation: 0 } };
+  const ejeValor = { grid: { color: "#ece3d6" }, border: { display: false }, ticks: { color: "#66574c", font: { size: 11 }, maxTicksLimit: horizontal ? 5 : 7, maxRotation: 0, callback: (v) => (dinero ? `RD$${num(v / 1000)}k` : num(v)) } };
+  const ejeCat = { grid: { display: false }, border: { color: "#cdbdaa" }, ticks: { color: "#66574c", font: { size: 11 }, autoSkip: true, maxRotation: 0 } };
   return {
     responsive: true, maintainAspectRatio: false, animation: { duration: 350 },
     indexAxis: horizontal ? "y" : "x",
     interaction: { mode: "index", intersect: false },
     plugins: {
       legend: { display: false },
-      tooltip: { backgroundColor: "#1c1f1d", padding: 10, cornerRadius: 4, titleFont: { weight: "700" }, callbacks: { label: (c) => ` ${c.dataset.label}: ${dinero ? rd(c.parsed[horizontal ? "x" : "y"]) : num(c.parsed[horizontal ? "x" : "y"])}` } },
+      tooltip: { backgroundColor: "#241c17", padding: 10, cornerRadius: 4, titleFont: { weight: "700" }, callbacks: { label: (c) => ` ${c.dataset.label}: ${dinero ? rd(c.parsed[horizontal ? "x" : "y"]) : num(c.parsed[horizontal ? "x" : "y"])}` } },
     },
     scales: horizontal ? { x: ejeValor, y: ejeCat } : { x: ejeCat, y: ejeValor },
   };
@@ -48,24 +48,24 @@ function grafico(id, config) {
   graficos.push(new Chart(lienzo, config));
 }
 
-const barras = (label, datos, color = "#1d5c47") => ({ label, data: datos, backgroundColor: color, borderRadius: 2, borderSkipped: "start", maxBarThickness: 26 });
+const barras = (label, datos, color = "#8a4a1f") => ({ label, data: datos, backgroundColor: color, borderRadius: 2, borderSkipped: "start", maxBarThickness: 26 });
 const linea = (label, datos, color) => ({ label, data: datos, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, tension: .3 });
 
 // ---------- pantallas ----------
 
 const VISTAS = {
-  inicio: { titulo: "Inicio", chip: "pino", pintar: pintarInicio },
-  ventas: { titulo: "Ventas", chip: "ozama", pintar: pintarVentas },
-  inventario: { titulo: "Inventario", chip: "cemento", pintar: pintarInventario },
-  cobros: { titulo: "Clientes y cobros", chip: "terracota", pintar: pintarCobros },
-  pedidos: { titulo: "Pedidos", chip: "turquesa", pintar: pintarPedidos },
-  alertas: { titulo: "Alertas", chip: "oxido", pintar: pintarAlertas },
+  inicio: { titulo: "Inicio", chip: "corteza", pintar: pintarInicio },
+  ventas: { titulo: "Ventas", chip: "anil", pintar: pintarVentas },
+  inventario: { titulo: "Insumos y menú", chip: "trigo", pintar: pintarInventario },
+  cobros: { titulo: "Clientes y cobros", chip: "guayaba", pintar: pintarCobros },
+  pedidos: { titulo: "Pedidos", chip: "menta", pintar: pintarPedidos },
+  alertas: { titulo: "Alertas", chip: "cereza", pintar: pintarAlertas },
 };
 
-// Nombres de las muestras de la carta (aparecen al pasar el cursor por cada indicador)
-const NOMBRES_MUESTRA = { pino: "Verde Pino", ozama: "Azul Ozama", terracota: "Terracota", turquesa: "Turquesa Caribe", oxido: "Rojo Óxido", malva: "Malva Atardecer", carbon: "Negro Carbón", cemento: "Amarillo Cemento", perla: "Gris Perla" };
+// Nombres de las cintas de la vitrina (aparecen al pasar el cursor por cada indicador)
+const NOMBRES_MUESTRA = { corteza: "Corteza", anil: "Añil", guayaba: "Guayaba", menta: "Menta", cereza: "Cereza", mora: "Mora", cacao: "Cacao", trigo: "Trigo", harina: "Harina" };
 
-// Un indicador es una muestra: campo de color con la cifra y etiqueta blanca debajo.
+// Un indicador es una etiqueta de vitrina: cinta de color con la cifra y tarjeta blanca debajo.
 function muestra(chip, valor, nombre, nota = "") {
   return `<div class="indicador" data-chip="${chip}"><div class="campo" title="${NOMBRES_MUESTRA[chip]}"><span class="valor">${valor}</span></div><div class="etiqueta"><span class="nombre">${nombre}</span>${nota}</div></div>`;
 }
@@ -93,17 +93,17 @@ function pintarInicio(raiz) {
   const i = N.indicadoresInicio();
   raiz.innerHTML = `
     <div class="indicadores">
-      ${muestra("pino", rd(i.hoyV.ventas_sin_itbis), "Ventas de hoy", nota(`Hasta ahora, ${i.hoyV.facturas} facturas. Hace una semana cerró en ${rd(i.mismoDiaSemanaPasada.ventas_sin_itbis)}`))}
-      ${muestra("ozama", rd(i.mes.ventas_sin_itbis), `Ventas de ${nombreMes(d.hoy)}`, variacion(i.mes.ventas_sin_itbis, i.mesAnt.ventas_sin_itbis, "vs. el mismo corte del mes pasado"))}
-      ${muestra("malva", porcentaje(i.mes.margen_pct), "Margen bruto del mes", nota(`${rd(i.mes.margen_bruto)} de ganancia bruta`))}
-      ${muestra("terracota", rd(i.cxc.total_por_cobrar), "Por cobrar", nota(`<span class="baja">${rd(i.cxc.total_vencido)}</span> vencido`))}
-      ${muestra("cemento", i.bajoMinimo, "Bajo el mínimo", nota("productos, en al menos una sucursal"))}
-      ${muestra("turquesa", i.abiertos, "Pedidos abiertos", nota(`${N.todosLosPedidos().filter((p) => p.canal === "WhatsApp" && p.fecha === d.hoy).length} por WhatsApp hoy`))}
+      ${muestra("corteza", rd(i.hoyV.ventas_sin_itbis), "Ventas de hoy", nota(`Hasta ahora, ${i.hoyV.facturas} facturas. Hace una semana cerró en ${rd(i.mismoDiaSemanaPasada.ventas_sin_itbis)}`))}
+      ${muestra("anil", rd(i.mes.ventas_sin_itbis), `Ventas de ${nombreMes(d.hoy)}`, variacion(i.mes.ventas_sin_itbis, i.mesAnt.ventas_sin_itbis, "vs. el mismo corte del mes pasado"))}
+      ${muestra("mora", porcentaje(i.mes.margen_pct), "Margen bruto del mes", nota(`${rd(i.mes.margen_bruto)} de ganancia bruta`))}
+      ${muestra("guayaba", rd(i.cxc.total_por_cobrar), "Por cobrar", nota(`<span class="baja">${rd(i.cxc.total_vencido)}</span> vencido`))}
+      ${muestra("trigo", i.bajoMinimo, "Insumos bajo el mínimo", nota("alcanzan para menos de 3 días"))}
+      ${muestra("menta", i.abiertos, "Pedidos abiertos", nota(`${N.todosLosPedidos().filter((p) => p.canal === "WhatsApp" && p.fecha === d.hoy).length} por WhatsApp hoy`))}
     </div>
     <div class="fila">
       <div class="tarjeta"><h2 class="muestra-titulo">Ventas por día</h2><p class="sub">Últimos 30 días, sin ITBIS</p><div class="grafico"><canvas id="g-dias"></canvas></div></div>
       <div class="tarjeta"><h2 class="muestra-titulo">Ventas por semana y sucursal</h2><p class="sub">Últimas 12 semanas completas, sin ITBIS</p>
-        <div class="leyenda"><span><i class="serie-1"></i>Herrera</span><span><i class="serie-2"></i>Villa Mella</span></div>
+        <div class="leyenda"><span><i class="serie-1"></i>Gazcue</span><span><i class="serie-2"></i>Los Prados</span></div>
         <div class="grafico"><canvas id="g-sucursales"></canvas></div></div>
     </div>
     <div class="fila tres">
@@ -122,9 +122,9 @@ function pintarInicio(raiz) {
   const [a, m, dd] = d.hoy.split("-").map(Number);
   const lunes = N.sumarDias(d.hoy, -((new Date(a, m - 1, dd).getDay() + 6) % 7));
   const semanas = { desde: N.sumarDias(lunes, -84), hasta: N.sumarDias(lunes, -1), agruparPor: "semana" };
-  const sh = N.resumenVentas({ ...semanas, sucursal: "Herrera" }).grupos;
-  const sv = N.resumenVentas({ ...semanas, sucursal: "Villa Mella" }).grupos;
-  grafico("g-sucursales", { type: "line", data: { labels: sh.map((g) => `Sem. ${fechaCorta(g.grupo)}`), datasets: [linea("Herrera", sh.map((g) => g.ventas), "#2a63ad"), linea("Villa Mella", sv.map((g) => g.ventas), "#c75a2a")] }, options: opcionesBase() });
+  const sh = N.resumenVentas({ ...semanas, sucursal: "Gazcue" }).grupos;
+  const sv = N.resumenVentas({ ...semanas, sucursal: "Los Prados" }).grupos;
+  grafico("g-sucursales", { type: "line", data: { labels: sh.map((g) => `Sem. ${fechaCorta(g.grupo)}`), datasets: [linea("Gazcue", sh.map((g) => g.ventas), "#2a63ad"), linea("Los Prados", sv.map((g) => g.ventas), "#c75a2a")] }, options: opcionesBase() });
 
   const cats = N.resumenVentas({ desde: `${d.hoy.slice(0, 8)}01`, agruparPor: "categoria" }).grupos;
   grafico("g-categorias", { type: "bar", data: { labels: cats.map((g) => g.grupo), datasets: [barras("Ventas", cats.map((g) => g.ventas))] }, options: opcionesBase({ horizontal: true }) });
@@ -144,7 +144,7 @@ function insigniaCanal(canal) {
 function pintarListaAlertas(ul, lista) {
   if (!lista.length) { ul.innerHTML = `<li class="unico"><p class="vacio">No hay alertas activas.</p></li>`; return; }
   const nombre = { alta: "Urgente", media: "Atender", baja: "Revisar" };
-  const chip = { alta: "oxido", media: "cemento", baja: "ozama" };
+  const chip = { alta: "cereza", media: "trigo", baja: "anil" };
   ul.innerHTML = lista.map((a) => `<li data-chip="${chip[a.gravedad]}"><span class="campo">${nombre[a.gravedad]}</span><div class="texto"><b>${escapar(a.titulo)}</b><span>${escapar(a.detalle)}</span></div></li>`).join("");
 }
 
@@ -162,20 +162,21 @@ function pintarVentas(raiz) {
       <select id="sel-sucursal" aria-label="Sucursal"><option value="">Todas las sucursales</option>${N.SUCURSALES.map((s) => `<option ${s.nombre === filtroVentas.sucursal ? "selected" : ""}>${s.nombre}</option>`).join("")}</select>
     </div>
     <div class="indicadores">
-      ${muestra("ozama", rd(r.ventas_sin_itbis), "Ventas sin ITBIS", variacion(r.ventas_sin_itbis, previo.ventas_sin_itbis, "vs. periodo anterior"))}
-      ${muestra("malva", porcentaje(r.margen_pct), "Margen bruto", nota(`${rd(r.margen_bruto)} de ganancia bruta`))}
-      ${muestra("turquesa", num(r.facturas), "Facturas", variacion(r.facturas, previo.facturas, "vs. periodo anterior"))}
-      ${muestra("pino", rd(r.ticket_promedio), "Ticket promedio", variacion(r.ticket_promedio, previo.ticket_promedio, "vs. periodo anterior"))}
+      ${muestra("anil", rd(r.ventas_sin_itbis), "Ventas sin ITBIS", variacion(r.ventas_sin_itbis, previo.ventas_sin_itbis, "vs. periodo anterior"))}
+      ${muestra("mora", porcentaje(r.margen_pct), "Margen bruto", nota(`${rd(r.margen_bruto)} de ganancia bruta`))}
+      ${muestra("menta", num(r.facturas), "Facturas", variacion(r.facturas, previo.facturas, "vs. periodo anterior"))}
+      ${muestra("corteza", rd(r.ticket_promedio), "Ticket promedio", variacion(r.ticket_promedio, previo.ticket_promedio, "vs. periodo anterior"))}
     </div>
     <div class="tarjeta"><h2 class="muestra-titulo">Ventas por ${agrupar === "dia" ? "día" : "semana"}</h2><p class="sub">${fechaCorta(desde)} al ${fechaCorta(d.hoy)}${suc ? ` · ${suc}` : ""}</p><div class="grafico"><canvas id="g-ventas"></canvas></div></div>
     <div class="fila">
       <div class="tarjeta"><h2 class="muestra-titulo">Por categoría</h2><p class="sub">Ventas, margen y participación</p><div class="tabla-envoltura" id="t-cat"></div></div>
       <div class="tarjeta"><h2 class="muestra-titulo">Por vendedor</h2><p class="sub">Ventas, facturas y margen</p><div class="tabla-envoltura" id="t-ven"></div></div>
     </div>
-    <div class="tarjeta"><h2 class="muestra-titulo">Productos más vendidos</h2><p class="sub">Por monto vendido en el periodo</p><div class="tabla-envoltura" id="t-prod"></div></div>`;
+    <div class="tarjeta"><h2 class="muestra-titulo">Productos más vendidos</h2><p class="sub">Por monto vendido en el periodo</p><div class="tabla-envoltura" id="t-prod"></div></div>
+    <div class="tarjeta" id="consignacion"></div>`;
 
   const serie = N.resumenVentas({ desde, sucursal: suc, agruparPor: agrupar }).grupos;
-  grafico("g-ventas", { type: "bar", data: { labels: serie.map((g) => (agrupar === "dia" ? fechaCorta(g.grupo) : `Sem. ${fechaCorta(g.grupo)}`)), datasets: [barras("Ventas", serie.map((g) => g.ventas), "#1d4f8f")] }, options: opcionesBase() });
+  grafico("g-ventas", { type: "bar", data: { labels: serie.map((g) => (agrupar === "dia" ? fechaCorta(g.grupo) : `Sem. ${fechaCorta(g.grupo)}`)), datasets: [barras("Ventas", serie.map((g) => g.ventas), "#2e4f8f")] }, options: opcionesBase() });
 
   const cat = N.resumenVentas({ desde, sucursal: suc, agruparPor: "categoria" }).grupos;
   $("#t-cat").innerHTML = tabla(["Categoría", "Ventas", "Margen", "Part."], cat.map((g) => [escapar(g.grupo), rd(g.ventas), porcentaje(g.margen_pct), porcentaje(g.participacion_pct)]));
@@ -184,8 +185,25 @@ function pintarVentas(raiz) {
   const prod = N.resumenVentas({ desde, sucursal: suc, agruparPor: "producto", limite: 10 }).grupos;
   $("#t-prod").innerHTML = tabla(["Producto", "Unidades", "Ventas", "Margen"], prod.map((g) => [escapar(g.grupo.replace(/^\S+\s/, "")), num(g.unidades), rd(g.ventas), porcentaje(g.margen_pct)]));
 
+  pintarConsignacion($("#consignacion"));
   raiz.querySelectorAll("#seg-dias button").forEach((b) => b.addEventListener("click", () => { filtroVentas.dias = Number(b.dataset.dias); mostrar("ventas"); }));
   $("#sel-sucursal").addEventListener("change", (e) => { filtroVentas.sucursal = e.target.value; mostrar("ventas"); });
+}
+
+// Consignación en la cadena de minimarkets: entregado contra lo que reporta vendido su PDF.
+function pintarConsignacion(caja) {
+  const c = N.consignacion();
+  const hay = c.total_vendido !== null;
+  caja.innerHTML = `<div class="cabecera"><div><h2 class="muestra-titulo">Consignación en ${escapar(c.cliente)}</h2><p class="sub">Empacados entregados del ${fechaCorta(c.periodo.slice(0, 10))} al ${fechaCorta(c.periodo.slice(-10))} y lo que la cadena reporta vendido${hay ? ` (reporte importado el ${escapar(c.reporte.importado)})` : ""}</p></div><button class="boton secundario pequeno" id="importar-reporte" type="button">Importar reporte de ventas (PDF)</button></div>
+    ${hay ? `<div class="indicadores">${muestra("anil", num(c.total_entregado), "Entregado", nota("unidades en la semana"))}${muestra("corteza", num(c.total_vendido), "Vendido", nota("según el reporte de la cadena"))}${muestra("trigo", num(c.total_entregado - c.total_vendido), "En las tiendas", nota("entregado menos vendido"))}${muestra("menta", rd(c.total_a_liquidar), "A liquidar", nota(`descontado el ${c.comision_de_la_cadena_pct} % de la cadena`))}</div>` : `<p class="vacio">Todavía no se ha importado el reporte de ventas de esta semana. Mientras tanto, lo vendido aparece como pendiente, nunca como cero.</p>`}
+    <div class="tabla-envoltura"><table><thead><tr><th>Tienda</th><th class="n">Entregado</th><th class="n">Vendido</th><th class="n">En tienda</th><th class="n">A liquidar</th><th>Revisar</th></tr></thead><tbody>
+    ${c.tiendas.map((t) => {
+      const raros = t.productos.filter((x) => x.revisar);
+      return `<tr><td>${escapar(t.tienda)}<span class="detalle">${t.productos.map((x) => `${escapar(x.producto.replace(/ \(.*\)$/, ""))}: ${x.vendido ?? "?"}/${x.entregado}`).join(" · ")}</span></td><td class="n">${num(t.entregado)}</td><td class="n">${hay ? num(t.vendido) : '<span class="insignia">pendiente</span>'}</td><td class="n">${hay ? num(t.entregado - t.vendido) : "—"}</td><td class="n">${hay ? rd(t.a_liquidar) : "—"}</td><td>${raros.length ? raros.map((x) => `<span class="insignia alta">${escapar(x.producto.replace(/ \(.*\)$/, ""))}: ${escapar(x.revisar)}</span>`).join(" ") : hay ? '<span class="insignia ok">Cuadra</span>' : ""}</td></tr>`;
+    }).join("")}
+    </tbody></table></div>
+    ${hay && c.reporte.no_reconocidas?.length ? `<p class="sub">En el reporte, pero no son productos de El Trigal: ${escapar(c.reporte.no_reconocidas.join("; "))}</p>` : ""}`;
+  $("#importar-reporte", caja).addEventListener("click", abrirImportar);
 }
 
 function tabla(cabeceras, filas) {
@@ -196,43 +214,43 @@ let filtroInv = { texto: "", categoria: "", bajo: false };
 function pintarInventario(raiz) {
   raiz.innerHTML = `
     <div class="filtros">
-      <input type="search" id="inv-texto" placeholder="Buscar producto…" value="${escapar(filtroInv.texto)}" aria-label="Buscar producto">
-      <select id="inv-cat" aria-label="Categoría"><option value="">Todas las categorías</option>${N.CATEGORIAS.map((c) => `<option ${c === filtroInv.categoria ? "selected" : ""}>${c}</option>`).join("")}</select>
+      <input type="search" id="inv-texto" placeholder="Buscar insumo…" value="${escapar(filtroInv.texto)}" aria-label="Buscar insumo">
+      <select id="inv-cat" aria-label="Categoría"><option value="">Todas las categorías</option>${N.CATEGORIAS_INSUMOS.map((c) => `<option ${c === filtroInv.categoria ? "selected" : ""}>${c}</option>`).join("")}</select>
       <label class="interruptor"><input type="checkbox" id="inv-bajo" ${filtroInv.bajo ? "checked" : ""}> Solo bajo el mínimo</label>
     </div>
-    <div class="tarjeta"><div class="tabla-envoltura sin-recorte" id="t-inv"></div></div>`;
+    <div class="tarjeta"><h2 class="muestra-titulo">Insumos de producción</h2><p class="sub">Lo que hay en cada sucursal y para cuántos días alcanza. El mínimo es lo que se usa en 3 días.</p><div class="tabla-envoltura sin-recorte" id="t-inv"></div></div>
+    <div class="tarjeta"><h2 class="muestra-titulo">Menú</h2><p class="sub">Precio, margen y unidades vendidas en los últimos 30 días</p><div class="tabla-envoltura" id="t-menu"></div></div>`;
+  const dec = (n) => Number(n).toLocaleString("en-US", { maximumFractionDigits: 1 });
+  const dias = (n) => (n <= 2 ? `<span class="insignia alta">${dec(n)}</span>` : n < 3 ? `<span class="insignia media">${dec(n)}</span>` : dec(n));
   const dibujar = () => {
-    const r = N.buscarProductos({ texto: filtroInv.texto || undefined, categoria: filtroInv.categoria || undefined, soloBajoMinimo: filtroInv.bajo, limite: 400 });
-    if (!r.encontrados) { $("#t-inv").innerHTML = `<p class="vacio">Ningún producto coincide con la búsqueda. Pruebe con otra palabra o quite los filtros.</p>`; return; }
-    $("#t-inv").innerHTML = `<p class="sub">${r.encontrados} productos</p><table class="tabla-fija"><thead><tr><th>Producto</th><th class="n">Herrera</th><th class="n">Villa Mella</th><th class="n">Vendidas 30 días</th><th class="n">Días de inventario</th><th class="n">Precio</th><th class="n">Margen</th></tr></thead><tbody>${r.productos.map((p) => {
-      const bajoH = p.stock.Herrera < p.minimo_herrera, bajoV = p.stock["Villa Mella"] < p.minimo_villa_mella;
-      const dias = p.dias_de_inventario;
-      return `<tr><td>${escapar(p.nombre)}<span class="detalle">${p.codigo} · ${escapar(p.categoria)}</span></td>
-        <td class="n">${num(p.stock.Herrera)} ${bajoH ? '<span class="insignia alta">bajo</span>' : ""}</td>
-        <td class="n">${num(p.stock["Villa Mella"])} ${bajoV ? '<span class="insignia alta">bajo</span>' : ""}</td>
-        <td class="n">${num(p.unidades_vendidas_30_dias)}</td>
-        <td class="n">${dias === null ? '<span class="insignia baja">sin ventas</span>' : dias <= 5 ? `<span class="insignia alta">${dias}</span>` : num(dias)}</td>
-        <td class="n">${rd(p.precio_sin_itbis)}</td><td class="n">${porcentaje(p.margen_pct)}</td></tr>`;
-    }).join("")}</tbody></table>`;
+    const r = N.consultarInsumos({ texto: filtroInv.texto || undefined, categoria: filtroInv.categoria || undefined, soloBajoMinimo: filtroInv.bajo, limite: 400 });
+    if (!r.encontrados) { $("#t-inv").innerHTML = `<p class="vacio">Ningún insumo coincide con la búsqueda. Pruebe con otra palabra o quite los filtros.</p>`; return; }
+    $("#t-inv").innerHTML = `<p class="sub">${r.encontrados} insumos, primero los que menos alcanzan</p><table class="tabla-fija"><thead><tr><th>Insumo</th><th class="n">Gazcue</th><th class="n">Días</th><th class="n">Los Prados</th><th class="n">Días</th><th class="n">Costo</th></tr></thead><tbody>${r.insumos.map((x) => `
+      <tr><td>${escapar(x.nombre)}<span class="detalle">${x.codigo} · ${escapar(x.categoria)} · ${escapar(x.proveedor)}</span></td>
+        <td class="n">${dec(x.existencia.Gazcue)}<span class="detalle">usa ${dec(x.uso_diario.Gazcue)}/día</span></td><td class="n">${dias(x.dias_que_alcanza.Gazcue)}</td>
+        <td class="n">${dec(x.existencia["Los Prados"])}<span class="detalle">usa ${dec(x.uso_diario["Los Prados"])}/día</span></td><td class="n">${dias(x.dias_que_alcanza["Los Prados"])}</td>
+        <td class="n">${rd(x.costo)}<span class="detalle">por ${escapar(x.unidad)}</span></td></tr>`).join("")}</tbody></table>`;
   };
   dibujar();
+  const menu = N.buscarProductos({ limite: 400, orden: "mas_vendidos" });
+  $("#t-menu").innerHTML = `<table><thead><tr><th>Producto</th><th class="n">Precio</th><th class="n">Margen</th><th class="n">Vendidas 30 días</th></tr></thead><tbody>${menu.productos.map((p) => `<tr><td>${escapar(p.nombre)}<span class="detalle">${p.codigo} · ${escapar(p.categoria)}${p.por_encargo ? ` · por encargo (${p.anticipacion_horas >= 48 ? `${p.anticipacion_horas / 24} días` : `${p.anticipacion_horas} h`})` : ""}</span></td><td class="n">${rd(p.precio_sin_itbis)}</td><td class="n">${porcentaje(p.margen_pct)}</td><td class="n">${p.unidades_vendidas_30_dias ? num(p.unidades_vendidas_30_dias) : '<span class="insignia baja">sin ventas</span>'}</td></tr>`).join("")}</tbody></table>`;
   $("#inv-texto").addEventListener("input", (e) => { filtroInv.texto = e.target.value; dibujar(); });
   $("#inv-cat").addEventListener("change", (e) => { filtroInv.categoria = e.target.value; dibujar(); });
   $("#inv-bajo").addEventListener("change", (e) => { filtroInv.bajo = e.target.checked; dibujar(); });
 }
 
-const TIPOS = { constructora: "Constructora", contratista: "Contratista", taller: "Taller", revendedor: "Revendedor", institucion: "Institución", condominio: "Condominio", maestro: "Maestro constructor", particular: "Particular" };
+const TIPOS = { hotel: "Hotel", cafeteria: "Cafetería", colmado: "Colmado", restaurante: "Restaurante", oficina: "Oficina", institucion: "Institución", catering: "Catering", particular: "Particular" };
 
 function pintarCobros(raiz) {
   const c = N.cuentasPorCobrar({ limite: 200 });
   const t = c.tramos_por_dias_de_atraso;
   raiz.innerHTML = `
     <div class="indicadores">
-      ${muestra("carbon", rd(c.total_por_cobrar), "Total por cobrar", nota(`${c.clientes_con_saldo} clientes con saldo`))}
-      ${muestra("pino", rd(t.al_dia), "Al día", nota("aún no vence"))}
-      ${muestra("cemento", rd(t["1_30"]), "Vencido 1 a 30 días")}
-      ${muestra("terracota", rd(t["31_60"]), "Vencido 31 a 60 días")}
-      ${muestra("oxido", rd(t.mas_60), "Vencido más de 60 días", nota("cobrar ya"))}
+      ${muestra("cacao", rd(c.total_por_cobrar), "Total por cobrar", nota(`${c.clientes_con_saldo} clientes con saldo`))}
+      ${muestra("corteza", rd(t.al_dia), "Al día", nota("aún no vence"))}
+      ${muestra("trigo", rd(t["1_30"]), "Vencido 1 a 30 días")}
+      ${muestra("guayaba", rd(t["31_60"]), "Vencido 31 a 60 días")}
+      ${muestra("cereza", rd(t.mas_60), "Vencido más de 60 días", nota("cobrar ya"))}
     </div>
     <div class="tarjeta"><h2 class="muestra-titulo">Clientes con saldo</h2><p class="sub">Ordenados por monto vencido</p><div class="tabla-envoltura">
       <table><thead><tr><th>Cliente</th><th class="n">Saldo</th><th class="n">Vencido</th><th class="n">Atraso mayor</th><th class="n">Límite de crédito</th><th>Situación</th></tr></thead><tbody>
@@ -241,8 +259,8 @@ function pintarCobros(raiz) {
       </tbody></table></div></div>`;
 }
 
-const CHIP_ESTADO = { nuevo: "cemento", "en preparación": "ozama", "listo para entrega": "pino", "en ruta": "malva", entregado: "perla" };
-const CHIP_CANAL = { WhatsApp: "whatsapp", "Teléfono": "ozama", Mostrador: "perla", Correo: "malva" };
+const CHIP_ESTADO = { nuevo: "trigo", "en preparación": "anil", "listo para entrega": "corteza", "en ruta": "mora", entregado: "harina" };
+const CHIP_CANAL = { WhatsApp: "whatsapp", "Teléfono": "anil", Mostrador: "harina", Correo: "mora" };
 let ultimoPedidoNuevo = null;
 function pintarPedidos(raiz) {
   const d = N.datos();
@@ -255,11 +273,12 @@ function pintarPedidos(raiz) {
       // "Entregado hoy": los de hoy y los que se entregaron durante la demo.
       const lista = pedidos.filter((p) => p.estado === e && (e !== "entregado" || p.fecha === d.hoy || p.cambioEnLaDemo));
       return `<div class="columna" data-chip="${CHIP_ESTADO[e]}"><h3><span>${e[0].toUpperCase() + e.slice(1)}${e === "entregado" ? " hoy" : ""}</span><span>${lista.length}</span></h3>${lista.length ? "" : `<p class="vacio">Sin pedidos</p>`}${lista.map((p) => `
-        <div class="pedido ${p.id === ultimoPedidoNuevo ? "nuevo-llegado" : ""}" data-chip="${CHIP_CANAL[p.canal] ?? "perla"}">
+        <div class="pedido ${p.id === ultimoPedidoNuevo ? "nuevo-llegado" : ""}" data-chip="${CHIP_CANAL[p.canal] ?? "harina"}">
           <div class="franja"><b>${p.id}</b><small>${escapar(p.canal)}${ORIGEN[p.origen] ? ` · ${ORIGEN[p.origen]}` : ""}</small></div>
           <div class="cuerpo">
             <div class="cliente">${escapar(p.cliente)}<span class="cuando">${p.fecha === d.hoy ? "Hoy" : fechaCorta(p.fecha)} ${p.hora} · ${escapar(p.entrega)}${p.direccion ? ` · ${escapar(p.direccion)}` : ""}</span></div>
             <div class="articulos">${p.items.map((i) => `${num(i.cantidad)} × ${escapar(i.nombre)}`).join("<br>")}</div>
+            ${p.para_cuando ? `<div class="nota-pedido"><b>Para:</b> ${escapar(p.para_cuando)}</div>` : ""}
             ${p.nota ? `<div class="nota-pedido">${escapar(p.nota)}</div>` : ""}
             ${p.novedad ? `<div class="novedad"><b>Novedad:</b> ${escapar(p.novedad)}</div>` : ""}
             <div class="pie-pedido"><span class="total">${rd(p.total)}</span>${e !== "entregado" ? `<button class="boton secundario pequeno" data-avanzar="${p.id}">Avanzar</button>` : ""}</div>
@@ -304,11 +323,11 @@ function aviso(texto) {
 
 const SUGERENCIAS = [
   "¿Cómo van las ventas de este mes comparadas con el mes pasado?",
-  "¿Qué productos tengo que reponer esta semana?",
+  "¿Qué insumos tengo que comprar esta semana?",
   "¿Quiénes me deben más de 30 días?",
-  "¿Por qué bajó el margen de las pinturas?",
-  "¿Cómo le va a la sucursal de Villa Mella?",
-  "¿Entraron pedidos por WhatsApp hoy?",
+  "¿Por qué bajó el margen de los bizcochos?",
+  "¿Cómo le va a la sucursal de Los Prados?",
+  "¿Qué encargos de bizcocho tengo pendientes?",
 ];
 const conversacion = new Conversacion("panel");
 
@@ -320,7 +339,7 @@ function abrirAsistente(abrir = true) {
 function reiniciarChat() {
   conversacion.reiniciar();
   $("#chat").innerHTML = `<div class="bienvenida"><b>Pregunte lo que quiera saber del negocio, en sus palabras.</b> Las respuestas salen de las mismas cifras que ve en el panel.</div>`;
-  const colores = ["pino", "ozama", "terracota", "turquesa", "oxido", "malva"];
+  const colores = ["corteza", "anil", "guayaba", "menta", "cereza", "mora"];
   $("#sugerencias").innerHTML = SUGERENCIAS.map((s, i) => `<button class="chip" type="button" data-chip="${colores[i % colores.length]}"><span>${escapar(s)}</span></button>`).join("");
   $("#sugerencias").classList.remove("oculto");
 }

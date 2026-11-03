@@ -1,24 +1,24 @@
 ---
-name: Ferretería Los Pinos · Carta de colores
-description: Business panel, start page and live view of a fictional Dominican hardware store, designed as the paint fan deck from the shop counter.
+name: Panadería El Trigal · Etiquetas de vitrina
+description: Business panel, start page and live view of a fictional Dominican bakery, designed as the labels of the bakery display case.
 colors:
-  carton: "#efeee9"
+  carton: "#f3ece1"
   papel: "#ffffff"
-  papel-2: "#f8f7f4"
-  tinta: "#1c1f1d"
-  tinta-2: "#4a524d"
-  tinta-3: "#5d655f"
-  linea: "#dedcd5"
-  linea-2: "#c9c6bd"
-  pino: "#1d5c47"
-  ozama: "#1d4f8f"
-  terracota: "#a8461f"
-  turquesa: "#0e6f6c"
-  oxido: "#9b2b1f"
-  malva: "#6b4c8a"
-  carbon: "#1c1f1d"
-  cemento: "#f0bf2e"
-  perla: "#dcd8cf"
+  papel-2: "#faf6ef"
+  tinta: "#241c17"
+  tinta-2: "#54473e"
+  tinta-3: "#66574c"
+  linea: "#e4d9ca"
+  linea-2: "#cdbdaa"
+  corteza: "#8a4a1f"
+  anil: "#2e4f8f"
+  guayaba: "#b0364f"
+  menta: "#1b6b5c"
+  cereza: "#9e2424"
+  mora: "#5f3b78"
+  cacao: "#2b1e18"
+  trigo: "#ebbb4c"
+  harina: "#e9dfd0"
   whatsapp: "#128c4a"
   serie-1: "#2a63ad"
   serie-2: "#c75a2a"
@@ -80,12 +80,12 @@ components:
     rounded: "{rounded.muestra}"
     padding: "10px 16px"
   kpi-muestra:
-    backgroundColor: "{colors.pino}"
+    backgroundColor: "{colors.corteza}"
     textColor: "{colors.papel}"
     rounded: "{rounded.muestra}"
     padding: "16px 14px 18px"
   tag-ficticio:
-    backgroundColor: "{colors.cemento}"
+    backgroundColor: "{colors.trigo}"
     textColor: "{colors.tinta}"
     rounded: "{rounded.cuadro}"
     padding: "6px 11px"
@@ -96,54 +96,56 @@ components:
     padding: "10px 12px"
 ---
 
-# Design System: Ferretería Los Pinos · Carta de colores
+# Design System: Panadería El Trigal · Etiquetas de vitrina
 
 Applies to `public/panel.html`, `public/index.html`, `public/en-vivo.html` (stylesheet `public/css/estilos.css`). The WhatsApp window (`public/whatsapp.html`, `public/css/whatsapp.css`) is deliberately outside this system: it must keep looking like WhatsApp.
 
 ## Overview
 
-**Creative North Star: "La carta de colores"**
+**Creative North Star: "Las etiquetas de la vitrina"**
 
-The business panel of a hardware store, designed as the paint fan deck every Dominican hardware owner has fanned open on the counter. Every number is a paint chip: a saturated colour field carrying the figure, with a white label strip below naming it. Navigation is a stack of strips, and the active section is pulled out of the deck. The start page is the deck itself, fanned open on its pivot.
+The business panel of a bakery, designed as the labels and ribbons of the display case and the cake boxes. Every number is a label: a saturated ribbon of colour carrying the figure, with a white card below naming it. Navigation is a stack of labels, and the active section is pulled out of the row. The start page is three labels tied with twine, fanned open on the knot.
 
-It is built for screen sharing in a webinar: high contrast, large figures, one obvious focal point per view, and colour that always comes with a written label. It refuses the generic SaaS dashboard of identical white cards. The owner should see their own shop, not software.
+It is built for screen sharing in a webinar: high contrast, large figures, one obvious focal point per view, and colour that always comes with a written label. It refuses the generic SaaS dashboard of identical white cards. The owner should see their own bakery, not software.
+
+History: the system began as "Carta de colores" (a paint fan deck) for a bakery; on 03/11/2026 the fictional company became a bakery and the same skeleton was rethemed. Layout, components and rules did not change; colours, names and the logo did.
 
 **Key Characteristics:**
-- Saturated chip fields with white label strips; no gradients.
-- Warm grey card-stock ground; near-black ink.
+- Saturated ribbon fields with white cards; no gradients.
+- Warm kraft-paper ground; warm near-black ink.
 - One typeface: SF Pro on Apple devices, Inter (bundled, near-identical) everywhere else; bold with tightened spacing for titles and figures.
 - Small, crisp corners (4px), soft paper shadows.
 - Colour identifies sections and states; it is always paired with text.
 
 ## Colors
 
-A full palette of named paint chips on a neutral card-stock ground. Each colour is a chip with a name, used as a whole field, not as a thin accent.
+A full palette of named bakery colours on a kraft-paper ground. Each colour is a ribbon with a name, used as a whole field, not as a thin accent.
 
-### Chips (section and state colours)
-- **Verde Pino** (#1d5c47): brand and Inicio; positive results; the AI answer band; single-series charts.
-- **Azul Ozama** (#1d4f8f): Ventas; "Teléfono" orders; "En preparación"; low-severity alerts.
-- **Amarillo Cemento** (#f0bf2e): Inventario; "Nuevo" orders; "Atender" alerts; the "Datos ficticios" tag; selection and focus ring. Takes ink text, never white.
-- **Terracota** (#a8461f): Clientes y cobros; 31–60 days overdue.
-- **Turquesa Caribe** (#0e6f6c): Pedidos.
-- **Rojo Óxido** (#9b2b1f): Alertas; "Urgente"; more than 60 days overdue; counters.
-- **Malva Atardecer** (#6b4c8a): margin figures; "En ruta"; "Correo" orders.
-- **Negro Carbón** (#1c1f1d): the AI assistant chip and primary buttons.
-- **Gris Perla** (#dcd8cf): "Mostrador" orders; delivered; neutral tags. Takes ink text.
+### Ribbons (section and state colours)
+- **Corteza** (#8a4a1f, crust brown): brand and Inicio; "Listo para entrega"; positive results; the AI answer band; single-series charts.
+- **Añil** (#2e4f8f): Ventas; "Teléfono" orders; "En preparación"; low-severity alerts.
+- **Trigo** (#ebbb4c): Insumos y menú; "Nuevo" orders; "Atender" alerts; the "Datos ficticios" tag; selection and focus ring. Takes ink text, never white.
+- **Guayaba** (#b0364f): Clientes y cobros; 31–60 days overdue.
+- **Menta** (#1b6b5c): Pedidos.
+- **Cereza** (#9e2424): Alertas; "Urgente"; more than 60 days overdue; counters.
+- **Mora** (#5f3b78): margin figures; "En ruta"; "Correo" orders.
+- **Cacao** (#2b1e18): the AI assistant label and primary buttons.
+- **Harina** (#e9dfd0): "Mostrador" orders; delivered; neutral tags. Takes ink text.
 - **Verde WhatsApp** (#128c4a): anything that came through WhatsApp.
 
 ### Chart series
-- **Azul Herrera** (#2a63ad) and **Terracota Villa Mella** (#c75a2a): the two-branch comparison. This pair passes the colour-blindness validator; keep it as the only two-series pair.
+- **Azul Gazcue** (#2a63ad) and **Naranja Los Prados** (#c75a2a): the two-branch comparison. This pair passes the colour-blindness validator; keep it as the only two-series pair.
 
 ### Neutral
-- **Cartón** (#efeee9): page ground.
-- **Papel** (#ffffff) / **Papel 2** (#f8f7f4): cards, label strips, drawer ground.
-- **Tinta** (#1c1f1d), **Tinta 2** (#4a524d), **Tinta 3** (#5d655f): text, secondary text, muted text (all at least 5:1 on Cartón).
-- **Línea** (#dedcd5) / **Línea 2** (#c9c6bd): dividers and control borders.
+- **Estraza** (#f3ece1): page ground (token `--carton`).
+- **Papel** (#ffffff) / **Papel 2** (#faf6ef): cards, label cards, drawer ground.
+- **Tinta** (#241c17), **Tinta 2** (#54473e), **Tinta 3** (#66574c): text, secondary text, muted text (all at least 5:1 on Estraza).
+- **Línea** (#e4d9ca) / **Línea 2** (#cdbdaa): dividers and control borders.
 
 ### Named Rules
 **The Chip Rule.** Colour lives in whole fields (a chip, a column header, an order band), never as a thin coloured edge on a white box.
 **The Label Rule.** Every colour carries a written label next to it (metric name, state word, channel name). Colour never carries meaning alone.
-**The Ink-on-Light Rule.** Amarillo Cemento and Gris Perla take Tinta text; every other chip takes white.
+**The Ink-on-Light Rule.** Trigo and Harina take Tinta text; every other ribbon takes white.
 
 ## Typography
 
@@ -155,7 +157,7 @@ A full palette of named paint chips on a neutral card-stock ground. Each colour 
 - **Display** (700, clamp(42px, 5.6vw, 80px), line-height 1, -0.04em): start-page headline only.
 - **Headline** (700, 30px, -0.02em): page title in the top bar.
 - **Title** (700, 17px, -0.02em): card titles, preceded by a 14px colour square in the section colour.
-- **Figure** (700, clamp(19px, 12cqi, 34px), -0.025em, tabular): the number inside a chip, sized from the chip's width so it never truncates.
+- **Figure** (700, clamp(15px, 9.5cqi, 34px), -0.025em, tabular): the number inside a chip, sized from the chip's width so it never truncates.
 - **Body** (400, 15px, 1.45, tabular figures everywhere).
 - **Label** (700, 11px, uppercase, 0.07em tracking): table column headers only.
 
@@ -186,15 +188,15 @@ Small, crisp corners: 4px for chips, buttons, inputs and tabs; 6px for cards and
 ## Components
 
 ### Buttons
-- **Primary:** Negro Carbón with white text, 4px corners, 10px/16px padding, weight 700.
+- **Primary:** Cacao with white text, 4px corners, 10px/16px padding, weight 700.
 - **Secondary:** Papel with a 1px Línea 2 border.
-- **Focus:** a 3px Amarillo Cemento outline with a 2px offset, on every control.
+- **Focus:** a 3px Trigo outline with a 2px offset, on every control.
 
 ### KPI chip ("muestra")
 A colour field (minimum 96px tall) with the white figure at the bottom, above a white label strip holding the metric name (13.5px/700) and a note (12px). Change notes use drawn triangle icons in Sube green or Baja red.
 
 ### Navigation ("carta")
-White strips with a 16px colour square and a stroke icon. The active strip drops the square, fills with its section colour, takes white text, and moves 16px to the right, pulled out of the deck. Hover moves 6px.
+White strips with a 16px colour square and a stroke icon. The active strip drops the square, fills with its section colour, takes white text, and moves 16px to the right, pulled out of the row of labels. Hover moves 6px.
 
 ### Alerts ("muestras que se sacan")
 A row of a 104px colour field holding the state word (Urgente, Atender, Revisar) and a white text block. On hover the row slides 4px.
@@ -203,10 +205,10 @@ A row of a 104px colour field holding the state word (Urgente, Atender, Revisar)
 A colour band with the order number and channel (WhatsApp, Teléfono, Mostrador or Correo colour), then the customer, items, and total plus an "Avanzar" button. A new WhatsApp order slides in from a 7° tilt with a green ring; this is the panel's one motion moment.
 
 ### Assistant drawer
-A Negro Carbón header with a cement-yellow spark. Suggestions are strips with a colour edge chip. Answers are white cards with a Verde Pino band ("Respuesta con sus cifras", sentence case). Progress steps are colour squares that fill as each lookup completes.
+A Cacao header with a wheat-yellow spark. Suggestions are strips with a colour edge chip. Answers are white cards with a Corteza band ("Respuesta con sus cifras", sentence case). Progress steps are colour squares that fill as each lookup completes.
 
 ### Start-page fan
-Three chips (WhatsApp, Panel, Los dos a la vez) rotate on a drawn pivot (an SVG grommet). They open once on load, from closed to −59°, −25° and 0°. The front chip stays straight so its text is sharp over video.
+Three chips (WhatsApp, Panel, Los dos a la vez) rotate on a drawn twine knot (an SVG grommet). They open once on load, from closed to −59°, −25° and 0°. The front chip stays straight so its text is sharp over video.
 
 ## Do's and Don'ts
 

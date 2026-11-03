@@ -4,7 +4,7 @@
 // Vive en el navegador (localStorage) y se avisa a las otras ventanas abiertas de la
 // demo (panel y WhatsApp lado a lado) con BroadcastChannel y el evento "storage".
 
-const CLAVE = "demo-los-pinos-v1";
+const CLAVE = "demo-el-trigal-v1";
 const canal = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CLAVE) : null;
 const oyentes = new Set();
 let memoria = null; // respaldo si el navegador bloquea localStorage

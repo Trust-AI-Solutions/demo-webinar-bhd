@@ -31,34 +31,42 @@ function claudeDeGuion({ modo, mensajes }) {
     const bloques = mensajes[0].content;
     const archivo = bloques.find((b) => b.type === "document" || b.type === "image");
     const texto = bloques.find((b) => b.type === "text").text;
-    if (!archivo?.source?.data?.length || !/CATÁLOGO/.test(texto)) return { stop_reason: "end_turn", content: [{ type: "text", text: "falta el documento o el contexto" }] };
-    if (/reporte/.test(texto)) {
-      return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "reporte_de_entregas", resumen: "Hoja de ruta del camión 2 con cinco entregas.", actualizaciones: [
-        { pedido: "P-1302", estado: "entregado", nota: "Recibió Ing. Pérez en obra" },
-        { pedido: "P-1305", estado: null, nota: "Cliente ausente; volver mañana" },
-        { pedido: "P-1319", estado: "entregado", nota: "Sr. Tavárez" },
+    const nombreArchivo = texto.match(/^Archivo recibido: (.*)$/m)?.[1] ?? "";
+    if (!archivo?.source?.data?.length || !/MENÚ/.test(texto)) return { stop_reason: "end_turn", content: [{ type: "text", text: "falta el documento o el contexto" }] };
+    if (/la-canasta/.test(nombreArchivo)) {
+      const v = (tienda, codigo, unidades, texto_original = codigo) => ({ tienda, texto_original, codigo, unidades });
+      return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "reporte_de_ventas", resumen: "Reporte de ventas de Minimarkets La Canasta, cuatro tiendas.", periodo: "últimos 7 días al corte de hoy", ventas_reportadas: [
+        v("La Canasta Gazcue", "GAL-001", 19), v("La Canasta Naco", "PAN-007", 32), v("La Canasta Naco", "GAL-001", 26), v("La Canasta Piantini", "GAL-003", 35),
+        v("La Canasta Piantini", null, 6, "GALLETA COCO DOÑA LULA 12U"),
+      ], dudas: ["La galleta de coco de Piantini no es de El Trigal."] })] };
+    }
+    if (/reporte/.test(nombreArchivo)) {
+      return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "reporte_de_entregas", resumen: "Hoja de reparto de la ruta de la mañana con cinco entregas.", actualizaciones: [
+        { pedido: "P-1302", estado: "entregado", nota: "Recibió el dueño" },
+        { pedido: "P-1305", estado: null, nota: "Cafetería cerrada; volver mañana" },
+        { pedido: "P-1319", estado: "entregado", nota: "Sra. Tavárez" },
       ], dudas: ["El pedido P-1319 no existe en el panel."] })] };
     }
-    return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "orden_de_compra", resumen: "Orden de compra OC-2026-0418 de Edificaciones Brisa Norte para la obra en Villa Mella.", pedido_nuevo: {
-      cliente: "Edificaciones Brisa Norte, SRL", telefono: "809-555-1007", entrega: "envío", direccion: "Av. Hermanas Mirabal km 9, Villa Mella", sucursal: "Villa Mella", forma_pago: "crédito a 30 días", referencia: "OC-2026-0418", nota: "Entregar de 8:00 a 12:00",
-      lineas: [{ texto_original: "Cemento gris Portland 42.5 kg", codigo: "CEM-001", cantidad: 40 }, { texto_original: "Varilla corrugada 3/8\" x 20'", codigo: "ACE-001", cantidad: 60 }, { texto_original: "Malla electrosoldada 6x6 (rollo)", codigo: null, cantidad: 4 }],
-    }, dudas: ["La malla electrosoldada no está en el catálogo."] })] };
+    return { stop_reason: "tool_use", content: [uso("proponer_resultado", { tipo: "orden_de_compra", resumen: "Orden de compra OC-2026-0418 de la Cafetería El Mesón del Café para la semana.", pedido_nuevo: {
+      cliente: "Cafetería El Mesón del Café, SRL", telefono: "809-555-1007", entrega: "envío", direccion: "Calle Dr. Delgado, Gazcue", sucursal: "Gazcue", forma_pago: "crédito a 15 días", referencia: "OC-2026-0418", nota: "Entregar antes de las 7:00 a. m.",
+      lineas: [{ texto_original: "Pan de agua", codigo: "PAN-001", cantidad: 200 }, { texto_original: "Pastelitos de pollo", codigo: "SAL-001", cantidad: 80 }, { texto_original: "Pan de masa madre (hogaza)", codigo: null, cantidad: 12 }],
+    }, dudas: ["El pan de masa madre no está en el menú."] })] };
   }
   const pregunta = [...mensajes].reverse().find((m) => m.role === "user" && typeof m.content === "string").content;
   const resultado = ultimoResultado(mensajes);
   const pasos = mensajes.length - mensajes.findLastIndex((m) => m.role === "user" && typeof m.content === "string") - 1;
   if (modo === "whatsapp") {
     if (/pedido/i.test(pregunta)) {
-      if (pasos === 0) return { stop_reason: "tool_use", content: [{ type: "thinking", thinking: "", signature: "x" }, uso("registrar_pedido", { items: [{ codigo: "CEM-001", cantidad: 25 }, { codigo: "ACE-001", cantidad: 10 }], nombre_cliente: "Carlos Prueba", telefono: "809-555-7788", tipo_entrega: "envío", direccion: "Calle 5 #12, Villa Mella", forma_pago: "transferencia" })] };
+      if (pasos === 0) return { stop_reason: "tool_use", content: [{ type: "thinking", thinking: "", signature: "x" }, uso("registrar_pedido", { items: [{ codigo: "BIZ-003", cantidad: 1 }, { codigo: "SAL-001", cantidad: 25 }], nombre_cliente: "Carlos Prueba", telefono: "809-555-7788", tipo_entrega: "envío", direccion: "Calle 5 #12, Naco", forma_pago: "transferencia", para_cuando: "sábado 3:00 p. m." })] };
       return { stop_reason: "end_turn", content: [{ type: "text", text: `¡Listo! Su pedido *${resultado.pedido}* quedó registrado.\n\nTotal a pagar: *RD$${resultado.total_a_pagar.toLocaleString("en-US")}*. Sale ${resultado.cuando}.` }] };
     }
-    if (pasos === 0) return { stop_reason: "tool_use", content: [uso("buscar_productos", { texto: "cemento gris" })] };
+    if (pasos === 0) return { stop_reason: "tool_use", content: [uso("buscar_productos", { texto: "bizcocho de 3 libras" })] };
     const p = resultado.productos[0];
     return { stop_reason: "end_turn", content: [{ type: "text", text: `Sí, tenemos *${p.nombre}* a RD$${p.precio_sin_itbis} el ${p.unidad}, más ITBIS. ¿Cuántos necesita?` }] };
   }
   if (pasos === 0) return { stop_reason: "tool_use", content: [uso("resumen_ventas", { agrupar_por: "sucursal" }), uso("ver_alertas", {})] };
   const r = mensajes.at(-1).content.map((b) => JSON.parse(b.content));
-  return { stop_reason: "end_turn", content: [{ type: "text", text: `En los últimos 30 días vendió **RD$${Math.round(r[0].ventas_sin_itbis).toLocaleString("en-US")}**, con margen de ${r[0].margen_pct} %.\n\n- Herrera: RD$${Math.round(r[0].grupos[0].ventas).toLocaleString("en-US")}\n- Alertas urgentes: ${r[1].alertas.filter((a) => a.gravedad === "alta").length}` }] };
+  return { stop_reason: "end_turn", content: [{ type: "text", text: `En los últimos 30 días vendió **RD$${Math.round(r[0].ventas_sin_itbis).toLocaleString("en-US")}**, con margen de ${r[0].margen_pct} %.\n\n- Gazcue: RD$${Math.round(r[0].grupos[0].ventas).toLocaleString("en-US")}\n- Alertas urgentes: ${r[1].alertas.filter((a) => a.gravedad === "alta").length}` }] };
 }
 
 const servidor = http.createServer(async (req, res) => {
@@ -104,7 +112,7 @@ try {
   await pagina.screenshot({ path: `${CAPTURAS}portada.png` });
 
   await pagina.goto(`${base}/panel.html`);
-  const titulos = { inicio: "Inicio", ventas: "Ventas", inventario: "Inventario", cobros: "Clientes y cobros", pedidos: "Pedidos", alertas: "Alertas" };
+  const titulos = { inicio: "Inicio", ventas: "Ventas", inventario: "Insumos y menú", cobros: "Clientes y cobros", pedidos: "Pedidos", alertas: "Alertas" };
   for (const [vista, titulo] of Object.entries(titulos)) {
     await pagina.click(`#nav [data-vista=${vista}]`);
     await pagina.waitForTimeout(700);
@@ -139,11 +147,11 @@ try {
   const panel = pagina.frameLocator('iframe[title="Panel del negocio"]');
   await wa.locator(".wa-msj.tienda").first().waitFor();
   verificar(!(await wa.locator(".volver").isVisible()), "en la vista en vivo no aparece el botón Volver del WhatsApp");
-  await wa.locator("#mensaje").fill("¿Tienen cemento gris?");
+  await wa.locator("#mensaje").fill("¿A cómo está el bizcocho de 3 libras?");
   await wa.locator("#mensaje").press("Enter");
   await wa.locator(".wa-msj.tienda").nth(1).waitFor();
-  verificar(/RD\$640/.test(await wa.locator(".wa-msj.tienda").nth(1).innerText()), "WhatsApp responde el precio real del catálogo");
-  await wa.locator("#mensaje").fill("Sí, quiero hacer el pedido: 25 sacos de cemento y 10 varillas de 3/8, envío a Villa Mella");
+  verificar(/RD\$1850/.test(await wa.locator(".wa-msj.tienda").nth(1).innerText()), "WhatsApp responde el precio real del menú");
+  await wa.locator("#mensaje").fill("Sí, quiero hacer el pedido: el bizcocho y 25 pastelitos de pollo para el sábado, envío a Naco");
   await wa.locator("#enviar").click();
   await wa.locator(".wa-msj.tienda >> text=/quedó registrado/").waitFor();
   const numeroPedido = (await wa.locator(".wa-msj.tienda >> text=/quedó registrado/").innerText()).match(/P-\d+/)[0];
@@ -164,41 +172,51 @@ try {
   await pagina.goto(`${base}/panel.html#pedidos`);
   await pagina.click("#nuevo-pedido");
   const hoja = pagina.locator("dialog.hoja");
-  await hoja.locator("input[name=cliente]").fill("Constructora Ozama");
+  await hoja.locator("input[name=cliente]").fill("Hotel Brisas de Gazcue (ficticio)");
   await hoja.locator("input[name=cliente]").dispatchEvent("change");
   verificar(await hoja.locator("input[name=telefono]").inputValue() === "809-555-1000", "al escoger un cliente existente se llena su teléfono");
-  await hoja.locator(".linea-pedido .producto").fill("CEM-001 · Cemento gris tipo Portland 42.5 kg · RD$640/saco");
-  await hoja.locator(".linea-pedido .cantidad").fill("10");
-  verificar(/RD\$7,552/.test(await hoja.locator(".totales").innerText()), "el formulario calcula el total con ITBIS (10 sacos = RD$7,552)");
+  await hoja.locator(".linea-pedido .producto").fill("PAN-001 · Pan de agua · RD$10/unidad");
+  await hoja.locator(".linea-pedido .cantidad").fill("100");
+  verificar(/RD\$1,330/.test(await hoja.locator(".totales").innerText()) || /RD\$1,180/.test(await hoja.locator(".totales").innerText()), `el formulario calcula el total con ITBIS (${(await hoja.locator(".totales").innerText()).replace(/\s+/g, " ")})`);
   await hoja.locator("select[name=entrega]").selectOption("envío");
   await hoja.locator("button[type=submit]").click();
   verificar(/dirección/.test(await hoja.locator(".error").innerText()), "para envío pide la dirección");
   await hoja.locator("input[name=direccion]").fill("Av. Luperón 100");
   await pagina.screenshot({ path: `${CAPTURAS}nuevo-pedido.png` });
   await hoja.locator("button[type=submit]").click();
-  await pagina.locator('.columna[data-chip=cemento] .pedido:has-text("Constructora Ozama")').waitFor({ timeout: 3000 });
-  verificar(/a mano/.test(await pagina.locator('.pedido:has-text("Constructora Ozama")').first().innerText()), "el pedido a mano entra en Nuevo, marcado como hecho a mano");
+  await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Hotel Brisas")').waitFor({ timeout: 3000 });
+  verificar(/a mano/.test(await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Hotel Brisas")').first().innerText()), "el pedido a mano entra en Nuevo, marcado como hecho a mano");
 
   await pagina.click("#importar-documento");
   await pagina.click("dialog.hoja [data-ejemplo='0']");
   await pagina.locator("dialog.hoja [data-aplicar]").waitFor();
-  verificar(await pagina.locator("dialog.hoja tr.sin-catalogo").count() === 1, "la línea que no está en el catálogo se marca");
+  verificar(await pagina.locator("dialog.hoja tr.sin-catalogo").count() === 1, "la línea que no está en el menú se marca");
   await pagina.screenshot({ path: `${CAPTURAS}importar-orden.png` });
   await pagina.click("dialog.hoja [data-aplicar]");
-  await pagina.locator('.pedido:has-text("Brisa Norte")').waitFor({ timeout: 3000 });
-  verificar(/Cotizar aparte: 4 × Malla/.test(await pagina.locator('.pedido:has-text("Brisa Norte")').innerText()), "la orden de compra crea el pedido y anota lo que falta cotizar");
+  await pagina.locator('.pedido:has-text("Mesón del Café")').first().waitFor({ timeout: 3000 });
+  verificar(/Cotizar aparte: 12 × Pan de masa madre/.test(await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Mesón del Café")').innerText()), "la orden de compra crea el pedido y anota lo que falta cotizar");
 
   await pagina.click("#importar-documento");
   await pagina.click("dialog.hoja [data-ejemplo='1']");
   await pagina.locator("dialog.hoja [data-aplicar]").waitFor();
-  verificar(/Aplicar 2 cambios/.test(await pagina.locator("dialog.hoja [data-aplicar]").innerText()), "el reporte del chofer ignora el pedido que no existe");
+  verificar(/Aplicar 2 cambios/.test(await pagina.locator("dialog.hoja [data-aplicar]").innerText()), "la hoja del repartidor ignora el pedido que no existe");
   await pagina.screenshot({ path: `${CAPTURAS}importar-reporte.png` });
   await pagina.click("dialog.hoja [data-aplicar]");
   await pagina.waitForTimeout(300);
-  verificar(await pagina.locator('.columna[data-chip=perla] .pedido:has-text("P-1302")').count() === 1, "P-1302 pasa a Entregado");
-  verificar(/Novedad: Cliente ausente/.test(await pagina.locator('.pedido:has-text("P-1305")').innerText()), "P-1305 muestra la novedad del chofer");
+  verificar(await pagina.locator('.columna[data-chip=harina] .pedido:has-text("P-1302")').count() === 1, "P-1302 pasa a Entregado");
+  verificar(/Novedad: Cafetería cerrada/.test(await pagina.locator('.pedido:has-text("P-1305")').innerText()), "P-1305 muestra la novedad del repartidor");
   await pagina.screenshot({ path: `${CAPTURAS}pedidos-actualizados.png`, fullPage: true });
-  await pagina.evaluate(() => localStorage.removeItem("demo-los-pinos-v1"));
+  await pagina.click("#importar-documento");
+  await pagina.click("dialog.hoja [data-ejemplo='2']");
+  await pagina.locator("dialog.hoja [data-aplicar]").waitFor();
+  verificar(await pagina.locator("dialog.hoja tr.sin-catalogo").count() === 2, "el reporte de ventas marca lo que no cuadra y lo que no es de El Trigal");
+  await pagina.screenshot({ path: `${CAPTURAS}importar-ventas.png` });
+  await pagina.click("dialog.hoja [data-aplicar]");
+  await pagina.goto(`${base}/panel.html#ventas`);
+  await pagina.locator("#consignacion .indicador").first().waitFor();
+  verificar(/no cuadra|Reportan 32 vendidos y se entregaron 30/.test(await pagina.locator("#consignacion").innerText()), "Ventas muestra la consignación y lo que no cuadra");
+  await pagina.locator("#consignacion").screenshot({ path: `${CAPTURAS}consignacion.png` });
+  await pagina.evaluate(() => localStorage.removeItem("demo-el-trigal-v1"));
 
   // Clave de la demo: se escribe oculta, avisa si es incorrecta y luego deja pasar
   exigirClave = true;
@@ -206,7 +224,7 @@ try {
   await conClave.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   await conClave.goto(`${base}/whatsapp.html`);
   await conClave.evaluate(() => localStorage.clear());
-  await conClave.fill("#mensaje", "¿Tienen cemento gris?");
+  await conClave.fill("#mensaje", "¿A cómo está el bizcocho de 3 libras?");
   await conClave.press("#mensaje", "Enter");
   const campo = conClave.locator(".clave-dialogo input");
   await campo.waitFor();

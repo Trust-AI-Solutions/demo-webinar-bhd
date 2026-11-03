@@ -1,9 +1,9 @@
 // Pantalla de pedidos: formulario "Nuevo pedido" (a mano, como en el mostrador o por
-// teléfono) e "Importar PDF o foto" (la IA lee una orden de compra o el reporte del
-// chofer y propone el pedido o los cambios; una persona revisa y aplica).
+// teléfono) e "Importar PDF o foto" (la IA lee una orden de compra o la hoja del
+// repartidor y propone el pedido o los cambios; una persona revisa y aplica).
 
 import * as N from "./negocio.js";
-import { calcularLineas, costoEnvio, crearPedido, actualizarPedidos } from "./pedidos.js";
+import { calcularLineas, costoEnvio, crearPedido, actualizarPedidos, guardarReporteVentas } from "./pedidos.js";
 import { leerDocumento } from "./ia.js";
 import { rd, num, escapar } from "./formato.js";
 
@@ -11,8 +11,9 @@ const $ = (s, r = document) => r.querySelector(s);
 const TAMANO_MAXIMO_PDF = 4 * 1024 * 1024;
 const LADO_MAXIMO_FOTO = 1600;
 const EJEMPLOS = [
-  { archivo: "ejemplos/orden-de-compra-brisa-norte.pdf", nombre: "Orden de compra", detalle: "Edificaciones Brisa Norte pide materiales para una obra" },
-  { archivo: "ejemplos/reporte-de-entregas-camion-2.pdf", nombre: "Reporte del chofer", detalle: "Cómo quedaron las entregas de la ruta de hoy" },
+  { archivo: "ejemplos/orden-de-compra-meson-del-cafe.pdf", nombre: "Orden de compra", detalle: "La Cafetería El Mesón del Café pide pan y salados para la semana" },
+  { archivo: "ejemplos/reporte-de-entregas-ruta-manana.pdf", nombre: "Hoja del repartidor", detalle: "Cómo quedaron las entregas de la ruta de la mañana" },
+  { archivo: "ejemplos/reporte-ventas-la-canasta.pdf", nombre: "Reporte de ventas de La Canasta", detalle: "Lo que vendió cada tienda de los productos en consignación" },
 ];
 
 let avisar = () => {};
@@ -22,7 +23,7 @@ export const barraPedidos = () => `
   <div class="acciones-pedidos">
     <button class="boton" type="button" id="nuevo-pedido">+ Nuevo pedido</button>
     <button class="boton secundario" type="button" id="importar-documento">Importar PDF o foto</button>
-    <span class="ayuda">Un pedido de mostrador o teléfono, una orden de compra o el reporte del chofer.</span>
+    <span class="ayuda">Un pedido de mostrador o teléfono, una orden de compra o la hoja del repartidor.</span>
   </div>`;
 
 export function conectarBarra(raiz) {
@@ -50,7 +51,7 @@ const codigoDe = (texto) => (String(texto).toUpperCase().match(/^\s*([A-Z]{3}-\d
 
 export function abrirNuevoPedido() {
   const d = N.datos();
-  const { d: dialogo, cuerpo, cerrar } = hoja("Nuevo pedido", "cemento");
+  const { d: dialogo, cuerpo, cerrar } = hoja("Nuevo pedido", "trigo");
   cuerpo.innerHTML = `
     <form class="formulario-pedido" novalidate>
       <datalist id="lista-clientes">${d.clientes.map((c) => `<option value="${escapar(c.nombre)}"></option>`).join("")}</datalist>
@@ -59,15 +60,16 @@ export function abrirNuevoPedido() {
         <label class="ancho">Cliente<input name="cliente" list="lista-clientes" autocomplete="off" placeholder="Escriba el nombre: si ya es cliente, aparece en la lista" required></label>
         <label>Teléfono<input name="telefono" inputmode="tel" autocomplete="off" placeholder="809-555-0000"></label>
         <label>Canal<select name="canal"><option>Mostrador</option><option>Teléfono</option><option>Correo</option></select></label>
-        <label>Sucursal<select name="sucursal"><option value="herrera">Herrera</option><option value="villa-mella">Villa Mella</option></select></label>
+        <label>Sucursal<select name="sucursal"><option value="gazcue">Gazcue</option><option value="los-prados">Los Prados</option></select></label>
         <label>Entrega<select name="entrega"><option value="retiro en tienda">Retira en tienda</option><option value="envío">Envío</option></select></label>
         <label class="ancho direccion" hidden>Dirección de entrega<input name="direccion" autocomplete="off"></label>
-        <label>Forma de pago<select name="forma_pago"><option>efectivo</option><option>transferencia</option><option>tarjeta</option><option>crédito a 30 días</option></select></label>
+        <label>Forma de pago<select name="forma_pago"><option>efectivo</option><option>transferencia</option><option>tarjeta</option><option>crédito a 15 días</option></select></label>
+        <label>Para cuándo<input name="para_cuando" autocomplete="off" placeholder="Hoy, o la fecha y hora del encargo"></label>
       </div>
       <h3>Productos</h3>
       <div class="lineas-pedido"></div>
       <button class="boton secundario pequeno" type="button" id="agregar-linea">+ Agregar producto</button>
-      <label class="ancho">Nota<input name="nota" autocomplete="off" placeholder="Opcional: horario, quién recibe…"></label>
+      <label class="ancho">Nota<input name="nota" autocomplete="off" placeholder="Opcional: mensaje en el bizcocho, quién recibe…"></label>
       <dl class="totales"></dl>
       <p class="error" role="alert" hidden></p>
       <div class="acciones-hoja"><button class="boton secundario" type="button" data-cancelar>Cancelar</button><button class="boton" type="submit">Guardar pedido</button></div>
@@ -78,7 +80,7 @@ export function abrirNuevoPedido() {
   const agregarLinea = () => {
     const fila = document.createElement("div");
     fila.className = "linea-pedido";
-    fila.innerHTML = `<input class="producto" list="lista-productos" autocomplete="off" placeholder="Busque el producto: cemento, varilla, pintura…" aria-label="Producto"><input class="cantidad" type="number" min="1" step="1" value="1" aria-label="Cantidad"><span class="importe">—</span><button type="button" class="quitar" aria-label="Quitar producto">×</button>`;
+    fila.innerHTML = `<input class="producto" list="lista-productos" autocomplete="off" placeholder="Busque el producto: pan de agua, bizcocho, pastelito…" aria-label="Producto"><input class="cantidad" type="number" min="1" step="1" value="1" aria-label="Cantidad"><span class="importe">—</span><button type="button" class="quitar" aria-label="Quitar producto">×</button>`;
     lineas.appendChild(fila);
     $(".quitar", fila).addEventListener("click", () => { fila.remove(); if (!lineas.children.length) agregarLinea(); recalcular(); });
     $(".producto", fila).focus();
@@ -103,7 +105,7 @@ export function abrirNuevoPedido() {
 
   f.cliente.addEventListener("change", () => {
     const c = d.clientes.find((x) => x.nombre === f.cliente.value);
-    if (c) { f.telefono.value = c.telefono; f.sucursal.value = c.sucursal; if (c.credito) f.forma_pago.value = "crédito a 30 días"; }
+    if (c) { f.telefono.value = c.telefono; f.sucursal.value = c.sucursal; if (c.credito) f.forma_pago.value = "crédito a 15 días"; }
   });
   f.entrega.addEventListener("change", () => { $(".direccion", f).hidden = f.entrega.value !== "envío"; recalcular(); });
   f.addEventListener("input", recalcular);
@@ -114,13 +116,13 @@ export function abrirNuevoPedido() {
     e.preventDefault();
     const items = recalcular();
     const error = !f.cliente.value.trim() ? "Escriba el nombre del cliente."
-      : !items.length ? "Agregue al menos un producto del catálogo."
-      : lineas.querySelector(".sin-producto") ? "Hay un producto que no está en el catálogo: escójalo de la lista."
+      : !items.length ? "Agregue al menos un producto del menú."
+      : lineas.querySelector(".sin-producto") ? "Hay un producto que no está en el menú: escójalo de la lista."
       : f.entrega.value === "envío" && !f.direccion.value.trim() ? "Para envío hace falta la dirección." : "";
     const caja = $(".error", f);
     caja.textContent = error; caja.hidden = !error;
     if (error) return;
-    const p = crearPedido({ cliente: f.cliente.value.trim(), telefono: f.telefono.value.trim(), canal: f.canal.value, sucursal: f.sucursal.value, entrega: f.entrega.value, direccion: f.direccion.value.trim(), forma_pago: f.forma_pago.value, nota: f.nota.value.trim(), items, origen: "manual" });
+    const p = crearPedido({ cliente: f.cliente.value.trim(), telefono: f.telefono.value.trim(), canal: f.canal.value, sucursal: f.sucursal.value, entrega: f.entrega.value, direccion: f.direccion.value.trim(), forma_pago: f.forma_pago.value, para_cuando: f.para_cuando.value.trim(), nota: f.nota.value.trim(), items, origen: "manual" });
     if (p.error) { caja.textContent = p.error; caja.hidden = false; return; }
     cerrar();
   });
@@ -136,11 +138,17 @@ function contextoParaLaIA() {
   const d = N.datos();
   const pedidos = N.todosLosPedidos().filter((p) => p.estado !== "entregado" || p.fecha === d.hoy);
   return [
-    "CATÁLOGO (código | producto | unidad | precio sin ITBIS):",
-    ...d.productos.map((p) => `${p.codigo} | ${p.nombre} | ${p.unidad} | ${p.precio}`),
+    "MENÚ (código | producto | unidad | precio sin ITBIS | anticipación):",
+    ...d.productos.map((p) => `${p.codigo} | ${p.nombre} | ${p.unidad} | ${p.precio} | ${p.anticipacionHoras ? `${p.anticipacionHoras} horas` : "del día"}`),
     "",
     "CLIENTES (nombre | teléfono | tipo | crédito):",
     ...d.clientes.map((c) => `${c.nombre} | ${c.telefono} | ${c.tipo} | ${c.credito ? "sí" : "no"}`),
+    "",
+    `CONSIGNACIÓN EN ${d.consignacion.cliente.toUpperCase()}`,
+    "Tiendas (nombre en el panel | nombre en el reporte de la cadena):",
+    ...d.consignacion.tiendas.map((t) => `${t.nombre} | ${t.enReporte}`),
+    "Productos (código del menú | código de la cadena | nombre en el reporte de la cadena):",
+    ...d.consignacion.productos.map((p) => `${p.codigo} | ${p.codigoCliente} | ${p.nombreCliente}`),
     "",
     "PEDIDOS ABIERTOS Y ENTREGADOS HOY (número | cliente | estado | entrega):",
     ...pedidos.map((p) => `${p.id} | ${p.cliente} | ${p.estado} | ${p.entrega}`),
@@ -172,14 +180,14 @@ async function prepararArchivo(archivo) {
 }
 
 export function abrirImportar() {
-  const { d: dialogo, cuerpo, cerrar } = hoja("Importar PDF o foto", "turquesa");
+  const { d: dialogo, cuerpo, cerrar } = hoja("Importar PDF o foto", "menta");
 
   const elegir = (error = "") => {
     cuerpo.innerHTML = `
       <label class="soltar" tabindex="0">
         <input type="file" accept="application/pdf,image/jpeg,image/png,image/webp" hidden>
         <b>Arrastre aquí un PDF o una foto</b>
-        <span>o haga clic para escogerlo. Una orden de compra, una lista escrita a mano o el reporte del chofer.</span>
+        <span>o haga clic para escogerlo. Una orden de compra, una lista escrita a mano, la hoja del repartidor o el reporte de ventas de una cadena.</span>
       </label>
       ${error ? `<p class="error" role="alert">${escapar(error)}</p>` : ""}
       <h3>O pruebe con un ejemplo</h3>
@@ -204,7 +212,7 @@ export function abrirImportar() {
   };
 
   const leer = async (archivo) => {
-    cuerpo.innerHTML = `<div class="leyendo"><span class="punto-carga" aria-hidden="true"></span><div><b>Leyendo ${escapar(archivo.name)}…</b><span>La IA compara cada línea con el catálogo y los pedidos. Toma entre 10 y 40 segundos.</span></div></div>`;
+    cuerpo.innerHTML = `<div class="leyendo"><span class="punto-carga" aria-hidden="true"></span><div><b>Leyendo ${escapar(archivo.name)}…</b><span>La IA compara cada línea con el menú y los pedidos. Toma entre 10 y 40 segundos.</span></div></div>`;
     try {
       const preparado = await prepararArchivo(archivo);
       if (preparado.vista) cuerpo.insertAdjacentHTML("beforeend", `<img class="vista-foto" src="${preparado.vista}" alt="Foto que se está leyendo">`);
@@ -220,7 +228,8 @@ export function abrirImportar() {
     const d = N.datos();
     const dudas = Array.isArray(r.dudas) ? r.dudas.filter(Boolean) : [];
     const bloqueDudas = dudas.length ? `<div class="dudas"><b>Para revisar</b><ul>${dudas.map((x) => `<li>${escapar(x)}</li>`).join("")}</ul></div>` : "";
-    const cabecera = `<p class="resumen-documento"><span class="insignia">${r.tipo === "orden_de_compra" ? "Orden de compra" : r.tipo === "reporte_de_entregas" ? "Reporte de entregas" : "Otro documento"}</span> ${escapar(r.resumen ?? "")}</p>`;
+    const tipos = { orden_de_compra: "Orden de compra", reporte_de_entregas: "Reporte de entregas", reporte_de_ventas: "Reporte de ventas" };
+    const cabecera = `<p class="resumen-documento"><span class="insignia">${tipos[r.tipo] ?? "Otro documento"}</span> ${escapar(r.resumen ?? "")}</p>`;
 
     if (r.tipo === "orden_de_compra" && r.pedido_nuevo?.lineas?.length) {
       const p = r.pedido_nuevo;
@@ -234,18 +243,18 @@ export function abrirImportar() {
       const envio = costoEnvio(c.subtotal, entrega);
       const sinCatalogo = lineas.filter((l) => !l.prod).length;
       cuerpo.innerHTML = `${cabecera}
-        <dl class="datos-cliente"><div><dt>Cliente</dt><dd>${escapar(p.cliente)}</dd></div><div><dt>Teléfono</dt><dd>${escapar(p.telefono || "—")}</dd></div><div><dt>Entrega</dt><dd>${escapar(entrega)}${p.direccion ? `: ${escapar(p.direccion)}` : ""}</dd></div><div><dt>Pago</dt><dd>${escapar(p.forma_pago || "por confirmar")}</dd></div>${p.referencia ? `<div><dt>Referencia</dt><dd>${escapar(p.referencia)}</dd></div>` : ""}</dl>
-        <div class="tabla-envoltura"><table class="tabla-documento"><thead><tr><th>En el documento</th><th>En el catálogo</th><th class="n">Cant.</th><th class="n">Importe</th></tr></thead><tbody>
-        ${lineas.map((l) => `<tr class="${l.prod ? "" : "sin-catalogo"}"><td>${escapar(l.texto_original)}</td><td>${l.prod ? `${escapar(l.prod.nombre)}<span class="detalle">${l.prod.codigo} · ${rd(l.prod.precio)}/${escapar(l.prod.unidad)}</span>` : `<span class="insignia alta">No está en el catálogo</span>`}</td><td class="n">${num(l.cantidad)}</td><td class="n">${l.prod ? rd(l.prod.precio * l.cantidad) : "—"}</td></tr>`).join("")}
+        <dl class="datos-cliente"><div><dt>Cliente</dt><dd>${escapar(p.cliente)}</dd></div><div><dt>Teléfono</dt><dd>${escapar(p.telefono || "—")}</dd></div><div><dt>Entrega</dt><dd>${escapar(entrega)}${p.direccion ? `: ${escapar(p.direccion)}` : ""}</dd></div><div><dt>Pago</dt><dd>${escapar(p.forma_pago || "por confirmar")}</dd></div>${p.para_cuando ? `<div><dt>Para</dt><dd>${escapar(p.para_cuando)}</dd></div>` : ""}${p.referencia ? `<div><dt>Referencia</dt><dd>${escapar(p.referencia)}</dd></div>` : ""}</dl>
+        <div class="tabla-envoltura"><table class="tabla-documento"><thead><tr><th>En el documento</th><th>En el menú</th><th class="n">Cant.</th><th class="n">Importe</th></tr></thead><tbody>
+        ${lineas.map((l) => `<tr class="${l.prod ? "" : "sin-catalogo"}"><td>${escapar(l.texto_original)}</td><td>${l.prod ? `${escapar(l.prod.nombre)}<span class="detalle">${l.prod.codigo} · ${rd(l.prod.precio)}/${escapar(l.prod.unidad)}</span>` : `<span class="insignia alta">No está en el menú</span>`}</td><td class="n">${num(l.cantidad)}</td><td class="n">${l.prod ? rd(l.prod.precio * l.cantidad) : "—"}</td></tr>`).join("")}
         </tbody></table></div>
         <dl class="totales"><div><dt>Subtotal</dt><dd>${rd(c.subtotal)}</dd></div><div><dt>ITBIS 18 %</dt><dd>${rd(c.itbis)}</dd></div><div><dt>Envío</dt><dd>${entrega === "envío" ? (envio ? rd(envio) : "Gratis") : "—"}</dd></div><div class="total"><dt>Total</dt><dd>${rd(c.total + envio)}</dd></div></dl>
         ${bloqueDudas}
-        ${sinCatalogo ? `<p class="pie-hoja">${sinCatalogo === 1 ? "La línea que no está en el catálogo no se incluye" : `Las ${sinCatalogo} líneas que no están en el catálogo no se incluyen`}; queda anotada en el pedido para cotizarla aparte.</p>` : ""}
+        ${sinCatalogo ? `<p class="pie-hoja">${sinCatalogo === 1 ? "La línea que no está en el menú no se incluye" : `Las ${sinCatalogo} líneas que no están en el menú no se incluyen`}; queda anotada en el pedido para cotizarla aparte.</p>` : ""}
         <div class="acciones-hoja"><button class="boton secundario" type="button" data-otro>Leer otro</button><button class="boton" type="button" data-aplicar ${items.length ? "" : "disabled"}>Crear el pedido</button></div>`;
       $("[data-aplicar]", cuerpo).addEventListener("click", () => {
         const faltantes = lineas.filter((l) => !l.prod).map((l) => `${l.cantidad} × ${l.texto_original}`);
         const nota = [p.referencia ? `Orden ${p.referencia}` : "", p.nota ?? "", faltantes.length ? `Cotizar aparte: ${faltantes.join("; ")}` : ""].filter(Boolean).join(". ");
-        const nuevo = crearPedido({ cliente: p.cliente, telefono: p.telefono, canal: archivo.tipo === "image" ? "WhatsApp" : "Correo", sucursal: p.sucursal, entrega, direccion: p.direccion, forma_pago: p.forma_pago, nota, items, origen: "documento" });
+        const nuevo = crearPedido({ cliente: p.cliente, telefono: p.telefono, canal: archivo.tipo === "image" ? "WhatsApp" : "Correo", sucursal: p.sucursal, entrega, direccion: p.direccion, forma_pago: p.forma_pago, para_cuando: p.para_cuando, nota, items, origen: "documento" });
         if (nuevo.error) { avisar(nuevo.error); return; }
         cerrar();
       });
@@ -264,8 +273,37 @@ export function abrirImportar() {
         cerrar();
         avisar(`Reporte aplicado: ${aplicados.length} ${aplicados.length === 1 ? "pedido actualizado" : "pedidos actualizados"}`);
       });
+    } else if (r.tipo === "reporte_de_ventas" && r.ventas_reportadas?.length) {
+      const c = d.consignacion;
+      const prod = Object.fromEntries(c.productos.map((p) => [p.codigo, p]));
+      const entregado = Object.fromEntries(c.entregas.map((e) => [`${e.tienda}|${e.codigo}`, e.unidades]));
+      const tiendaDe = (texto) => { const t = N.normalizar(texto); return c.tiendas.find((x) => N.normalizar(x.nombre) === t || N.normalizar(x.enReporte) === t || t.includes(N.normalizar(x.nombre.replace("La Canasta ", "")))); };
+      const filas = r.ventas_reportadas.map((v) => {
+        const t = tiendaDe(v.tienda), p = prod[String(v.codigo ?? "").toUpperCase()];
+        const ent = t && p ? entregado[`${t.id}|${p.codigo}`] ?? 0 : null;
+        return { ...v, t, p, ent, unidades: Math.max(0, Math.floor(Number(v.unidades) || 0)) };
+      });
+      const validas = filas.filter((f) => f.t && f.p);
+      const total = validas.reduce((a, f) => a + f.unidades * f.p.precioLiquidar, 0);
+      cuerpo.innerHTML = `${cabecera}
+        <dl class="datos-cliente"><div><dt>Cadena</dt><dd>${escapar(c.cliente)}</dd></div><div><dt>Periodo</dt><dd>${escapar(r.periodo || "—")}</dd></div><div><dt>A liquidar</dt><dd>${rd(total)}</dd></div><div><dt>Comisión de la cadena</dt><dd>${c.comision * 100} %</dd></div></dl>
+        <div class="tabla-envoltura"><table class="tabla-documento"><thead><tr><th>Tienda</th><th>Producto</th><th class="n">Entregado</th><th class="n">Vendido</th><th class="n">Quedan</th><th class="n">A liquidar</th></tr></thead><tbody>
+        ${filas.map((f) => {
+          const raro = f.p && f.t && f.unidades > f.ent;
+          return `<tr class="${f.t && f.p && !raro ? "" : "sin-catalogo"}"><td>${escapar(f.t ? f.t.nombre : f.tienda)}</td><td>${f.p ? `${escapar(f.p.nombre)}<span class="detalle">${escapar(f.texto_original)}</span>` : `${escapar(f.texto_original)}<span class="detalle"><span class="insignia alta">No es de El Trigal</span></span>`}</td><td class="n">${f.ent ?? "—"}</td><td class="n">${num(f.unidades)}</td><td class="n">${f.p && f.t ? (raro ? `<span class="insignia alta">${f.ent - f.unidades}</span>` : num(f.ent - f.unidades)) : "—"}</td><td class="n">${f.p && f.t ? rd(f.unidades * f.p.precioLiquidar) : "—"}</td></tr>`;
+        }).join("")}
+        </tbody></table></div>
+        ${bloqueDudas}
+        <p class="pie-hoja">Las cifras en rojo no cuadran: la cadena reporta más de lo que se le entregó. Se guardan igual y quedan como alerta para revisarlas.</p>
+        <div class="acciones-hoja"><button class="boton secundario" type="button" data-otro>Leer otro</button><button class="boton" type="button" data-aplicar ${validas.length ? "" : "disabled"}>Guardar el reporte</button></div>`;
+      $("[data-aplicar]", cuerpo).addEventListener("click", () => {
+        const noReconocidas = filas.filter((f) => !f.p && f.t).map((f) => `${f.t.nombre}: ${f.texto_original} (${f.unidades})`);
+        const g = guardarReporteVentas({ lineas: validas.map((f) => ({ tienda: f.t.nombre, codigo: f.p.codigo, unidades: f.unidades, texto_original: f.texto_original })), periodo: r.periodo, noReconocidas });
+        cerrar();
+        avisar(`Reporte de ventas guardado: ${g.guardadas} líneas. La consignación está en Ventas.`);
+      });
     } else {
-      cuerpo.innerHTML = `${cabecera}${bloqueDudas}<p class="pie-hoja">No es una orden de compra ni un reporte de entregas, así que no hay nada que aplicar.</p><div class="acciones-hoja"><button class="boton" type="button" data-otro>Leer otro</button></div>`;
+      cuerpo.innerHTML = `${cabecera}${bloqueDudas}<p class="pie-hoja">No es una orden de compra, un reporte de entregas ni un reporte de ventas, así que no hay nada que aplicar.</p><div class="acciones-hoja"><button class="boton" type="button" data-otro>Leer otro</button></div>`;
     }
     $("[data-otro]", cuerpo)?.addEventListener("click", () => elegir());
   };

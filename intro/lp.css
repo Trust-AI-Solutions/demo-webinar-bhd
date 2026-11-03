@@ -1,5 +1,5 @@
-/* Intro de Ferretería Los Pinos: el mundo "Carta de colores" (muestras de
-   pintura con su etiqueta blanca) sobre el cartón de la página. La página es
+/* Intro de Panadería El Trigal: el mundo "Etiquetas de vitrina" (cintas de
+   color con su tarjeta blanca) sobre el papel de estraza de la página. La página es
    el fondo: sin placa. Un margen de 40px. */
 @font-face {
   font-family: "Inter Intro";
@@ -10,33 +10,33 @@
 }
 
 .lp {
-  --lp-pino: #1d5c47;
-  --lp-ozama: #1d4f8f;
-  --lp-terracota: #a8461f;
-  --lp-turquesa: #0e6f6c;
-  --lp-oxido: #9b2b1f;
-  --lp-cemento: #f0bf2e;
-  --lp-tinta: #1c1f1d;
-  --lp-tinta-2: #4a524d;
-  --lp-linea: #dedcd5;
+  --lp-corteza: #8a4a1f;
+  --lp-anil: #2e4f8f;
+  --lp-guayaba: #b0364f;
+  --lp-menta: #1b6b5c;
+  --lp-cereza: #9e2424;
+  --lp-trigo: #ebbb4c;
+  --lp-tinta: #241c17;
+  --lp-tinta-2: #54473e;
+  --lp-linea: #e4d9ca;
   --lp-wa: #128c4a;
 }
 
 .lp .ss-stage {
   --gutter: 40px;
-  --ss-accent: var(--lp-pino);
+  --ss-accent: var(--lp-corteza);
   --ss-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Intro", "Segoe UI", system-ui, sans-serif;
   font-family: var(--ss-font);
   overflow: hidden;
   background: transparent;
 }
 
-.lp [data-chip="pino"] { --chip: var(--lp-pino); --chip-ink: #fff; }
-.lp [data-chip="ozama"] { --chip: var(--lp-ozama); --chip-ink: #fff; }
-.lp [data-chip="terracota"] { --chip: var(--lp-terracota); --chip-ink: #fff; }
-.lp [data-chip="turquesa"] { --chip: var(--lp-turquesa); --chip-ink: #fff; }
-.lp [data-chip="oxido"] { --chip: var(--lp-oxido); --chip-ink: #fff; }
-.lp [data-chip="cemento"] { --chip: var(--lp-cemento); --chip-ink: var(--lp-tinta); }
+.lp [data-chip="corteza"] { --chip: var(--lp-corteza); --chip-ink: #fff; }
+.lp [data-chip="anil"] { --chip: var(--lp-anil); --chip-ink: #fff; }
+.lp [data-chip="guayaba"] { --chip: var(--lp-guayaba); --chip-ink: #fff; }
+.lp [data-chip="menta"] { --chip: var(--lp-menta); --chip-ink: #fff; }
+.lp [data-chip="cereza"] { --chip: var(--lp-cereza); --chip-ink: #fff; }
+.lp [data-chip="trigo"] { --chip: var(--lp-trigo); --chip-ink: var(--lp-tinta); }
 
 /* ---------- El panel: arriba a la izquierda, sale por abajo ---------- */
 .lp .lp-window {
@@ -62,7 +62,7 @@
   width: 168px;
   padding: 16px 0 16px 14px;
   border-right: 1px solid var(--lp-linea);
-  background: #f8f7f4;
+  background: #faf6ef;
 }
 
 .lp .lp-marca {
@@ -89,7 +89,7 @@
   background: var(--chip);
   border-color: transparent;
   transform: translateX(10px);
-  box-shadow: 0 1px 0 rgba(28, 31, 29, 0.06), 0 10px 18px -10px rgba(28, 31, 29, 0.35);
+  box-shadow: 0 1px 0 rgba(43, 30, 24, 0.06), 0 10px 18px -10px rgba(43, 30, 24, 0.35);
 }
 
 .lp .lp-tira__txt {
@@ -114,7 +114,7 @@
   padding: 20px;
 }
 
-/* La pregunta: un campo; la respuesta se abre debajo, sobre las muestras */
+/* La pregunta: un campo; la respuesta se abre debajo, sobre las etiquetas */
 .lp .lp-ask {
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@
 
 .lp .lp-answer__band {
   padding: 7px 14px;
-  background: var(--lp-pino);
+  background: var(--lp-corteza);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -152,7 +152,7 @@
 /* Muestras: campo de color y etiqueta blanca */
 .lp .lp-kpis {
   display: grid;
-  /* La muestra con palabras ("Pedidos abiertos") es la más ancha: el texto nunca toca el borde */
+  /* La etiqueta con palabras ("Pedidos abiertos") es la más ancha: el texto nunca toca el borde */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1fr);
   gap: 12px;
 }
@@ -161,7 +161,7 @@
   overflow: hidden;
   border-radius: 4px;
   background: #fff;
-  box-shadow: 0 1px 0 rgba(28, 31, 29, 0.06), 0 10px 18px -10px rgba(28, 31, 29, 0.35);
+  box-shadow: 0 1px 0 rgba(43, 30, 24, 0.06), 0 10px 18px -10px rgba(43, 30, 24, 0.35);
 }
 
 .lp .lp-kpi__campo {
@@ -287,7 +287,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Hasta que la muestra aterriza, la fila nueva espera sin su contenido */
+/* Hasta que la etiqueta aterriza, la fila nueva espera sin su contenido */
 .lp .lp-row--new > * {
   transition: opacity 0.3s ease;
 }
@@ -298,7 +298,7 @@
 .lp .lp-pill--chip {
   display: inline-block;
   margin: 0;
-  box-shadow: 0 10px 22px -8px rgba(28, 31, 29, 0.5);
+  box-shadow: 0 10px 22px -8px rgba(43, 30, 24, 0.5);
 }
 
 /* ---------- WhatsApp en el teléfono: cruza el borde derecho del panel ---------- */
@@ -323,7 +323,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--lp-pino);
+  background: var(--lp-corteza);
 }
 
 .lp .lp-wa-name {

@@ -1,24 +1,24 @@
 import { Bar, Bubble, Collapse, Count, Field, Fly, Phone, Roll, Stage, Stamp, Stream, Text, Thread, Window, type Act, type Rect } from './kit'
 import './lp.css'
 
-// Intro de la demo de Ferretería Los Pinos (empresa ficticia), en el mundo
-// "Carta de colores". Una historia de sistema con un cursor al final:
-// el cliente pide por WhatsApp en el teléfono, el pedido viaja como una
-// muestra al panel del negocio (la fila nueva abre y "Pedidos abiertos" sube
-// de 10 a 11), y el dueño le pregunta al panel qué reponer; la respuesta sale
-// de sus cifras. Se reproduce una vez y se queda en el resultado.
+// Intro de la demo de Panadería El Trigal (empresa ficticia), en el mundo
+// "Etiquetas de vitrina". Una historia de sistema con un cursor al final:
+// una clienta encarga un bizcocho por WhatsApp, el encargo viaja como una
+// etiqueta al panel del negocio (la fila nueva abre y "Pedidos abiertos" sube
+// de 10 a 11), y el dueño le pregunta al panel qué insumos comprar; la
+// respuesta sale de sus cifras. Se reproduce una vez y se queda en el resultado.
 // Palabras reales: la conversación, el pedido, "Pedidos abiertos", la
 // pregunta y la respuesta. Lo demás son barras.
 
 const MSGS = [
-  { from: 'me' as const, text: 'Buenas, ¿tienen cemento gris?' },
-  { from: 'them' as const, text: 'Sí: cemento gris Portland a RD$640 el saco, más ITBIS.' },
-  { from: 'me' as const, text: 'Mándeme 25 sacos a Villa Mella.' },
-  { from: 'them' as const, text: 'Listo, su pedido quedó registrado:' },
+  { from: 'me' as const, text: 'Buenas, ¿a cómo está el bizcocho de 3 libras?' },
+  { from: 'them' as const, text: 'Bizcocho dominicano de 3 libras: RD$1,850, más ITBIS. Se encarga con 24 horas.' },
+  { from: 'me' as const, text: 'Apártenmelo para el sábado a las 3, que diga "Feliz cumpleaños, Ana".' },
+  { from: 'them' as const, text: 'Listo, su encargo quedó registrado:' },
 ]
-const ORDER = 'P-1501 · RD$22,833'
-const Q = '¿Qué tengo que reponer esta semana?'
-const A = 'El cemento gris en Herrera: quedan 12 sacos y se venden unos 10 por día. Alcanza para 1 día.'
+const ORDER = 'P-1501 · RD$2,183'
+const Q = '¿Qué insumos tengo que comprar esta semana?'
+const A = 'Mantequilla para Gazcue: quedan 2 cajas y se usan 1.5 por día. Alcanza para poco más de un día.'
 const WORDS = A.split(' ').length
 
 type S = {
@@ -103,12 +103,22 @@ function WhatsApp({ s, width }: { s: S; width: number }) {
       <div className="lp-wa-head">
         <span className="lp-wa-foto" aria-hidden>
           <svg viewBox="0 0 24 24" width="22" height="22">
-            <path d="M12 2 6.5 9h3L5 15h4.5L6 20h12l-3.5-5H19l-4.5-6h3z" fill="#fff" />
-            <path d="M11 20h2v2h-2z" fill="#e0a526" />
+            <path d="M12 22V6.5" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" />
+            <g fill="#fff">
+              <ellipse cx="12" cy="4.3" rx="1.7" ry="2.7" />
+              <ellipse cx="9.2" cy="8.6" rx="1.5" ry="2.6" transform="rotate(-38 9.2 8.6)" />
+              <ellipse cx="14.8" cy="8.6" rx="1.5" ry="2.6" transform="rotate(38 14.8 8.6)" />
+              <ellipse cx="9.2" cy="12.8" rx="1.5" ry="2.6" transform="rotate(-38 9.2 12.8)" />
+              <ellipse cx="14.8" cy="12.8" rx="1.5" ry="2.6" transform="rotate(38 14.8 12.8)" />
+            </g>
+            <g fill="#ebbb4c">
+              <ellipse cx="9.2" cy="17" rx="1.5" ry="2.6" transform="rotate(-38 9.2 17)" />
+              <ellipse cx="14.8" cy="17" rx="1.5" ry="2.6" transform="rotate(38 14.8 17)" />
+            </g>
           </svg>
         </span>
         <span className="lp-wa-name">
-          Ferretería Los Pinos
+          Panadería El Trigal
           <small><Roll variant="fade">{s.typing ? 'escribiendo…' : 'en línea'}</Roll></small>
         </span>
       </div>
@@ -148,14 +158,14 @@ function Pedidos({ s }: { s: S }) {
   return (
     <section className="lp-card lp-pedidos">
       <div className="lp-card__head">
-        <span className="lp-swatch" data-chip="turquesa" />
+        <span className="lp-swatch" data-chip="menta" />
         <Text className="lp-card__title">Pedidos nuevos</Text>
       </div>
       <div className="lp-list" data-target="list">
         <Collapse open={s.open} reveal="clip">
           <div className="lp-row lp-row--new" data-target="row-new" data-landed={s.landed || undefined}>
             <span className="lp-band" />
-            <span className="lp-row__name">Carlos Gómez</span>
+            <span className="lp-row__name">Ana Pérez</span>
             <span className="lp-tag">WhatsApp</span>
             <span className="lp-pill" data-target="pill-new">
               {ORDER}
@@ -179,14 +189,14 @@ function Panel({ s }: { s: S }) {
     <Window title="Panel del negocio" className="lp-window">
       <div className="lp-body">
         <aside className="lp-carta">
-          <span className="lp-marca">Ferretería Los Pinos</span>
+          <span className="lp-marca">Panadería El Trigal</span>
           {[
-            { chip: 'pino', w: 40, on: true },
-            { chip: 'ozama', w: 48 },
-            { chip: 'cemento', w: 58 },
-            { chip: 'terracota', w: 66 },
-            { chip: 'turquesa', w: 50 },
-            { chip: 'oxido', w: 44 },
+            { chip: 'corteza', w: 40, on: true },
+            { chip: 'anil', w: 48 },
+            { chip: 'trigo', w: 58 },
+            { chip: 'guayaba', w: 66 },
+            { chip: 'menta', w: 50 },
+            { chip: 'cereza', w: 44 },
           ].map((n, i) => (
             <div key={i} className="lp-tira" data-chip={n.chip} data-on={n.on || undefined}>
               {n.on ? <span className="lp-tira__txt">Inicio</span> : (
@@ -213,7 +223,7 @@ function Panel({ s }: { s: S }) {
                 <div className="lp-answer__band">Respuesta con sus cifras</div>
                 <div className="lp-answer__body">
                   <Collapse open={s.phase === 'thinking'}>
-                    <span className="lp-thinking">Revisando el inventario…</span>
+                    <span className="lp-thinking">Revisando los insumos…</span>
                   </Collapse>
                   <Collapse open={s.phase === 'answer'}>
                     <Stream className="lp-stream" text={A} count={s.words} />
@@ -223,17 +233,17 @@ function Panel({ s }: { s: S }) {
             </Collapse>
           </div>
           <div className="lp-kpis">
-            <div className="lp-kpi" data-chip="pino">
+            <div className="lp-kpi" data-chip="corteza">
               <div className="lp-kpi__campo"><span className="lp-kpi__ph" style={{ width: 74 }} /></div>
               <div className="lp-kpi__etiqueta"><Bar w={56} h={6} tone={3} /></div>
             </div>
-            <div className="lp-kpi" data-chip="turquesa">
+            <div className="lp-kpi" data-chip="menta">
               <div className="lp-kpi__campo">
                 <Count className="lp-kpi__valor" value={s.pedidos} duration={800} />
               </div>
               <div className="lp-kpi__etiqueta"><span className="lp-kpi__nombre">Pedidos abiertos</span></div>
             </div>
-            <div className="lp-kpi" data-chip="terracota">
+            <div className="lp-kpi" data-chip="guayaba">
               <div className="lp-kpi__campo"><span className="lp-kpi__ph" style={{ width: 82 }} /></div>
               <div className="lp-kpi__etiqueta"><Bar w={48} h={6} tone={3} /></div>
             </div>
@@ -245,7 +255,7 @@ function Panel({ s }: { s: S }) {
   )
 }
 
-export default function LosPinosIntro() {
+export default function ElTrigalIntro() {
   return (
     <Stage<S>
       width={1000}

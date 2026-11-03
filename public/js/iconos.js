@@ -2,7 +2,7 @@
 const t = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 
 export const ICONOS = {
-  pino: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 6.5 9h3L5 15h4.5L6 20h12l-3.5-5H19l-4.5-6h3z" fill="#fff"/><path d="M11 20h2v2h-2z" fill="#e0a526"/></svg>`,
+  logo: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22V6.5" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><g fill="#fff"><ellipse cx="12" cy="4.3" rx="1.7" ry="2.7"/><ellipse cx="9.2" cy="8.6" rx="1.5" ry="2.6" transform="rotate(-38 9.2 8.6)"/><ellipse cx="14.8" cy="8.6" rx="1.5" ry="2.6" transform="rotate(38 14.8 8.6)"/><ellipse cx="9.2" cy="12.8" rx="1.5" ry="2.6" transform="rotate(-38 9.2 12.8)"/><ellipse cx="14.8" cy="12.8" rx="1.5" ry="2.6" transform="rotate(38 14.8 12.8)"/></g><g fill="#ebbb4c"><ellipse cx="9.2" cy="17" rx="1.5" ry="2.6" transform="rotate(-38 9.2 17)"/><ellipse cx="14.8" cy="17" rx="1.5" ry="2.6" transform="rotate(38 14.8 17)"/></g></svg>`,
   inicio: t('<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'),
   ventas: t('<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>'),
   inventario: t('<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>'),

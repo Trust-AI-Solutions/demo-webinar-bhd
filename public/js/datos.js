@@ -1,46 +1,47 @@
-// DATOS FICTICIOS de "Ferretería Los Pinos, SRL" (empresa inventada para la demo).
+// DATOS FICTICIOS de "Panadería y Repostería El Trigal, SRL" (empresa inventada para la demo).
 // Todo se genera aquí con una semilla fija, anclado a la fecha de hoy: cada vez que
 // se abre la demo, los últimos 6 meses de ventas terminan hoy. No hay base de datos:
-// lo que cambia durante la demo (pedidos y cotizaciones del asistente de WhatsApp,
-// conversaciones que piden a una persona) se guarda en el navegador (estado.js).
+// lo que cambia durante la demo (pedidos, cotizaciones, avisos) se guarda en el
+// navegador (estado.js).
 //
 // Situaciones sembradas a propósito para que la IA las encuentre:
-//  1. La sucursal Villa Mella vende alrededor de un tercio menos en las últimas 4 semanas.
-//  2. El cemento gris en Herrera alcanza para uno o dos días.
-//  3. Constructora Ozama pasó su límite de crédito y tiene facturas con más de 60 días.
-//  4. El costo de las pinturas subió 12 % hace 6 semanas y el precio no se ajustó:
-//     el margen de esa categoría cayó.
-//  5. Hay inventario sin movimiento en 90 días (calentadores de agua de 30 galones).
+//  1. La sucursal Los Prados vende alrededor de un tercio menos en las últimas 4 semanas.
+//  2. La mantequilla en Gazcue alcanza para uno o dos días de producción.
+//  3. Hotel Brisas de Gazcue pasó su límite de crédito y tiene facturas con más de 60 días.
+//  4. La mantequilla y la crema subieron hace 6 semanas y el precio de los bizcochos no se
+//     ajustó: el margen de "Bizcochos y tortas" cayó.
+//  5. Hay productos del menú sin ventas en 90 días (pan de centeno, bizcocho sin azúcar).
 
 export const EMPRESA = {
-  nombre: "Ferretería Los Pinos, SRL",
-  nombreCorto: "Ferretería Los Pinos",
+  nombre: "Panadería y Repostería El Trigal, SRL",
+  nombreCorto: "Panadería El Trigal",
   ciudad: "Santo Domingo",
   telefono: "809-555-0142",
   whatsapp: "809-555-0143",
-  horario: "Lunes a sábado de 7:30 a. m. a 6:00 p. m.; domingos de 8:00 a. m. a 12:00 m. (solo Herrera)",
-  envio: "Envío gratis en el Gran Santo Domingo para pedidos desde RD$15,000 antes de ITBIS; si no, RD$500. Pedidos confirmados antes de las 2:00 p. m. salen el mismo día; después, al día siguiente.",
-  pagos: "Efectivo, transferencia, tarjeta de débito o crédito. Crédito a 30 días solo para clientes aprobados.",
+  horario: "Lunes a sábado de 6:00 a. m. a 8:00 p. m.; domingos de 7:00 a. m. a 1:00 p. m.",
+  envio: "Entregas en el Distrito Nacional: gratis desde RD$3,000 antes de ITBIS; si no, RD$150. Lo confirmado antes de las 11:00 a. m. sale el mismo día; después, al día siguiente. A negocios (colmados, cafeterías, hoteles) se les reparte pan cada mañana en ruta.",
+  encargos: "Bizcochos enteros, tortas y bandejas de picaderas se piden con al menos 24 horas; bizcochos de boda, con 7 días. Se reservan con el 50 % de adelanto.",
+  pagos: "Efectivo, transferencia, tarjeta de débito o crédito. Crédito a 15 días solo para negocios aprobados.",
   itbis: 0.18,
 };
 
 export const SUCURSALES = [
-  { id: "herrera", nombre: "Herrera", direccion: "Av. Isabel Aguiar, Herrera, Santo Domingo Oeste (dirección ficticia)" },
-  { id: "villa-mella", nombre: "Villa Mella", direccion: "Av. Hermanas Mirabal, Villa Mella, Santo Domingo Norte (dirección ficticia)" },
+  { id: "gazcue", nombre: "Gazcue", direccion: "Calle Santiago, Gazcue, Distrito Nacional (dirección ficticia). Aquí está el horno principal." },
+  { id: "los-prados", nombre: "Los Prados", direccion: "Calle Max Henríquez Ureña, Los Prados, Distrito Nacional (dirección ficticia)" },
 ];
 
 export const VENDEDORES = [
-  { id: "V01", nombre: "Ramón Peralta", sucursal: "herrera" },
-  { id: "V02", nombre: "Yesenia Castillo", sucursal: "herrera" },
-  { id: "V03", nombre: "Julio Batista", sucursal: "villa-mella" },
-  { id: "V04", nombre: "Mariela Ureña", sucursal: "villa-mella" },
+  { id: "V01", nombre: "Yudelka Peralta", sucursal: "gazcue" },
+  { id: "V02", nombre: "Ramón Castillo", sucursal: "gazcue" },
+  { id: "V03", nombre: "Mariela Batista", sucursal: "los-prados" },
+  { id: "V04", nombre: "Julio Ureña", sucursal: "los-prados" },
 ];
 
 export const CATEGORIAS = [
-  "Cemento y agregados", "Acero y varillas", "Plomería", "Electricidad", "Pinturas",
-  "Herramientas manuales", "Herramientas eléctricas", "Tornillería y fijaciones",
-  "Madera y plywood", "Cerrajería y ferretería general",
+  "Pan del día", "Bizcochos y tortas", "Repostería y postres", "Galletas y empacados", "Salados", "Café y bebidas",
 ];
+
+export const CATEGORIAS_INSUMOS = ["Harinas y granos", "Lácteos y huevos", "Azúcares y rellenos", "Carnes y quesos", "Empaques"];
 
 // ---------- utilidades ----------
 
@@ -73,247 +74,196 @@ export function diasEntre(desdeISO, hastaISO) {
 
 const redondear = (n, dec = 0) => Math.round(n * 10 ** dec) / 10 ** dec;
 
-// ---------- catálogo ----------
-// [nombre, unidad, precio RD$ sin ITBIS, popularidad 0-10, mínimo por sucursal]
+// ---------- menú ----------
+// [nombre, unidad, precio RD$ sin ITBIS, popularidad 0-10, horas de anticipación (0 = se vende del día)]
 
-const CATALOGO_BASE = {
-  "Cemento y agregados": [
-    ["Cemento gris tipo Portland 42.5 kg", "saco", 640, 10, 60],
-    ["Cemento blanco 40 kg", "saco", 1250, 3, 15],
-    ["Arena lavada", "metro cúbico", 1900, 6, 10],
-    ["Grava 3/4", "metro cúbico", 2150, 5, 8],
-    ["Block de concreto 6 pulgadas", "unidad", 42, 9, 1500],
-    ["Block de concreto 8 pulgadas", "unidad", 52, 7, 1000],
-    ["Block de concreto 4 pulgadas", "unidad", 34, 5, 800],
-    ["Pegamento para cerámica 20 kg", "saco", 520, 6, 40],
-    ["Pegamento para porcelanato 20 kg", "saco", 780, 4, 25],
-    ["Lechada para juntas 5 kg", "funda", 260, 4, 30],
-    ["Cal hidratada 25 kg", "saco", 390, 3, 20],
-    ["Mezcla lista para empañete 40 kg", "saco", 450, 4, 30],
-    ["Impermeabilizante de techo acrílico 5 galones", "cubeta", 4850, 5, 12],
-    ["Malla electrosoldada 6x6", "lámina", 1650, 3, 15],
-    ["Yeso en polvo 25 kg", "saco", 420, 2, 10],
+const MENU = {
+  "Pan del día": [
+    ["Pan de agua", "unidad", 10, 10, 0],
+    ["Pan sobao", "unidad", 12, 9, 0],
+    ["Pan integral", "unidad", 15, 6, 0],
+    ["Pan de coco", "unidad", 35, 6, 0],
+    ["Pan de maíz (porción)", "porción", 45, 5, 0],
+    ["Pan de leche (paquete de 6)", "paquete", 95, 6, 0],
+    ["Pan de molde blanco", "funda", 145, 7, 0],
+    ["Pan de molde integral", "funda", 165, 5, 0],
+    ["Pan de hamburguesa (paquete de 8)", "paquete", 130, 5, 0],
+    ["Pan de hot dog (paquete de 8)", "paquete", 125, 4, 0],
+    ["Baguette", "unidad", 65, 6, 0],
+    ["Pan de ajo", "unidad", 85, 5, 0],
+    ["Croissant de mantequilla", "unidad", 75, 7, 0],
+    ["Pan de batata", "unidad", 40, 3, 0],
+    ["Pan de centeno con semillas", "unidad", 120, 0, 0],
   ],
-  "Acero y varillas": [
-    ["Varilla corrugada 3/8 x 20 pies", "unidad", 335, 9, 300],
-    ["Varilla corrugada 1/2 x 20 pies", "unidad", 585, 8, 200],
-    ["Varilla corrugada 3/4 x 20 pies", "unidad", 1290, 4, 60],
-    ["Varilla corrugada 1/4 x 20 pies", "unidad", 160, 5, 120],
-    ["Alambre dulce calibre 16", "libra", 85, 7, 150],
-    ["Alambre de púas 400 m", "rollo", 3400, 2, 6],
-    ["Tubo cuadrado 1 x 1 pulgada calibre 18", "unidad", 980, 3, 20],
-    ["Tubo cuadrado 2 x 2 pulgadas calibre 16", "unidad", 1850, 2, 12],
-    ["Angular 1 1/2 x 1/8", "unidad", 1150, 2, 15],
-    ["Plancha de zinc acanalado calibre 26 x 12 pies", "unidad", 1180, 6, 80],
-    ["Plancha galvalume calibre 26 x 12 pies", "unidad", 1490, 4, 50],
-    ["Estribos de 3/8 (paquete de 50)", "paquete", 1450, 4, 20],
-    ["Malla ciclónica 5 pies x 50 pies", "rollo", 6900, 2, 5],
-    ["Clavos para zinc con arandela (libra)", "libra", 140, 5, 60],
+  "Bizcochos y tortas": [
+    ["Bizcocho dominicano de 1 libra", "unidad", 650, 6, 24],
+    ["Bizcocho dominicano de 2 libras", "unidad", 1250, 7, 24],
+    ["Bizcocho dominicano de 3 libras", "unidad", 1850, 6, 24],
+    ["Bizcocho dominicano de 5 libras", "unidad", 2950, 4, 24],
+    ["Bizcocho de chocolate de 2 libras", "unidad", 1450, 4, 24],
+    ["Bizcocho de boda de 3 pisos", "unidad", 14500, 1, 168],
+    ["Torta de zanahoria (entera)", "unidad", 1350, 3, 24],
+    ["Cheesecake de chinola (entero)", "unidad", 1650, 3, 24],
+    ["Tres leches (bandeja mediana)", "bandeja", 950, 5, 24],
+    ["Porción de bizcocho dominicano", "porción", 120, 7, 0],
+    ["Bizcocho de zanahoria sin azúcar", "unidad", 1450, 0, 24],
   ],
-  "Plomería": [
-    ["Tubo PVC presión 1/2 pulgada x 19 pies", "unidad", 210, 8, 120],
-    ["Tubo PVC presión 3/4 pulgada x 19 pies", "unidad", 290, 6, 80],
-    ["Tubo PVC sanitario 4 pulgadas x 19 pies", "unidad", 980, 6, 40],
-    ["Tubo PVC sanitario 2 pulgadas x 19 pies", "unidad", 430, 5, 50],
-    ["Codo PVC 1/2 pulgada", "unidad", 18, 7, 300],
-    ["Codo PVC 4 pulgadas sanitario", "unidad", 135, 5, 60],
-    ["Tee PVC 1/2 pulgada", "unidad", 22, 6, 200],
-    ["Pegamento PVC 1/4 galón", "unidad", 640, 6, 30],
-    ["Llave de paso 1/2 pulgada bronce", "unidad", 395, 5, 40],
-    ["Llave de lavamanos cromada", "unidad", 1150, 4, 20],
-    ["Mezcladora de fregadero", "unidad", 2850, 3, 10],
-    ["Inodoro blanco de dos piezas", "unidad", 6200, 3, 8],
-    ["Lavamanos de pedestal blanco", "unidad", 3900, 2, 6],
-    ["Tanque de agua 250 galones", "unidad", 7800, 3, 6],
-    ["Tanque de agua 500 galones", "unidad", 13500, 2, 4],
-    ["Bomba de agua 1/2 HP", "unidad", 6900, 3, 6],
-    ["Calentador de agua eléctrico 30 galones", "unidad", 14900, 0, 3],
-    ["Cinta teflón 3/4", "unidad", 35, 7, 200],
-    ["Flotante para tanque 1/2", "unidad", 420, 3, 15],
-    ["Manguera de jardín 50 pies", "unidad", 1250, 3, 12],
+  "Repostería y postres": [
+    ["Danesa de guayaba", "unidad", 55, 6, 0],
+    ["Dona glaseada", "unidad", 45, 7, 0],
+    ["Dona rellena de crema", "unidad", 55, 5, 0],
+    ["Brownie", "unidad", 65, 5, 0],
+    ["Flan de leche (porción)", "porción", 85, 4, 0],
+    ["Quesillo (porción)", "porción", 90, 4, 0],
+    ["Pudín de pan (porción)", "porción", 70, 4, 0],
+    ["Majarete (vaso)", "vaso", 80, 3, 0],
+    ["Tarta de manzana (porción)", "porción", 110, 3, 0],
+    ["Alfajor de dulce de leche", "unidad", 50, 4, 0],
+    ["Cupcake decorado", "unidad", 75, 5, 0],
+    ["Caja de 12 cupcakes decorados", "caja", 850, 3, 24],
   ],
-  "Electricidad": [
-    ["Cable THHN 12 negro (rollo 100 m)", "rollo", 4350, 6, 15],
-    ["Cable THHN 12 blanco (rollo 100 m)", "rollo", 4350, 6, 15],
-    ["Cable THHN 10 negro (rollo 100 m)", "rollo", 6650, 4, 8],
-    ["Cable THHN 14 (rollo 100 m)", "rollo", 3100, 4, 10],
-    ["Cable dúplex 2x12 (metro)", "metro", 68, 6, 300],
-    ["Tubo conduit PVC 1/2 pulgada x 10 pies", "unidad", 75, 7, 200],
-    ["Caja rectangular PVC", "unidad", 28, 7, 300],
-    ["Tomacorriente doble blanco", "unidad", 115, 8, 150],
-    ["Interruptor sencillo blanco", "unidad", 105, 7, 150],
-    ["Breaker 20 amperios", "unidad", 390, 5, 40],
-    ["Breaker 30 amperios", "unidad", 420, 4, 30],
-    ["Panel eléctrico 8 circuitos", "unidad", 2650, 3, 8],
-    ["Bombillo LED 9 W", "unidad", 95, 9, 300],
-    ["Bombillo LED 15 W", "unidad", 155, 6, 150],
-    ["Lámpara LED de techo 18 W", "unidad", 690, 4, 30],
-    ["Reflector LED 50 W", "unidad", 1150, 3, 15],
-    ["Cinta aislante negra", "unidad", 55, 8, 200],
-    ["Extensión eléctrica 25 pies", "unidad", 650, 4, 20],
-    ["Protector de voltaje para nevera", "unidad", 1350, 4, 15],
-    ["Inversor 1,500 W", "unidad", 18500, 1, 3],
-    ["Batería de ciclo profundo 200 Ah", "unidad", 16900, 1, 4],
+  "Galletas y empacados": [
+    ["Galletas de mantequilla (funda de 12)", "funda", 150, 5, 0],
+    ["Galletas de avena y pasas (funda de 12)", "funda", 165, 4, 0],
+    ["Galletas con chispas de chocolate (funda de 12)", "funda", 175, 5, 0],
+    ["Pan tostado (funda)", "funda", 120, 4, 0],
+    ["Bizcochitos de anís (funda)", "funda", 110, 3, 0],
+    ["Panetón de frutas", "unidad", 650, 3, 0],
   ],
-  "Pinturas": [
-    ["Pintura acrílica blanca interior (galón)", "galón", 980, 9, 80],
-    ["Pintura acrílica blanca interior (cubeta 5 galones)", "cubeta", 4450, 7, 25],
-    ["Pintura acrílica exterior blanca (galón)", "galón", 1190, 7, 50],
-    ["Pintura acrílica exterior blanca (cubeta 5 galones)", "cubeta", 5450, 5, 15],
-    ["Pintura acrílica color crema (galón)", "galón", 1050, 6, 30],
-    ["Pintura acrílica color gris perla (galón)", "galón", 1050, 5, 30],
-    ["Pintura acrílica color azul cielo (galón)", "galón", 1050, 4, 20],
-    ["Pintura de aceite blanca (galón)", "galón", 1450, 4, 20],
-    ["Pintura anticorrosiva gris (galón)", "galón", 1380, 4, 20],
-    ["Sellador acrílico (galón)", "galón", 690, 6, 40],
-    ["Masilla para paredes (galón)", "galón", 620, 5, 30],
-    ["Diluyente (galón)", "galón", 450, 4, 25],
-    ["Brocha 3 pulgadas", "unidad", 135, 7, 80],
-    ["Rodillo 9 pulgadas con mango", "unidad", 360, 7, 50],
-    ["Bandeja para pintura", "unidad", 160, 5, 40],
-    ["Cinta de enmascarar 2 pulgadas", "unidad", 120, 6, 80],
-    ["Lija de agua número 150", "unidad", 30, 5, 200],
+  "Salados": [
+    ["Pastelito de pollo", "unidad", 55, 8, 0],
+    ["Pastelito de res", "unidad", 55, 7, 0],
+    ["Pastelito de queso", "unidad", 50, 6, 0],
+    ["Quipe", "unidad", 50, 7, 0],
+    ["Empanada de pollo horneada", "unidad", 60, 5, 0],
+    ["Sándwich de jamón y queso", "unidad", 165, 6, 0],
+    ["Sándwich cubano", "unidad", 250, 4, 0],
+    ["Croissant de jamón y queso", "unidad", 145, 5, 0],
+    ["Pizza personal", "unidad", 220, 4, 0],
+    ["Bandeja de picaderas (25 piezas)", "bandeja", 1450, 3, 24],
+    ["Bandeja de picaderas (50 piezas)", "bandeja", 2750, 2, 24],
   ],
-  "Herramientas manuales": [
-    ["Martillo de uña 16 oz", "unidad", 490, 5, 20],
-    ["Cinta métrica 8 metros", "unidad", 380, 6, 30],
-    ["Nivel de aluminio 24 pulgadas", "unidad", 640, 3, 12],
-    ["Pala cuadrada con mango", "unidad", 690, 4, 20],
-    ["Pico con mango", "unidad", 850, 2, 10],
-    ["Carretilla 6 pies cúbicos", "unidad", 4300, 3, 8],
-    ["Llana metálica dentada", "unidad", 320, 4, 20],
-    ["Cuchara de albañil 7 pulgadas", "unidad", 290, 5, 25],
-    ["Destornilladores juego de 6", "juego", 520, 4, 15],
-    ["Alicate universal 8 pulgadas", "unidad", 430, 4, 15],
-    ["Llave ajustable 10 pulgadas", "unidad", 560, 3, 12],
-    ["Segueta con arco", "unidad", 390, 3, 12],
-    ["Machete 22 pulgadas", "unidad", 420, 3, 15],
-    ["Escalera de aluminio 6 peldaños", "unidad", 5200, 2, 5],
-    ["Cubeta de albañil", "unidad", 140, 6, 50],
-  ],
-  "Herramientas eléctricas": [
-    ["Taladro percutor 1/2 pulgada 650 W", "unidad", 3950, 3, 6],
-    ["Atornillador inalámbrico 20 V", "unidad", 6200, 2, 4],
-    ["Esmeriladora angular 4 1/2 pulgadas", "unidad", 3450, 3, 6],
-    ["Sierra circular 7 1/4 pulgadas", "unidad", 6900, 2, 4],
-    ["Rotomartillo SDS 800 W", "unidad", 8900, 1, 3],
-    ["Disco de corte para metal 4 1/2", "unidad", 75, 7, 120],
-    ["Disco de corte para concreto 4 1/2", "unidad", 390, 5, 30],
-    ["Broca para concreto 3/8", "unidad", 120, 6, 60],
-    ["Juego de brocas para metal 13 piezas", "juego", 890, 3, 10],
-    ["Máquina de soldar 200 A", "unidad", 11500, 1, 3],
-    ["Electrodos 6013 1/8 (libra)", "libra", 160, 5, 60],
-  ],
-  "Tornillería y fijaciones": [
-    ["Clavos de acero 2 1/2 pulgadas (libra)", "libra", 95, 8, 150],
-    ["Clavos corrientes 3 pulgadas (libra)", "libra", 70, 7, 150],
-    ["Tornillo para madera 1 1/2 (caja de 100)", "caja", 260, 5, 40],
-    ["Tornillo para plycem 1 1/4 (caja de 100)", "caja", 290, 4, 40],
-    ["Tarugo plástico 1/4 (bolsa de 100)", "bolsa", 140, 6, 60],
-    ["Ancla de expansión 3/8", "unidad", 38, 5, 200],
-    ["Pernos 3/8 x 3 con tuerca", "unidad", 32, 4, 200],
-    ["Bisagra de 3 pulgadas (par)", "par", 120, 5, 60],
-    ["Silicón transparente", "unidad", 280, 6, 50],
-    ["Espuma expansiva", "unidad", 450, 3, 20],
-  ],
-  "Madera y plywood": [
-    ["Plywood 3/4 4x8 pies", "lámina", 2650, 5, 30],
-    ["Plywood 1/2 4x8 pies", "lámina", 1950, 5, 30],
-    ["Plywood 1/4 4x8 pies", "lámina", 1150, 3, 20],
-    ["Madera de pino 2x4x12 pies", "unidad", 640, 6, 80],
-    ["Madera de pino 1x4x10 pies", "unidad", 330, 4, 60],
-    ["Madera de pino 2x6x12 pies", "unidad", 980, 3, 40],
-    ["Plycem 4x8 pies 8 mm", "lámina", 1290, 3, 25],
-    ["Puerta de madera interior 32 pulgadas", "unidad", 5900, 2, 6],
-    ["Puerta de metal exterior 36 pulgadas", "unidad", 11200, 1, 3],
-  ],
-  "Cerrajería y ferretería general": [
-    ["Candado de 40 mm", "unidad", 390, 5, 30],
-    ["Candado de 60 mm", "unidad", 690, 3, 15],
-    ["Cerradura de pomo para puerta", "unidad", 980, 4, 15],
-    ["Cerradura de seguridad doble cilindro", "unidad", 2350, 2, 6],
-    ["Cadena galvanizada 1/4 (pie)", "pie", 75, 3, 100],
-    ["Soga de nylon 3/8 (pie)", "pie", 18, 4, 300],
-    ["Lona plástica 12x15 pies", "unidad", 980, 3, 12],
-    ["Guantes de trabajo (par)", "par", 160, 7, 80],
-    ["Lentes de seguridad", "unidad", 180, 4, 30],
-    ["Casco de seguridad", "unidad", 390, 3, 20],
-    ["Botas de goma (par)", "par", 950, 3, 15],
-    ["Escoba de fibra", "unidad", 210, 5, 30],
-    ["Recogedor plástico", "unidad", 120, 4, 30],
+  "Café y bebidas": [
+    ["Café negro (taza)", "taza", 50, 9, 0],
+    ["Café con leche (taza)", "taza", 75, 8, 0],
+    ["Capuchino", "taza", 120, 5, 0],
+    ["Chocolate caliente", "taza", 95, 4, 0],
+    ["Jugo de naranja natural (vaso)", "vaso", 110, 5, 0],
+    ["Morir soñando (vaso)", "vaso", 130, 4, 0],
+    ["Agua (botella)", "botella", 35, 6, 0],
+    ["Refresco (lata)", "lata", 60, 5, 0],
   ],
 };
 
 const PREFIJOS = {
-  "Cemento y agregados": "CEM", "Acero y varillas": "ACE", "Plomería": "PLO", "Electricidad": "ELE",
-  "Pinturas": "PIN", "Herramientas manuales": "HMA", "Herramientas eléctricas": "HEL",
-  "Tornillería y fijaciones": "TOR", "Madera y plywood": "MAD", "Cerrajería y ferretería general": "GEN",
+  "Pan del día": "PAN", "Bizcochos y tortas": "BIZ", "Repostería y postres": "REP",
+  "Galletas y empacados": "GAL", "Salados": "SAL", "Café y bebidas": "BEB",
 };
 
 const MARGEN_CATEGORIA = {
-  "Cemento y agregados": 0.13, "Acero y varillas": 0.15, "Plomería": 0.30, "Electricidad": 0.32,
-  "Pinturas": 0.34, "Herramientas manuales": 0.38, "Herramientas eléctricas": 0.28,
-  "Tornillería y fijaciones": 0.42, "Madera y plywood": 0.20, "Cerrajería y ferretería general": 0.40,
+  "Pan del día": 0.42, "Bizcochos y tortas": 0.52, "Repostería y postres": 0.56,
+  "Galletas y empacados": 0.48, "Salados": 0.47, "Café y bebidas": 0.64,
 };
 
-const PROVEEDORES = {
-  "Cemento y agregados": "Cementos del Caribe (ficticio)", "Acero y varillas": "Aceros Quisqueya (ficticio)",
-  "Plomería": "Distribuidora Hidro Sur (ficticio)", "Electricidad": "Eléctrica Antillana (ficticio)",
-  "Pinturas": "Pinturas Brisa Tropical (ficticio)", "Herramientas manuales": "Importadora Herramax (ficticio)",
-  "Herramientas eléctricas": "Importadora Herramax (ficticio)", "Tornillería y fijaciones": "Fijaciones del Cibao (ficticio)",
-  "Madera y plywood": "Maderas del Norte (ficticio)", "Cerrajería y ferretería general": "Suplidora Central (ficticio)",
+// ---------- insumos (lo que se compra para producir) ----------
+// [nombre, categoría, unidad, costo RD$, uso diario en Gazcue, proveedor]
+// Gazcue tiene el horno principal; Los Prados hornea menos (35 % del uso de Gazcue).
+
+const INSUMOS = [
+  ["Harina de trigo panadera (saco 50 lb)", "Harinas y granos", "saco", 1650, 6, "Molinos del Este (ficticio)"],
+  ["Harina de trigo para repostería (saco 50 lb)", "Harinas y granos", "saco", 1850, 1.6, "Molinos del Este (ficticio)"],
+  ["Harina de maíz (saco 25 lb)", "Harinas y granos", "saco", 980, 0.4, "Molinos del Este (ficticio)"],
+  ["Levadura seca (paquete 500 g)", "Harinas y granos", "paquete", 310, 2.5, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Polvo de hornear (lata 2 lb)", "Harinas y granos", "lata", 420, 0.5, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Mantequilla sin sal (caja 36 lb)", "Lácteos y huevos", "caja", 7400, 1.5, "Lácteos del Valle (ficticio)"],
+  ["Margarina para hojaldre (caja 22 lb)", "Lácteos y huevos", "caja", 3100, 0.8, "Lácteos del Valle (ficticio)"],
+  ["Huevos (cartón de 30)", "Lácteos y huevos", "cartón", 285, 12, "Granja Avícola Monte Plata (ficticio)"],
+  ["Leche entera (galón)", "Lácteos y huevos", "galón", 230, 7, "Lácteos del Valle (ficticio)"],
+  ["Leche evaporada (lata)", "Lácteos y huevos", "lata", 72, 14, "Lácteos del Valle (ficticio)"],
+  ["Leche condensada (lata)", "Lácteos y huevos", "lata", 98, 10, "Lácteos del Valle (ficticio)"],
+  ["Crema de leche para batir (litro)", "Lácteos y huevos", "litro", 340, 4, "Lácteos del Valle (ficticio)"],
+  ["Queso crema (bloque 3 lb)", "Lácteos y huevos", "bloque", 760, 1.2, "Lácteos del Valle (ficticio)"],
+  ["Azúcar crema (saco 50 lb)", "Azúcares y rellenos", "saco", 1950, 1.4, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Azúcar glas (funda 2 lb)", "Azúcares y rellenos", "funda", 165, 3, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Pasta de guayaba (lata 5 lb)", "Azúcares y rellenos", "lata", 690, 0.8, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Chocolate para cobertura (bloque 5 lb)", "Azúcares y rellenos", "bloque", 1450, 0.6, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Coco rallado (libra)", "Azúcares y rellenos", "libra", 160, 3, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Esencia de vainilla (galón)", "Azúcares y rellenos", "galón", 980, 0.2, "Distribuidora La Espiga Dorada (ficticio)"],
+  ["Pechuga de pollo (libra)", "Carnes y quesos", "libra", 135, 9, "Carnes Selectas del Cibao (ficticio)"],
+  ["Carne molida de res (libra)", "Carnes y quesos", "libra", 210, 6, "Carnes Selectas del Cibao (ficticio)"],
+  ["Jamón de pierna (libra)", "Carnes y quesos", "libra", 240, 4, "Carnes Selectas del Cibao (ficticio)"],
+  ["Queso amarillo (libra)", "Carnes y quesos", "libra", 260, 5, "Carnes Selectas del Cibao (ficticio)"],
+  ["Café molido (libra)", "Carnes y quesos", "libra", 320, 2.5, "Café de la Loma (ficticio)"],
+  ["Caja para bizcocho de 1 a 2 libras", "Empaques", "unidad", 38, 8, "Empaques del Caribe (ficticio)"],
+  ["Caja para bizcocho de 3 a 5 libras", "Empaques", "unidad", 55, 5, "Empaques del Caribe (ficticio)"],
+  ["Fundas de papel para pan (paquete de 500)", "Empaques", "paquete", 450, 0.9, "Empaques del Caribe (ficticio)"],
+  ["Vasos para café 8 oz (paquete de 50)", "Empaques", "paquete", 260, 2.2, "Empaques del Caribe (ficticio)"],
+];
+const PREFIJO_INSUMO = { "Harinas y granos": "HAR", "Lácteos y huevos": "LAC", "Azúcares y rellenos": "AZU", "Carnes y quesos": "CAR", "Empaques": "EMP" };
+
+// ---------- consignación (cadena de minimarkets ficticia) ----------
+// productos: [código del menú, código de la cadena, nombre en el reporte de la cadena, unidades por semana en una tienda típica]
+
+const CONSIGNACION = {
+  cliente: "Minimarkets La Canasta (ficticio)",
+  comision: 0.2, // la cadena se queda con el 20 % del precio
+  tiendas: [
+    { id: "canasta-gazcue", nombre: "La Canasta Gazcue", enReporte: "LC-01 GAZCUE", factor: 1 },
+    { id: "canasta-naco", nombre: "La Canasta Naco", enReporte: "LC-02 NACO", factor: 1.25 },
+    { id: "canasta-piantini", nombre: "La Canasta Piantini", enReporte: "LC-03 ENS. PIANTINI", factor: 1.5 },
+    { id: "canasta-los-prados", nombre: "La Canasta Los Prados", enReporte: "LC-04 LOS PRADOS", factor: 0.75 },
+  ],
+  productos: [
+    ["GAL-001", "7401001", "GALLETA MANTEQ. EL TRIGAL 12U", 24],
+    ["GAL-003", "7401003", "GALLETA CHISPAS CHOC. EL TRIGAL 12U", 24],
+    ["PAN-007", "7401007", "PAN MOLDE BLANCO EL TRIGAL", 24],
+    ["GAL-004", "7401004", "PAN TOSTADO EL TRIGAL", 12],
+    ["GAL-006", "7401006", "PANETON FRUTAS EL TRIGAL", 8],
+  ],
 };
 
 // ---------- clientes ----------
 
 const NOMBRES = ["Rafael", "Carmen", "José", "Altagracia", "Luis", "Mercedes", "Pedro", "Rosa", "Juan Carlos", "Yolanda",
-  "Manuel", "Francisca", "Héctor", "Dulce María", "Wilson", "Ana Julia", "Domingo", "Margarita", "Félix", "Josefina",
+  "Manuel", "Francisca", "Héctor", "Ana María", "Wilson", "Ana Julia", "Domingo", "Margarita", "Félix", "Josefina",
   "Ramón Antonio", "Elena", "Cristian", "Patricia", "Andrés", "Teresa", "Fausto", "Nelly", "Starling", "Mayra"];
 const APELLIDOS = ["Pérez", "Rodríguez", "Martínez", "Santos", "Reyes", "Jiménez", "Familia", "Mejía", "Rosario", "Almonte",
   "Taveras", "Polanco", "Vásquez", "Guzmán", "Féliz", "De la Rosa", "Encarnación", "Cabrera", "Núñez", "Paulino",
   "Ventura", "Medina", "Sánchez", "Tejada", "Abreu", "Mateo", "Lantigua", "Del Orbe", "Frías", "Valdez"];
-const EMPRESAS_CLIENTES = [
-  ["Constructora Ozama", "constructora", 250000],
-  ["Edificaciones Brisa Norte, SRL", "constructora", 400000],
-  ["Inversiones Palmar Alto, SRL", "constructora", 300000],
-  ["Construcciones Hermanos Tejada", "constructora", 200000],
-  ["Proyectos Arco Iris del Este", "constructora", 350000],
-  ["Desarrollos Monte Verde, SRL", "constructora", 500000],
-  ["Ingeniería y Obras del Sur", "constructora", 250000],
-  ["Remodelaciones Casa Linda", "contratista", 120000],
-  ["Herrería El Yunque", "taller", 80000],
-  ["Taller de Ebanistería Caoba Fina", "taller", 60000],
-  ["Electricidad Total Rosario", "contratista", 90000],
-  ["Plomería Express del Norte", "contratista", 70000],
-  ["Pinturas y Acabados Valdez", "contratista", 75000],
-  ["Condominio Torres del Parque", "condominio", 100000],
-  ["Colegio Nuevo Amanecer (ficticio)", "institucion", 120000],
-  ["Junta de Vecinos Los Girasoles", "institucion", 40000],
-  ["Mantenimiento Industrial Caribe", "contratista", 150000],
-  ["Hotel Playa Serena (ficticio)", "institucion", 200000],
-  ["Inmobiliaria Puerta del Sol", "constructora", 300000],
-  ["Techados y Estructuras Lantigua", "contratista", 110000],
-  ["Herrería y Portones Paulino", "taller", 60000],
-  ["Constructora Mella Unida", "constructora", 220000],
-  ["Obras Civiles Frías & Asociados", "constructora", 280000],
-  ["Supermercado La Esquina (ficticio)", "institucion", 50000],
-  ["Iglesia Comunidad de Fe Villa Mella", "institucion", 30000],
-  ["Reparaciones Generales Abreu", "contratista", 50000],
-  ["Taller de Aluminio y Vidrio Nuñez", "taller", 70000],
-  ["Ferretería Barrio Nuevo (revendedor)", "revendedor", 150000],
-  ["Colmado y Ferretería Don Fausto (revendedor)", "revendedor", 80000],
-  ["Constructora Cibao Sur", "constructora", 250000],
-  ["Grupo Inmobiliario Altos de Arroyo", "constructora", 350000],
-  ["Instalaciones Eléctricas Mejía", "contratista", 80000],
-  ["Mantenimiento de Piscinas Azul Claro", "contratista", 40000],
-  ["Clínica Dental Sonrisa (ficticio)", "institucion", 30000],
-  ["Escuela Técnica Santa Cruz (ficticio)", "institucion", 60000],
-  ["Desarrollos Verde Mar", "constructora", 300000],
-  ["Taller de Soldadura Encarnación", "taller", 50000],
-  ["Remodelaciones Express Guzmán", "contratista", 70000],
-  ["Viviendas Económicas del Ozama", "constructora", 260000],
-  ["Mantenimiento de Edificios Cabrera", "contratista", 90000],
+// Negocios que compran al por mayor (todos ficticios). [nombre, tipo, límite de crédito]
+const NEGOCIOS_CLIENTES = [
+  ["Hotel Brisas de Gazcue (ficticio)", "hotel", 60000],
+  ["Cafetería El Mesón del Café, SRL", "cafeteria", 50000],
+  ["Colmado Los Tres Hermanos", "colmado", 25000],
+  ["Restaurante Sabor Criollo", "restaurante", 40000],
+  ["Colmado y Bar Don Fausto", "colmado", 20000],
+  ["Cafetería Universitaria La Pluma", "cafeteria", 45000],
+  ["Oficinas Grupo Atlántico (ficticio)", "oficina", 35000],
+  ["Colmado La Bendición", "colmado", 20000],
+  ["Hostal Colonial Las Mariposas (ficticio)", "hotel", 30000],
+  ["Café Bohemio de Gazcue", "cafeteria", 30000],
+  ["Colmado El Buen Vecino", "colmado", 25000],
+  ["Comedor Doña Chela", "restaurante", 20000],
+  ["Colegio Nuevo Amanecer (ficticio)", "institucion", 40000],
+  ["Clínica Dental Sonrisa (ficticio)", "oficina", 15000],
+  ["Banca de Apuestas La Suerte (ficticio)", "oficina", 10000],
+  ["Cafetería Hospital San Rafael (ficticio)", "cafeteria", 50000],
+  ["Colmado Mi Esperanza", "colmado", 20000],
+  ["Restaurante La Terraza de Los Prados", "restaurante", 35000],
+  ["Eventos y Catering Bella Fiesta", "catering", 60000],
+  ["Junta de Vecinos Los Prados", "institucion", 15000],
+  ["Colmado Hermanos Paulino", "colmado", 20000],
+  ["Gimnasio Cuerpo Sano (ficticio)", "oficina", 10000],
+  ["Cafetería Torre Empresarial Naco (ficticio)", "cafeteria", 40000],
+  ["Iglesia Comunidad de Fe Gazcue", "institucion", 15000],
+  ["Colmado y Cafetería La Esquinita", "colmado", 25000],
+  ["Restaurante Mar y Sol", "restaurante", 30000],
+  ["Escuela Técnica Santa Cruz (ficticio)", "institucion", 30000],
+  ["Floristería y Detalles Primavera", "oficina", 10000],
+  ["Colmado Nuevo Horizonte", "colmado", 20000],
+  ["Hotel Plaza Independencia (ficticio)", "hotel", 50000],
 ];
+const NEGOCIO = new Set(["hotel", "cafeteria", "colmado", "restaurante", "oficina", "institucion", "catering"]);
 
 // ---------- generación ----------
 
@@ -325,34 +275,51 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
   const entre = (a, b) => a + Math.floor(azar() * (b - a + 1));
   const elegir = (lista) => lista[Math.floor(azar() * lista.length)];
 
-  // Productos
+  // Productos del menú
   const productos = [];
   for (const categoria of CATEGORIAS) {
-    CATALOGO_BASE[categoria].forEach(([nombre, unidad, precio, popularidad, minimo], i) => {
-      const margen = MARGEN_CATEGORIA[categoria] * (0.85 + azar() * 0.3);
+    MENU[categoria].forEach(([nombre, unidad, precio, popularidad, anticipacion], i) => {
+      const margen = MARGEN_CATEGORIA[categoria] * (0.88 + azar() * 0.24);
       productos.push({
         codigo: `${PREFIJOS[categoria]}-${String(i + 1).padStart(3, "0")}`,
-        nombre, categoria, unidad, precio,
+        nombre, categoria, unidad, precio, popularidad,
         costo: redondear(precio * (1 - margen), 2),
-        popularidad, minimo, proveedor: PROVEEDORES[categoria], stock: {},
+        anticipacionHoras: anticipacion,
       });
     });
   }
   const porCodigo = Object.fromEntries(productos.map((p) => [p.codigo, p]));
 
-  // Pinturas: el costo subió 12 % hace 42 días; el precio no se ajustó.
-  const diaAumentoPintura = sumarDias(hoyISO, -42);
+  // Bizcochos (sembrada 4): la mantequilla y la crema subieron hace 42 días y el costo
+  // de cada bizcocho subió 16 %; el precio de venta no se ajustó.
+  const diaAumento = sumarDias(hoyISO, -42);
   for (const p of productos) {
     p.costoAnterior = p.costo;
-    if (p.categoria === "Pinturas") p.costo = redondear(p.costoAnterior * 1.12, 2);
+    if (p.categoria === "Bizcochos y tortas") p.costo = redondear(p.costoAnterior * 1.16, 2);
   }
 
-  // Clientes
+  // Insumos: existencia por sucursal y uso diario. Mínimo = 3 días de uso.
+  const insumos = [];
+  const contador = {};
+  for (const [nombre, categoria, unidad, costo, usoGazcue, proveedor] of INSUMOS) {
+    const pre = PREFIJO_INSUMO[categoria];
+    contador[pre] = (contador[pre] ?? 0) + 1;
+    const uso = { gazcue: usoGazcue, "los-prados": redondear(usoGazcue * 0.35, 2) };
+    const stock = {};
+    for (const s of SUCURSALES) stock[s.id] = redondear(uso[s.id] * (4 + azar() * 8), uso[s.id] < 1 ? 1 : 0);
+    insumos.push({ codigo: `${pre}-${String(contador[pre]).padStart(3, "0")}`, nombre, categoria, unidad, costo, proveedor, uso, stock });
+  }
+  const insumo = (texto) => insumos.find((x) => x.nombre.startsWith(texto));
+  insumo("Mantequilla sin sal").stock.gazcue = 2; // sembrada 2: 1.3 días
+  insumo("Queso crema").stock.gazcue = 3; // bajo el mínimo, sin urgencia
+  insumo("Caja para bizcocho de 1 a 2").stock["los-prados"] = 7;
+
+  // Clientes: negocios (compran al por mayor) y personas
   const clientes = [];
-  EMPRESAS_CLIENTES.forEach(([nombre, tipo, limite], i) => {
+  NEGOCIOS_CLIENTES.forEach(([nombre, tipo, limite], i) => {
     clientes.push({
       id: `C${String(i + 1).padStart(3, "0")}`, nombre, tipo, credito: true, limiteCredito: limite,
-      sucursal: i % 3 === 2 ? "villa-mella" : "herrera",
+      sucursal: i % 3 === 2 ? "los-prados" : "gazcue",
       telefono: `809-555-${String(1000 + i * 7).padStart(4, "0")}`,
       clienteDesde: sumarDias(hoyISO, -entre(200, 2400)),
     });
@@ -363,38 +330,35 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
     if (usados.has(n)) continue;
     usados.add(n);
     const i = clientes.length;
-    const esMaestro = azar() < 0.45;
     clientes.push({
-      id: `C${String(i + 1).padStart(3, "0")}`,
-      nombre: esMaestro ? `${n} (maestro constructor)` : n,
-      tipo: esMaestro ? "maestro" : "particular",
-      credito: esMaestro && azar() < 0.3, limiteCredito: esMaestro ? 30000 : 0,
-      sucursal: azar() < 0.55 ? "herrera" : "villa-mella",
+      id: `C${String(i + 1).padStart(3, "0")}`, nombre: n, tipo: "particular", credito: false, limiteCredito: 0,
+      sucursal: azar() < 0.55 ? "gazcue" : "los-prados",
       telefono: `829-555-${String(2000 + i * 13).slice(-4)}`,
       clienteDesde: sumarDias(hoyISO, -entre(30, 1800)),
     });
   }
-  for (const c of clientes) if (!c.credito) c.limiteCredito = 0;
-  const ozama = clientes[0];
+  const hotel = clientes[0];
 
   // Ventas de los últimos 182 días
-  const pesos = productos.map((p) => (p.popularidad === 0 ? 0 : p.popularidad ** 1.6));
+  const pesos = productos.map((p) => (p.popularidad === 0 ? 0 : p.popularidad ** 1.7));
   const totalPeso = pesos.reduce((a, b) => a + b, 0);
   const elegirProducto = () => {
     let r = azar() * totalPeso;
     for (let i = 0; i < productos.length; i++) { r -= pesos[i]; if (r <= 0) return productos[i]; }
     return productos[0];
   };
+  // Lo que compra un negocio: pan, salados y algo de repostería; casi nunca bebidas.
+  const paraNegocio = productos.filter((p) => ["Pan del día", "Salados", "Repostería y postres"].includes(p.categoria) && p.popularidad > 0 && !p.anticipacionHoras);
   const clientesPorSucursal = {
-    herrera: clientes.filter((c) => c.sucursal === "herrera"),
-    "villa-mella": clientes.filter((c) => c.sucursal === "villa-mella"),
+    gazcue: clientes.filter((c) => c.sucursal === "gazcue"),
+    "los-prados": clientes.filter((c) => c.sucursal === "los-prados"),
   };
   const facturas = [];
   const lineas = [];
   const inicio = sumarDias(hoyISO, -181);
   const horaActual = new Date().getHours() + new Date().getMinutes() / 60;
-  const fraccionHoy = Math.min(1, Math.max(0.15, (horaActual - 7.5) / 10.5));
-  let numero = 4800;
+  const fraccionHoy = Math.min(1, Math.max(0.12, (horaActual - 6) / 14));
+  let numero = 18000;
 
   for (let d = 0; d <= 181; d++) {
     const fecha = sumarDias(inicio, d);
@@ -402,104 +366,99 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
     const diaSemana = new Date(a, m - 1, dd).getDay();
     const diasAtras = 181 - d;
     for (const suc of SUCURSALES) {
-      let base = suc.id === "herrera" ? 9.5 : 7;
-      if (diaSemana === 0) base = suc.id === "herrera" ? 3 : 0;
-      if (diaSemana === 6) base *= 1.3;
-      if (suc.id === "villa-mella" && diasAtras < 28) base *= 0.76; // situación sembrada 1
-      base *= 1 + (d / 181) * 0.08; // leve crecimiento en el semestre
+      let base = suc.id === "gazcue" ? 34 : 26;
+      if (diaSemana === 0) base *= 0.55;
+      if (diaSemana === 6) base *= 1.25;
+      if (suc.id === "los-prados" && diasAtras < 28) base *= 0.62; // situación sembrada 1
+      base *= 1 + (d / 181) * 0.06; // leve crecimiento en el semestre
       if (diasAtras === 0) base *= fraccionHoy;
-      const cantidad = Math.max(0, Math.round(base + (azar() - 0.5) * base * 0.5));
+      const cantidad = Math.max(0, Math.round(base + (azar() - 0.5) * base * 0.4));
       const vendedores = VENDEDORES.filter((v) => v.sucursal === suc.id);
       for (let k = 0; k < cantidad; k++) {
         numero++;
-        const registrado = azar() < 0.45;
-        let cliente = registrado ? elegir(clientesPorSucursal[suc.id]) : null;
-        if (registrado && azar() < 0.035 && suc.id === "herrera") cliente = ozama;
-        const esEmpresa = cliente && ["constructora", "contratista", "revendedor"].includes(cliente.tipo);
-        const nLineas = esEmpresa ? entre(2, 6) : entre(1, 4);
+        let cliente = null;
+        const r = azar();
+        if (r < 0.1) cliente = elegir(clientesPorSucursal[suc.id].filter((c) => NEGOCIO.has(c.tipo)));
+        else if (r < 0.26) cliente = elegir(clientesPorSucursal[suc.id].filter((c) => c.tipo === "particular"));
+        if (cliente && suc.id === "gazcue" && azar() < 0.03) cliente = hotel;
+        const esNegocio = cliente && NEGOCIO.has(cliente.tipo);
+        const nLineas = esNegocio ? entre(2, 5) : entre(1, 3);
         const id = `F-${numero}`;
         let total = 0, costoTotal = 0;
         const vistos = new Set();
         for (let l = 0; l < nLineas; l++) {
-          const p = elegirProducto();
+          const p = esNegocio ? elegir(paraNegocio) : elegirProducto();
           if (vistos.has(p.codigo)) continue;
           vistos.add(p.codigo);
-          const grande = p.precio < 200 ? 10 : p.precio < 1000 ? 4 : 1;
-          let cant = esEmpresa ? entre(1, 6) * grande * (p.precio < 800 ? 3 : 1) : entre(1, 3) * Math.max(1, grande / 2);
-          cant = Math.max(1, Math.round(cant));
-          const descuento = esEmpresa ? [0, 0, 0.03, 0.05, 0.08][entre(0, 4)] : 0;
+          let cant;
+          if (esNegocio) cant = p.precio <= 15 ? entre(3, 15) * 10 : p.precio < 100 ? entre(1, 5) * 10 : entre(1, 6);
+          else cant = p.precio <= 15 ? entre(3, 20) : p.precio < 200 ? entre(1, 4) : 1;
+          const descuento = esNegocio ? [0, 0.05, 0.08, 0.1][entre(0, 3)] : 0;
           const precio = redondear(p.precio * (1 - descuento), 2);
-          const costoUnit = p.categoria === "Pinturas" && fecha < diaAumentoPintura ? p.costoAnterior : p.costo;
+          const costoUnit = p.categoria === "Bizcochos y tortas" && fecha < diaAumento ? p.costoAnterior : p.costo;
           const importe = redondear(precio * cant, 2);
           total += importe; costoTotal += costoUnit * cant;
           lineas.push({ factura: id, fecha, sucursal: suc.id, codigo: p.codigo, categoria: p.categoria, cantidad: cant, precio, importe, costo: redondear(costoUnit * cant, 2) });
         }
         if (total === 0) { numero--; continue; }
-        const aCredito = cliente && cliente.credito && azar() < 0.7;
+        const aCredito = cliente && cliente.credito && azar() < 0.75;
         facturas.push({
           id, fecha, sucursal: suc.id, vendedor: elegir(vendedores).id,
           cliente: cliente ? cliente.id : null, total: redondear(total, 2), costo: redondear(costoTotal, 2),
-          condicion: aCredito ? "crédito 30 días" : elegir(["efectivo", "efectivo", "tarjeta", "transferencia"]),
-          vence: aCredito ? sumarDias(fecha, 30) : fecha, pagado: aCredito ? 0 : redondear(total, 2),
+          condicion: aCredito ? "crédito 15 días" : elegir(["efectivo", "efectivo", "efectivo", "tarjeta", "transferencia"]),
+          vence: aCredito ? sumarDias(fecha, 15) : fecha, pagado: aCredito ? 0 : redondear(total, 2),
         });
       }
     }
   }
 
-  // Cobros: la mayoría paga entre 15 y 45 días después; Ozama (sembrada 3) dejó de pagar hace 105 días.
+  // Cobros: la mayoría paga entre 7 y 25 días después; el hotel (sembrada 3) dejó de pagar hace 95 días.
   for (const f of facturas) {
-    if (f.condicion !== "crédito 30 días") continue;
+    if (f.condicion !== "crédito 15 días") continue;
     const edad = diasEntre(f.fecha, hoyISO);
-    if (f.cliente === ozama.id) { if (edad > 105) f.pagado = f.total; continue; }
+    if (f.cliente === hotel.id) { if (edad > 95) f.pagado = f.total; continue; }
     const lento = azar() < 0.12;
-    const diasPago = lento ? entre(40, 80) : entre(12, 42);
+    const diasPago = lento ? entre(25, 50) : entre(7, 25);
     if (edad > diasPago) f.pagado = f.total;
-    else if (edad > 20 && azar() < 0.25) f.pagado = redondear(f.total * 0.5, 2);
+    else if (edad > 12 && azar() < 0.25) f.pagado = redondear(f.total * 0.5, 2);
   }
 
-  // Límites de crédito acordes con lo que cada cliente suele deber; solo Ozama queda por encima.
+  // Límites de crédito acordes con lo que cada cliente suele deber; solo el hotel queda por encima.
   const saldos = {};
   for (const f of facturas) if (f.cliente && f.total > f.pagado) saldos[f.cliente] = (saldos[f.cliente] ?? 0) + f.total - f.pagado;
   for (const c of clientes) {
-    if (c === ozama || !c.credito) continue;
+    if (c === hotel || !c.credito) continue;
     const saldo = saldos[c.id] ?? 0;
-    if (saldo * 1.25 > c.limiteCredito) c.limiteCredito = Math.ceil((saldo * 1.4) / 25000) * 25000;
+    if (saldo * 1.25 > c.limiteCredito) c.limiteCredito = Math.ceil((saldo * 1.4) / 5000) * 5000;
   }
 
-  // Inventario por sucursal
-  for (const p of productos) {
-    for (const s of SUCURSALES) {
-      const factor = s.id === "herrera" ? 1 : 0.7;
-      p.stock[s.id] = Math.round(p.minimo * factor * (1.1 + azar() * 2.4));
-    }
-  }
-  // Situaciones sembradas 2 y 5, y algunos productos bajo mínimo
-  porCodigo["CEM-001"].stock.herrera = 12;
-  porCodigo["PLO-017"].stock = { herrera: 9, "villa-mella": 5 };
-  porCodigo["ACE-002"].stock["villa-mella"] = 61;
-  porCodigo["ELE-013"].stock.herrera = 112;
-  porCodigo["PIN-001"].stock["villa-mella"] = 19;
-  porCodigo["CEM-013"].stock.herrera = 7;
-
-  // Pedidos de los últimos días (los del asistente de WhatsApp se agregan desde estado.js)
+  // Pedidos de los últimos días (los nuevos de la demo se agregan desde estado.js)
   const estados = ["nuevo", "en preparación", "listo para entrega", "en ruta", "entregado"];
-  const canales = ["Mostrador", "Teléfono", "Teléfono", "WhatsApp", "Correo"];
+  const canales = ["Mostrador", "Teléfono", "Teléfono", "WhatsApp", "WhatsApp", "Correo"];
+  const encargos = productos.filter((p) => p.anticipacionHoras === 24);
   const pedidos = [];
   for (let i = 0; i < 16; i++) {
-    // Los pedidos de "hoy" nunca quedan en el futuro: su hora va de las 7:30 a. m. hasta
-    // unos minutos antes de ahora. Antes de abrir (7:40 a. m.) pasan a ser de ayer.
+    // Los pedidos de "hoy" nunca quedan en el futuro: su hora va de las 6:00 a. m. hasta
+    // unos minutos antes de ahora. Antes de abrir (6:10 a. m.) pasan a ser de ayer.
     const ahora = new Date();
     const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
-    const hayHoy = minutosAhora >= 460;
+    const hayHoy = minutosAhora >= 370;
     const diasAtras = i < 7 ? (hayHoy ? 0 : 1) : i < 12 ? 1 : 2;
-    const minutoPedido = diasAtras === 0 ? entre(450, Math.max(450, minutosAhora - 5)) : entre(480, 1019);
-    const c = elegir(clientes.slice(0, 60));
+    const minutoPedido = diasAtras === 0 ? entre(360, Math.max(360, minutosAhora - 5)) : entre(380, 1170);
+    const esEncargo = azar() < 0.35;
+    const c = esEncargo ? elegir(clientes.slice(30)) : elegir(clientes.slice(0, 30));
     const items = [];
-    const n = entre(1, 4);
-    for (let j = 0; j < n; j++) {
-      const p = elegirProducto();
-      if (items.some((x) => x.codigo === p.codigo)) continue;
-      items.push({ codigo: p.codigo, nombre: p.nombre, cantidad: p.precio < 800 ? entre(5, 40) : entre(1, 6), precio: p.precio });
+    if (esEncargo) {
+      const p = elegir(encargos);
+      items.push({ codigo: p.codigo, nombre: p.nombre, cantidad: 1, precio: p.precio });
+      if (azar() < 0.5) { const q = elegir(paraNegocio); items.push({ codigo: q.codigo, nombre: q.nombre, cantidad: entre(1, 3) * 12, precio: q.precio }); }
+    } else {
+      const n = entre(2, 4);
+      for (let j = 0; j < n; j++) {
+        const p = elegir(paraNegocio);
+        if (items.some((x) => x.codigo === p.codigo)) continue;
+        items.push({ codigo: p.codigo, nombre: p.nombre, cantidad: p.precio <= 15 ? entre(5, 20) * 10 : p.precio < 100 ? entre(2, 6) * 10 : entre(2, 10), precio: p.precio });
+      }
     }
     const subtotal = items.reduce((a, x) => a + x.cantidad * x.precio, 0);
     pedidos.push({
@@ -511,15 +470,38 @@ export function generarDatos(hoyISO = fechaISO(new Date())) {
     });
   }
 
-  // La ruta del camión 2 (el PDF de ejemplo public/ejemplos/reporte-de-entregas-camion-2.pdf)
+  // La ruta de reparto de la mañana (el PDF de ejemplo public/ejemplos/reporte-de-entregas-ruta-manana.pdf)
   // siempre tiene los mismos pedidos y clientes, sea cual sea la fecha.
-  const RUTA_CAMION_2 = { "P-1302": "C006", "P-1305": "C004", "P-1306": "C008", "P-1307": "C011" };
+  const RUTA_MANANA = { "P-1302": "C003", "P-1305": "C006", "P-1306": "C010", "P-1307": "C011" };
   for (const p of pedidos) {
-    const c = clientes.find((x) => x.id === RUTA_CAMION_2[p.id]);
+    const c = clientes.find((x) => x.id === RUTA_MANANA[p.id]);
     if (!c) continue;
-    Object.assign(p, { cliente: c.nombre, telefono: c.telefono, sucursal: c.sucursal, estado: "en ruta", entrega: "envío" });
+    const pan = porCodigo["PAN-001"], sobao = porCodigo["PAN-002"], pastelito = porCodigo["SAL-001"];
+    const items = [
+      { codigo: pan.codigo, nombre: pan.nombre, cantidad: 120 + Number(p.id.slice(-1)) * 20, precio: pan.precio },
+      { codigo: sobao.codigo, nombre: sobao.nombre, cantidad: 60, precio: sobao.precio },
+      { codigo: pastelito.codigo, nombre: pastelito.nombre, cantidad: 30, precio: pastelito.precio },
+    ];
+    const subtotal = items.reduce((a, x) => a + x.cantidad * x.precio, 0);
+    Object.assign(p, { cliente: c.nombre, telefono: c.telefono, sucursal: "gazcue", estado: "en ruta", entrega: "envío", canal: "Teléfono", items, subtotal: redondear(subtotal, 2), total: redondear(subtotal * (1 + EMPRESA.itbis), 2) });
   }
 
-  cache = { hoy: hoyISO, productos, porCodigo, clientes, facturas, lineas, pedidos, vendedores: VENDEDORES, sucursales: SUCURSALES };
+  // Consignación: la panadería deja productos empacados en las tiendas de una cadena de
+  // minimarkets (ficticia) y cobra lo que se vende. La cadena manda cada semana un PDF con
+  // las ventas por tienda y producto (public/ejemplos/reporte-ventas-la-canasta.pdf), que se
+  // importa en el panel. Lo entregado es fijo para que el PDF de ejemplo cuadre cualquier día.
+  const consignacion = {
+    cliente: CONSIGNACION.cliente,
+    comision: CONSIGNACION.comision,
+    tiendas: CONSIGNACION.tiendas,
+    productos: CONSIGNACION.productos.map(([codigo, codigoCliente, nombreCliente, porSemana]) => ({
+      codigo, codigoCliente, nombreCliente, nombre: porCodigo[codigo].nombre,
+      precioLiquidar: redondear(porCodigo[codigo].precio * (1 - CONSIGNACION.comision), 2), porSemana,
+    })),
+    desde: sumarDias(hoyISO, -6), hasta: hoyISO,
+  };
+  consignacion.entregas = consignacion.tiendas.flatMap((t) => consignacion.productos.map((pr) => ({ tienda: t.id, codigo: pr.codigo, unidades: Math.round(pr.porSemana * t.factor) })));
+
+  cache = { hoy: hoyISO, productos, porCodigo, insumos, clientes, facturas, lineas, pedidos, consignacion, vendedores: VENDEDORES, sucursales: SUCURSALES };
   return cache;
 }

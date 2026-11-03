@@ -7,6 +7,7 @@ import { hoy } from "./negocio.js";
 import { pedirClave } from "./clave.js";
 
 const MAX_PASOS = 8;
+// Se conserva el nombre de cuando la empresa era una ferretería, para no volver a pedir la clave.
 const CLAVE_ACCESO = "demo-los-pinos-clave";
 
 function leerClave() { try { return localStorage.getItem(CLAVE_ACCESO) ?? ""; } catch { return ""; } }
@@ -85,7 +86,7 @@ export class Conversacion {
 }
 
 // Lee un PDF o una foto en una sola consulta. archivo: { tipo: "document" | "image",
-// media_type, datos (base64), nombre }. contexto: catálogo, clientes y pedidos en texto.
+// media_type, datos (base64), nombre }. contexto: menú, clientes y pedidos en texto.
 // Devuelve lo que propone la IA (tipo, resumen, pedido_nuevo, actualizaciones, dudas);
 // nada se aplica hasta que una persona lo apruebe en el panel.
 export async function leerDocumento(archivo, contexto) {

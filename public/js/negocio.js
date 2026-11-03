@@ -2,10 +2,10 @@
 // la IA (a través de herramientas.js), así que el panel y el asistente siempre
 // muestran las mismas cifras.
 
-import { generarDatos, EMPRESA, SUCURSALES, VENDEDORES, CATEGORIAS, sumarDias, diasEntre, fechaISO } from "./datos.js";
+import { generarDatos, EMPRESA, SUCURSALES, VENDEDORES, CATEGORIAS, CATEGORIAS_INSUMOS, sumarDias, diasEntre, fechaISO } from "./datos.js";
 import { leerEstado } from "./estado.js";
 
-export { EMPRESA, SUCURSALES, VENDEDORES, CATEGORIAS, sumarDias, diasEntre };
+export { EMPRESA, SUCURSALES, VENDEDORES, CATEGORIAS, CATEGORIAS_INSUMOS, sumarDias, diasEntre };
 
 export const hoy = () => fechaISO(new Date());
 export const datos = () => generarDatos(hoy());
@@ -30,14 +30,10 @@ const nombreVendedor = (id) => VENDEDORES.find((v) => v.id === id)?.nombre ?? id
 
 // ---------- productos ----------
 
-export function buscarProductos({ texto, categoria, sucursal, soloBajoMinimo, sinMovimientoDias, limite = 15, orden } = {}) {
+export function buscarProductos({ texto, categoria, sinVentasDias, limite = 15, orden } = {}) {
   const d = datos();
   const ventas30 = unidadesVendidas(30);
-  let lista = d.productos.map((p) => {
-    const stockTotal = Object.values(p.stock).reduce((a, b) => a + b, 0);
-    const v30 = ventas30[p.codigo] ?? { total: 0 };
-    return { p, stockTotal, v30 };
-  });
+  let lista = d.productos.map((p) => ({ p, v30: ventas30[p.codigo] ?? { total: 0 } }));
   if (categoria) {
     const c = normalizar(categoria);
     lista = lista.filter(({ p }) => normalizar(p.categoria).includes(c));
@@ -52,30 +48,52 @@ export function buscarProductos({ texto, categoria, sucursal, soloBajoMinimo, si
     const mejor = Math.max(0, ...puntuados.map((x) => x.puntos));
     lista = puntuados.filter((x) => x.puntos >= Math.max(1, mejor - (t.length > 2 ? 1 : 0))).sort((a, b) => b.puntos - a.puntos);
   }
-  if (soloBajoMinimo) {
-    lista = lista.filter(({ p }) => (sucursal ? [sucursal] : Object.keys(p.stock)).some((s) => p.stock[s] < p.minimo * (s === "herrera" ? 1 : 0.7)));
-  }
-  if (sinMovimientoDias) {
-    const vendidos = unidadesVendidas(sinMovimientoDias);
-    lista = lista.filter(({ p, stockTotal }) => !vendidos[p.codigo] && stockTotal > 0);
+  if (sinVentasDias) {
+    const vendidos = unidadesVendidas(sinVentasDias);
+    lista = lista.filter(({ p }) => !vendidos[p.codigo]);
   }
   if (orden === "mas_vendidos") lista.sort((a, b) => b.v30.total - a.v30.total);
-  if (orden === "menor_cobertura") lista.sort((a, b) => cobertura(a) - cobertura(b));
   return {
     encontrados: lista.length,
-    productos: lista.slice(0, limite).map(({ p, stockTotal, v30 }) => ({
+    productos: lista.slice(0, limite).map(({ p, v30 }) => ({
       codigo: p.codigo, nombre: p.nombre, categoria: p.categoria, unidad: p.unidad,
       precio_sin_itbis: p.precio, costo: p.costo, margen_pct: pct(p.precio - p.costo, p.precio),
-      stock: Object.fromEntries(Object.entries(p.stock).map(([s, n]) => [nombreSucursal(s), n])),
-      stock_total: stockTotal, minimo_herrera: p.minimo, minimo_villa_mella: Math.round(p.minimo * 0.7),
+      por_encargo: p.anticipacionHoras > 0, anticipacion_horas: p.anticipacionHoras,
       unidades_vendidas_30_dias: v30.total,
-      dias_de_inventario: v30.total ? Math.round((stockTotal / (v30.total / 30)) * 10) / 10 : null,
-      dias_de_inventario_por_sucursal: Object.fromEntries(Object.keys(p.stock).map((s) => [nombreSucursal(s), v30[s] ? Math.round((p.stock[s] / (v30[s] / 30)) * 10) / 10 : null])),
-      proveedor: p.proveedor,
     })),
   };
 }
-function cobertura({ stockTotal, v30 }) { return v30.total ? stockTotal / (v30.total / 30) : 9999; }
+
+// ---------- insumos (inventario de la producción) ----------
+
+export function consultarInsumos({ texto, categoria, sucursal, soloBajoMinimo, orden, limite = 30 } = {}) {
+  const d = datos();
+  const sucursalId = sucursal ? SUCURSALES.find((s) => normalizar(s.nombre) === normalizar(sucursal) || s.id === sucursal)?.id : null;
+  if (sucursal && !sucursalId) return { error: `No existe la sucursal "${sucursal}". Sucursales: ${SUCURSALES.map((s) => s.nombre).join(", ")}.` };
+  const suc = sucursalId ? [sucursalId] : SUCURSALES.map((s) => s.id);
+  let lista = d.insumos.map((x) => {
+    const dias = Object.fromEntries(suc.map((s) => [s, Math.round((x.stock[s] / x.uso[s]) * 10) / 10]));
+    return { x, dias, menor: Math.min(...Object.values(dias)) };
+  });
+  if (categoria) { const c = normalizar(categoria); lista = lista.filter(({ x }) => normalizar(x.categoria).includes(c)); }
+  if (texto) {
+    const t = terminos(texto);
+    lista = lista.filter(({ x }) => { const n = terminos(`${x.nombre} ${x.categoria}`); return t.some((ti) => n.some((ni) => ni.startsWith(ti) || ti.startsWith(ni) && ni.length > 2)); });
+  }
+  if (soloBajoMinimo) lista = lista.filter(({ menor }) => menor < 3);
+  if (orden !== "nombre") lista.sort((a, b) => a.menor - b.menor);
+  return {
+    nota: "El mínimo de cada insumo es lo que se usa en 3 días.",
+    encontrados: lista.length,
+    insumos: lista.slice(0, limite).map(({ x, dias }) => ({
+      codigo: x.codigo, nombre: x.nombre, categoria: x.categoria, unidad: x.unidad, costo: x.costo, proveedor: x.proveedor,
+      existencia: Object.fromEntries(suc.map((s) => [nombreSucursal(s), x.stock[s]])),
+      uso_diario: Object.fromEntries(suc.map((s) => [nombreSucursal(s), x.uso[s]])),
+      dias_que_alcanza: Object.fromEntries(suc.map((s) => [nombreSucursal(s), dias[s]])),
+      bajo_minimo: suc.filter((s) => dias[s] < 3).map(nombreSucursal),
+    })),
+  };
+}
 
 let cacheUnidades = {};
 export function unidadesVendidas(dias) {
@@ -110,7 +128,7 @@ export function resumenVentas({ desde, hasta, sucursal, categoria, vendedor, cli
   const sucursalId = sucursal ? SUCURSALES.find((s) => normalizar(s.nombre) === normalizar(sucursal) || s.id === sucursal)?.id : null;
   const vendedorId = vendedor ? VENDEDORES.find((v) => normalizar(v.nombre).includes(normalizar(vendedor)) || v.id === vendedor)?.id : null;
   const clienteObj = cliente ? d.clientes.find((c) => normalizar(c.nombre).includes(normalizar(cliente)) || c.id === cliente) : null;
-  if (sucursal && !sucursalId) return { error: `No existe la sucursal "${sucursal}". Sucursales: Herrera, Villa Mella.` };
+  if (sucursal && !sucursalId) return { error: `No existe la sucursal "${sucursal}". Sucursales: Gazcue, Los Prados.` };
   if (vendedor && !vendedorId) return { error: `No existe el vendedor "${vendedor}".` };
   if (cliente && !clienteObj) return { error: `No encontré un cliente que coincida con "${cliente}".` };
 
@@ -224,15 +242,17 @@ export function todosLosPedidos() {
     .sort((a, b) => (b.fecha + b.hora.padStart(5, "0")).localeCompare(a.fecha + a.hora.padStart(5, "0")));
 }
 
-export function verPedidos({ estado, canal, limite = 15 } = {}) {
+export function verPedidos({ estado, canal, soloEncargos, limite = 15 } = {}) {
+  const d = datos();
   let lista = todosLosPedidos();
   if (estado) lista = lista.filter((p) => normalizar(p.estado).includes(normalizar(estado)));
   if (canal) lista = lista.filter((p) => normalizar(p.canal).includes(normalizar(canal)));
+  if (soloEncargos) lista = lista.filter((p) => p.estado !== "entregado" && p.items.some((i) => (d.porCodigo[i.codigo]?.anticipacionHoras ?? 0) > 0));
   const abiertos = todosLosPedidos().filter((p) => p.estado !== "entregado");
   return {
     pedidos_abiertos: abiertos.length,
     encontrados: lista.length,
-    pedidos: lista.slice(0, limite).map((p) => ({ id: p.id, fecha: p.fecha, hora: p.hora, cliente: p.cliente, canal: p.canal, estado: p.estado, entrega: p.entrega, total_con_itbis: p.total, articulos: p.items.map((i) => `${i.cantidad} x ${i.nombre}`).join("; "), ...(p.novedad ? { novedad: p.novedad } : {}) })),
+    pedidos: lista.slice(0, limite).map((p) => ({ id: p.id, fecha: p.fecha, hora: p.hora, cliente: p.cliente, canal: p.canal, estado: p.estado, entrega: p.entrega, total_con_itbis: p.total, es_encargo: p.items.some((i) => (d.porCodigo[i.codigo]?.anticipacionHoras ?? 0) > 0), ...(p.para_cuando ? { para_cuando: p.para_cuando } : {}), ...(p.nota ? { nota: p.nota } : {}), articulos: p.items.map((i) => `${i.cantidad} x ${i.nombre}`).join("; "), ...(p.novedad ? { novedad: p.novedad } : {}) })),
   };
 }
 
@@ -241,13 +261,12 @@ export function verPedidos({ estado, canal, limite = 15 } = {}) {
 export function alertas() {
   const d = datos();
   const lista = [];
-  // Inventario que se agota en 3 días o menos (por sucursal)
-  const v30 = unidadesVendidas(30);
-  for (const p of d.productos) {
+  // Insumos que se acaban en 2 días o menos (por sucursal)
+  for (const x of d.insumos) {
     for (const s of SUCURSALES) {
-      const diario = (v30[p.codigo]?.[s.id] ?? 0) / 30;
-      if (diario > 0 && p.stock[s.id] / diario <= 3) {
-        lista.push({ tipo: "inventario", gravedad: "alta", titulo: `${p.nombre} se agota en ${s.nombre}`, detalle: `Quedan ${p.stock[s.id]} (${p.unidad}); se venden unas ${Math.round(diario * 10) / 10} por día: alcanza para ${Math.max(1, Math.round(p.stock[s.id] / diario))} día(s).`, codigo: p.codigo });
+      const dias = x.stock[s.id] / x.uso[s.id];
+      if (dias <= 2) {
+        lista.push({ tipo: "inventario", gravedad: "alta", titulo: `${x.nombre.replace(/ \(.*\)$/, "")} se acaba en ${s.nombre}`, detalle: `Quedan ${x.stock[s.id]} (${x.unidad}); se usan unas ${x.uso[s.id]} por día: alcanza para ${Math.round(dias * 10) / 10} días. Proveedor: ${x.proveedor}.`, codigo: x.codigo });
       }
     }
   }
@@ -274,10 +293,15 @@ export function alertas() {
       lista.push({ tipo: "margen", gravedad: "media", titulo: `El margen de ${cat} bajó de ${previo} % a ${actual} %`, detalle: "El costo de compra subió y los precios de venta no se ajustaron." });
     }
   }
-  // Inventario sin movimiento en 90 días
-  for (const x of buscarProductos({ sinMovimientoDias: 90, limite: 20 }).productos) {
-    const valor = x.stock_total * x.costo;
-    lista.push({ tipo: "inventario", gravedad: "baja", titulo: `${x.nombre}: sin ventas en 90 días`, detalle: `Hay ${x.stock_total} en tienda, unos RD$${Math.round(valor).toLocaleString("es-DO")} a costo detenidos.`, codigo: x.codigo });
+  // Productos del menú sin ventas en 90 días
+  for (const x of buscarProductos({ sinVentasDias: 90, limite: 20 }).productos) {
+    lista.push({ tipo: "menu", gravedad: "baja", titulo: `${x.nombre}: sin ventas en 90 días`, detalle: "Está en el menú pero nadie lo ha comprado. Conviene revisar si se sigue ofreciendo.", codigo: x.codigo });
+  }
+  // Consignación: la cadena reporta más vendido que lo entregado
+  if (leerEstado().reporteVentas) {
+    for (const t of consignacion().tiendas) for (const x of t.productos) {
+      if (x.revisar) lista.push({ tipo: "consignacion", gravedad: "media", titulo: `${t.tienda}: ${x.producto} no cuadra`, detalle: `${x.revisar}. Conviene revisarlo con la cadena antes de facturar.` });
+    }
   }
   // Pedidos de WhatsApp que esperan a una persona
   for (const a of leerEstado().atenciones.filter((x) => !x.atendida)) {
@@ -301,7 +325,42 @@ export function indicadoresInicio() {
   const finCorteAnt = fechaISO(new Date(a, m - 2, Math.min(diaDelMes, new Date(a, m - 1, 0).getDate())));
   const mesAnt = resumenVentas({ desde: inicioMesAnt, hasta: finCorteAnt });
   const cxc = cuentasPorCobrar({ limite: 0 });
-  const bajoMinimo = buscarProductos({ soloBajoMinimo: true, limite: 0 }).encontrados;
+  const bajoMinimo = consultarInsumos({ soloBajoMinimo: true, limite: 0 }).encontrados;
   const abiertos = todosLosPedidos().filter((p) => p.estado !== "entregado").length;
   return { hoyV, mismoDiaSemanaPasada, mes, mesAnt, cxc, bajoMinimo, abiertos };
+}
+
+// ---------- consignación (cadena de minimarkets) ----------
+// Compara lo entregado en la semana con lo que la cadena reporta vendido en su PDF
+// (importado desde el panel). Sin reporte importado, lo vendido queda en null: nunca cero.
+
+export function consignacion({ tienda } = {}) {
+  const d = datos();
+  const c = d.consignacion;
+  const reporte = leerEstado().reporteVentas ?? null;
+  const vendido = {};
+  for (const l of reporte?.lineas ?? []) vendido[`${l.tienda}|${l.codigo}`] = (vendido[`${l.tienda}|${l.codigo}`] ?? 0) + l.unidades;
+  const prod = Object.fromEntries(c.productos.map((p) => [p.codigo, p]));
+  let tiendas = c.tiendas;
+  if (tienda) { const t = normalizar(tienda); tiendas = tiendas.filter((x) => normalizar(x.nombre).includes(t) || normalizar(x.enReporte).includes(t)); }
+  const filas = tiendas.map((t) => {
+    const productos = c.entregas.filter((e) => e.tienda === t.id).map((e) => {
+      const v = reporte ? vendido[`${t.id}|${e.codigo}`] ?? 0 : null;
+      return {
+        codigo: e.codigo, producto: prod[e.codigo].nombre, entregado: e.unidades, vendido: v,
+        en_tienda: v === null ? null : e.unidades - v, a_liquidar: v === null ? null : r2(v * prod[e.codigo].precioLiquidar),
+        revisar: v !== null && v > e.unidades ? `Reportan ${v} vendidos y se entregaron ${e.unidades}` : undefined,
+      };
+    });
+    const suma = (k) => (reporte ? r2(productos.reduce((a, x) => a + x[k], 0)) : null);
+    return { tienda: t.nombre, entregado: productos.reduce((a, x) => a + x.entregado, 0), vendido: suma("vendido"), a_liquidar: suma("a_liquidar"), productos };
+  });
+  return {
+    cliente: c.cliente, periodo: `${c.desde} al ${c.hasta}`, comision_de_la_cadena_pct: c.comision * 100,
+    reporte: reporte ? { importado: reporte.importado, periodo: reporte.periodo, no_reconocidas: reporte.noReconocidas } : "Todavía no se ha importado el reporte de ventas de esta semana.",
+    total_entregado: filas.reduce((a, f) => a + f.entregado, 0),
+    total_vendido: reporte ? filas.reduce((a, f) => a + f.vendido, 0) : null,
+    total_a_liquidar: reporte ? r2(filas.reduce((a, f) => a + f.a_liquidar, 0)) : null,
+    tiendas: filas,
+  };
 }

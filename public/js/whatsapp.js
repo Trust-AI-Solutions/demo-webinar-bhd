@@ -1,4 +1,4 @@
-// Asistente de WhatsApp de la ferretería (vista de cliente).
+// Asistente de WhatsApp de la panadería (vista de cliente).
 
 import { Conversacion } from "./ia.js";
 import { ICONOS } from "./iconos.js";
@@ -7,11 +7,11 @@ import { alCambiar } from "./estado.js";
 
 const $ = (s) => document.querySelector(s);
 const conversacion = new Conversacion("whatsapp");
-const SALUDO = "¡Hola! 👋 Gracias por escribir a *Ferretería Los Pinos*. Soy el asistente virtual: le ayudo con precios, disponibilidad, cotizaciones y pedidos. ¿Qué necesita hoy?";
+const SALUDO = "¡Hola! 👋 Gracias por escribir a *Panadería El Trigal*. Soy el asistente virtual: le ayudo con precios, encargos de bizcochos y picaderas, cotizaciones y pedidos. ¿Qué necesita hoy?";
 const SUGERENCIAS = [
-  "¿Tienen cemento gris? ¿A cómo está?",
-  "Cotízame 20 varillas de 3/8 y 10 sacos de cemento",
-  "¿Hacen envío a Villa Mella?",
+  "¿A cómo está el bizcocho dominicano de 3 libras?",
+  "Cotízame 50 pastelitos de pollo y 50 quipes para el viernes",
+  "¿Hacen entregas en Naco?",
   "Quiero hacer un pedido",
   "¿Me pueden hacer un descuento?",
   "¿A qué hora abren el domingo?",

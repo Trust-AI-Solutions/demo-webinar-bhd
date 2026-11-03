@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demo · Ferretería Los Pinos</title>
+<title>Demo · Panadería El Trigal</title>
 <meta name="description" content="Demostración de un panel de negocio y un asistente de WhatsApp con IA, con una empresa y datos ficticios.">
 <link rel="preload" href="fuentes/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/estilos.css">
@@ -11,16 +11,16 @@
 </head>
 <body>
 <!--
-THESIS: la portada es la carta de colores en la mano: tres muestras abiertas en abanico sobre un remache, cada una es una forma de ver la demo. Rechaza la portada de tres tarjetas iguales.
-OWN-WORLD: cartón gris cálido, muestras Verde Pino, Azul Ozama y verde WhatsApp con etiqueta blanca, remache dibujado sobre el que gira el abanico, SF Pro (Inter fuera de Apple).
-STORY: el público entiende que es una ferretería como la de ellos y que todo lo que verá funciona; quien presenta escoge una muestra.
+THESIS: la portada son las etiquetas de la vitrina de la panadería: tres etiquetas atadas con un cordel, abiertas en abanico; cada una es una forma de ver la demo. Rechaza la portada de tres tarjetas iguales.
+OWN-WORLD: papel de estraza, cintas Corteza, Añil y verde WhatsApp con tarjeta blanca, nudo de cordel sobre el que gira el abanico, SF Pro (Inter fuera de Apple).
+STORY: el público entiende que es una panadería como las que conoce y que todo lo que verá funciona; quien presenta escoge una etiqueta.
 FIRST VIEWPORT: a la izquierda el titular grande y el lema; a la derecha el abanico de tres muestras que se abre al cargar. La acción es tocar una muestra.
-FORM: carta de colores de pintura, candidato 4 de 7, semilla 5e3cd307 (tirada degradada, sin retadores).
+FORM: etiquetas de vitrina (antes carta de colores; mismo esqueleto, mundo de panadería).
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 -->
 <section class="intro" id="intro" aria-label="Introducción">
   <header>
-    <span class="marca"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></span></span>
+    <span class="marca"><span class="logo" data-icono="logo"></span><span><b>Panadería El Trigal</b><small>Santo Domingo · empresa ficticia</small></span></span>
     <span class="ficticio">Demostración con datos ficticios</span>
   </header>
   <div class="intro__escena" id="intro-escena"></div>
@@ -32,27 +32,27 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 <div class="portada" id="portada" hidden>
   <header>
-    <span class="marca"><span class="logo" data-icono="pino"></span><span><b>Ferretería Los Pinos</b><small>Santo Domingo · empresa ficticia</small></span></span>
+    <span class="marca"><span class="logo" data-icono="logo"></span><span><b>Panadería El Trigal</b><small>Santo Domingo · empresa ficticia</small></span></span>
     <span class="ficticio">Demostración con datos ficticios</span>
   </header>
 
   <section class="escena">
     <div>
       <h1>Así trabaja la IA en una empresa como la suya</h1>
-      <p class="lema">Una ferretería con dos sucursales, 145 productos y seis meses de ventas. El dueño le pregunta a su negocio en sus palabras, y los clientes cotizan y piden por WhatsApp a cualquier hora.</p>
-      <p class="instruccion">Escoja una muestra de la carta</p>
+      <p class="lema">Una panadería con dos sucursales, unos 60 productos y seis meses de ventas. El dueño le pregunta a su negocio en sus palabras, y los clientes encargan y piden por WhatsApp a cualquier hora.</p>
+      <p class="instruccion">Escoja una etiqueta</p>
     </div>
     <nav class="abanico cerrado" id="abanico" aria-label="Vistas de la demo">
-      <svg class="remache" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#8f8b80"/><circle cx="12" cy="12" r="7.5" fill="#c9c6bd"/><circle cx="12" cy="12" r="3.5" fill="#5d655f"/></svg>
+      <svg class="remache" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#c49a62"/><circle cx="12" cy="12" r="10.5" fill="none" stroke="#8a4a1f" stroke-width="1.2" stroke-dasharray="2.2 1.6"/><circle cx="12" cy="12" r="3.6" fill="#f3ece1"/><path d="M4.5 7.5 19.5 16.5M4.5 16.5 19.5 7.5" stroke="#8a4a1f" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg>
       <a href="whatsapp.html" data-chip="whatsapp">
         <span class="campo"><span data-icono="whatsapp"></span><h2>WhatsApp</h2></span>
-        <span class="etiqueta"><p><b>Asistente de WhatsApp.</b> Precios, disponibilidad, cotizaciones y pedidos. Pasa a una persona cuando hace falta.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
+        <span class="etiqueta"><p><b>Asistente de WhatsApp.</b> Precios, encargos de bizcochos, cotizaciones y pedidos. Pasa a una persona cuando hace falta.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
       </a>
-      <a href="panel.html" data-chip="ozama">
+      <a href="panel.html" data-chip="anil">
         <span class="campo"><span data-icono="ventas"></span><h2>Panel</h2></span>
-        <span class="etiqueta"><p><b>Panel del negocio.</b> Ventas, inventario, cobros, pedidos y alertas, con un asistente que responde sobre las cifras.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
+        <span class="etiqueta"><p><b>Panel del negocio.</b> Ventas, insumos, cobros, pedidos y alertas, con un asistente que responde sobre las cifras.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
       </a>
-      <a href="en-vivo.html" data-chip="pino">
+      <a href="en-vivo.html" data-chip="corteza">
         <span class="campo"><span data-icono="pantalla"></span><h2>Los dos a la vez</h2></span>
         <span class="etiqueta"><p><b>En vivo.</b> WhatsApp y panel lado a lado: el pedido del cliente aparece en el panel en el momento.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
       </a>
@@ -61,7 +61,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   <footer>
     <button class="boton secundario pequeno" id="restablecer" type="button">Restablecer la demo</button>
-    <span id="restablecido">Borra los pedidos, cotizaciones y avisos creados durante la demo.</span>
+    <span id="restablecido">Borra los pedidos, encargos, cotizaciones y avisos creados durante la demo.</span>
     <button class="boton secundario pequeno" id="ver-intro" type="button">Ver la introducción</button>
   </footer>
 </div>

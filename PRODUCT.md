@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-A live, working mock-up that shows what AI does inside a business like theirs: a business panel the owner can question in plain Spanish, and a WhatsApp assistant that quotes and takes orders that land in the panel. Success: in a few minutes an owner understands "this could run in my business" and wants the free diagnosis offered at the end of the webinar.
+A live, working mock-up that shows what AI does inside a business like theirs: a business panel the owner can question in plain Spanish, and a WhatsApp assistant that quotes, takes cake orders and other orders that land in the panel. Success: in a few minutes an owner understands "this could run in my business" and wants the free diagnosis offered at the end of the webinar.
 
 ## Positioning
 
@@ -28,7 +28,7 @@ Everything on screen is real and working, not a slideshow: the AI answers from t
 ## Capabilities and Constraints
 
 - Static site in `public/` (plain HTML, CSS, ES modules; Chart.js 4.4.1 vendored), one Netlify function `netlify/functions/ia` that calls Claude. No build step, no framework.
-- Fictional company "Ferretería Los Pinos, SRL": hardware store, two branches (Herrera, Villa Mella), 145 products, 120 customers, about 2,900 tickets over six months ending today; five planted situations for the AI to find. Name, sector, data, AI behaviour and features stay as they are.
+- Fictional company "Panadería y Repostería El Trigal, SRL": bakery, two branches (Gazcue with the main oven, Los Prados), 63 menu products, 28 production ingredients, 120 customers (walk-in people plus colmados, cafeterías, hotels), about 10,500 tickets over six months ending today; five planted situations for the AI to find. Changed from a hardware store on 03/11/2026 (Jorge). It must not resemble any beta client: no consignment, no supermarket reports, no "minis", no assistant called "Dulce".
 - The WhatsApp window (`whatsapp.html` and its styles) stays exactly as it is; it must keep looking like WhatsApp.
 - All client-visible text in Spanish (Dominican), no internal jargon; data always labelled as fictional.
 - No real company from the Trust beta (or any real business) may appear.

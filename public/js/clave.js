@@ -3,22 +3,22 @@
 // La usan el panel y WhatsApp, así que trae sus propios estilos.
 
 const ESTILOS = `
-.clave-dialogo { border: 0; padding: 0; border-radius: 6px; width: min(380px, calc(100vw - 32px)); background: #fff; color: #1c1f1d; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .45); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Sitio", "Inter", "Segoe UI", system-ui, sans-serif; overflow: hidden; }
-.clave-dialogo::backdrop { background: rgba(28, 31, 29, .55); }
-.clave-dialogo .franja { background: #1c1f1d; color: #fff; padding: 14px 18px; font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+.clave-dialogo { border: 0; padding: 0; border-radius: 6px; width: min(380px, calc(100vw - 32px)); background: #fff; color: #241c17; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .45); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Sitio", "Inter", "Segoe UI", system-ui, sans-serif; overflow: hidden; }
+.clave-dialogo::backdrop { background: rgba(43, 30, 24, .55); }
+.clave-dialogo .franja { background: #241c17; color: #fff; padding: 14px 18px; font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
 .clave-dialogo form { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 12px; margin: 0; }
-.clave-dialogo p { margin: 0; color: #4a524d; font-size: 14px; }
-.clave-dialogo .error { color: #9b2b1f; font-weight: 600; }
-.clave-dialogo .campo { display: flex; border: 1px solid #c9c6bd; border-radius: 4px; overflow: hidden; }
-.clave-dialogo .campo:focus-within { outline: 3px solid #f0bf2e; outline-offset: 1px; border-color: #1c1f1d; }
+.clave-dialogo p { margin: 0; color: #54473e; font-size: 14px; }
+.clave-dialogo .error { color: #9e2424; font-weight: 600; }
+.clave-dialogo .campo { display: flex; border: 1px solid #cdbdaa; border-radius: 4px; overflow: hidden; }
+.clave-dialogo .campo:focus-within { outline: 3px solid #ebbb4c; outline-offset: 1px; border-color: #241c17; }
 .clave-dialogo input { flex: 1; min-width: 0; border: 0; padding: 11px 12px; font: inherit; font-size: 16px; letter-spacing: .08em; outline: none; background: #fff; color: inherit; }
-.clave-dialogo .ojo { border: 0; border-left: 1px solid #dedcd5; background: #f8f7f4; width: 46px; display: grid; place-items: center; cursor: pointer; color: #4a524d; }
+.clave-dialogo .ojo { border: 0; border-left: 1px solid #e4d9ca; background: #faf6ef; width: 46px; display: grid; place-items: center; cursor: pointer; color: #54473e; }
 .clave-dialogo .ojo svg { width: 20px; height: 20px; }
 .clave-dialogo .acciones { display: flex; justify-content: flex-end; gap: 8px; }
 .clave-dialogo .acciones button { border-radius: 4px; padding: 9px 16px; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; }
-.clave-dialogo .cancelar { background: #fff; border: 1px solid #c9c6bd; color: #1c1f1d; }
-.clave-dialogo .entrar { background: #1c1f1d; border: 0; color: #fff; }
-.clave-dialogo button:focus-visible { outline: 3px solid #f0bf2e; outline-offset: 2px; }
+.clave-dialogo .cancelar { background: #fff; border: 1px solid #cdbdaa; color: #241c17; }
+.clave-dialogo .entrar { background: #241c17; border: 0; color: #fff; }
+.clave-dialogo button:focus-visible { outline: 3px solid #ebbb4c; outline-offset: 2px; }
 `;
 
 const OJO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
