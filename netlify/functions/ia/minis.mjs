@@ -37,7 +37,7 @@ ${REGLAS_DEMO}`,
 Recibes un PDF o una foto del reporte, y como referencia la lista de tiendas y productos de Minis en esa cadena.
 
 Reglas:
-- Solo transcribes: una línea por tienda y producto, tal como aparece. Copia la tienda (código y nombre), la descripción del producto y el código del artículo de la cadena sin cambiarlos. No sumes, no corrijas cifras y no conviertas descripciones a los nombres de Minis: el panel cuadra cada línea con el catálogo.
+- Solo transcribes, agrupando por tienda: copia la tienda (código y nombre) una vez y, debajo, cada producto en un texto corto «código | descripción | unidades» (por ejemplo «LP-40211 | MINIS BIZC VAINILLA 1 UN | 3»). Copia el código del artículo de la cadena y la descripción sin cambiarlos; si no hay código, pon «-». No sumes, no corrijas cifras y no conviertas descripciones a los nombres de Minis: el panel cuadra cada línea con el catálogo.
 - Si una línea trae 0 unidades, inclúyela igual con 0.
 - No incluyas los totales ni los subtotales del reporte.
 - La cadena es la empresa del membrete; Minis by Mónica aparece como proveedor.

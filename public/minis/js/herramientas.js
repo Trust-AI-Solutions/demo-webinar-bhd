@@ -39,10 +39,21 @@ export function crearEjecutor(contexto) {
 // Nombres de las funciones (la prueba revisa que coincidan con las definiciones).
 export const HERRAMIENTAS_CHOFER = ["buscar_tienda", "ver_productos_de_conteo", "registrar_visita"];
 
+// «LP-40211 | MINIS BIZC VAINILLA 1 UN | 3» → { codigo_cadena, producto, unidades }. Lo que no
+// tiene esa forma queda con 0 unidades y sin producto, para que la persona lo revise.
+function leerVenta(texto) {
+  const partes = String(texto).split("|").map((x) => x.trim());
+  if (partes.length < 3) return { producto: String(texto).trim(), codigo_cadena: null, unidades: 0 };
+  const unidades = partes.pop().replace(/[^\d-]/g, "");
+  const codigo = partes.shift();
+  return { producto: partes.join(" | "), codigo_cadena: /^[-—–]?$/.test(codigo) ? null : codigo, unidades: unidades === "" ? 0 : Number(unidades) };
+}
+
 // Cuadra la transcripción del reporte con las tiendas y el catálogo. Nada se adivina:
 // lo que no coincide queda marcado para que la persona lo revise.
 export function mapearReporte(propuesta) {
-  const lineas = (propuesta?.lineas ?? []).map((l) => {
+  const crudas = (propuesta?.tiendas ?? []).flatMap((t) => (t?.ventas ?? []).map((v) => ({ tienda: String(t.tienda ?? ""), ...leerVenta(v) })));
+  const lineas = crudas.map((l) => {
     const t = N.tiendaDesdeReporte(l.tienda);
     const p = N.buscarProducto(l.producto, l.codigo_cadena);
     return { original: l, tienda: t, producto: p, unidades: Math.max(0, entero(l.unidades) ?? 0) };

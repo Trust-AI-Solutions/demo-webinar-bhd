@@ -54,28 +54,32 @@ const REPORTE = [
   {
     name: "proponer_ventas",
     etiqueta: "Leyendo el reporte",
-    description: "Entrega la transcripción del reporte de ventas de la cadena. Una línea por tienda y producto, tal como aparece en el documento. No sumes, no corrijas y no conviertas nada: el panel busca cada tienda y producto y una persona revisa antes de guardar.",
+    description: "Entrega la transcripción del reporte de ventas de la cadena, agrupada por tienda, tal como aparece en el documento. No sumes, no corrijas y no conviertas nada: el panel busca cada tienda y producto y una persona revisa antes de guardar.",
     input_schema: {
       type: "object",
       properties: {
         cadena: { type: ["string", "null"], description: "Nombre de la cadena que envía el reporte (el membrete)." },
         fecha_reporte: { type: ["string", "null"], description: "Fecha de las ventas tal como está impresa (no la fecha de impresión)." },
-        lineas: {
+        // Una venta por texto corto, agrupadas por tienda: así la respuesta es cuatro veces más
+        // corta que un objeto por línea y un reporte de 100 líneas se lee en menos tiempo.
+        tiendas: {
           type: "array",
           items: {
             type: "object",
             properties: {
               tienda: { type: "string", description: "La tienda tal como aparece (código y nombre)." },
-              producto: { type: "string", description: "La descripción del producto tal como aparece." },
-              codigo_cadena: { type: ["string", "null"], description: "El código del artículo de la cadena, si aparece." },
-              unidades: { type: "integer", description: "Unidades vendidas." },
+              ventas: {
+                type: "array",
+                items: { type: "string" },
+                description: "Una por producto, así: «código | descripción | unidades», todo tal como aparece. Sin código: «- | descripción | unidades».",
+              },
             },
-            required: ["tienda", "producto", "unidades"],
+            required: ["tienda", "ventas"],
           },
         },
         dudas: { type: "array", items: { type: "string" }, description: "Lo que no se lee bien o no queda claro, en frases cortas." },
       },
-      required: ["lineas", "dudas"],
+      required: ["tiendas", "dudas"],
     },
   },
 ];

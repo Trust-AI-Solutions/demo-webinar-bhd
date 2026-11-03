@@ -26,12 +26,11 @@ await pagina.route("**/api/ia", async (route) => {
     ok(cuerpo.mensajes[0].content[0].type === "document", "el PDF viaja como documento");
     return resp([{ type: "tool_use", id: "t1", name: "proponer_ventas", input: {
       cadena: "HIPER LAS PALMAS, S.R.L.", fecha_reporte: "03/11/2026",
-      lineas: [
-        { tienda: "HLP-03 · LUPERON", producto: "MINIS BIZC VAINILLA 1 UN", codigo_cadena: "LP-40211", unidades: 3 },
-        { tienda: "HLP-03 · LUPERON", producto: "MINIS COCO HORNEADO 6 OZ", codigo_cadena: "LP-40220", unidades: 2 },
-        { tienda: "HLP-07 · SAN ISIDRO", producto: "MINIS GALL. JENGIBRE 8 UN", codigo_cadena: "LP-40253", unidades: 1 },
-        { tienda: "HLP-08 · LOS MINA", producto: "MINIS BROWNIE 2 UN", codigo_cadena: "LP-40290", unidades: 3 },
-        { tienda: "HLP-19 · BOCA CHICA", producto: "MINIS POLVORONES 10 UN", codigo_cadena: "LP-40272", unidades: 4 },
+      tiendas: [
+        { tienda: "HLP-03 · LUPERON", ventas: ["LP-40211 | MINIS BIZC VAINILLA 1 UN | 3", "LP-40220 | MINIS COCO HORNEADO 6 OZ | 2"] },
+        { tienda: "HLP-07 · SAN ISIDRO", ventas: ["LP-40253 | MINIS GALL. JENGIBRE 8 UN | 1"] },
+        { tienda: "HLP-08 · LOS MINA", ventas: ["LP-40290 | MINIS BROWNIE 2 UN | 3"] },
+        { tienda: "HLP-19 · BOCA CHICA", ventas: ["LP-40272 | MINIS POLVORONES 10 UN | 4"] },
       ],
       dudas: ["El artículo LP-40290 (brownie) no aparece en la lista de Minis."],
     } }], "tool_use");

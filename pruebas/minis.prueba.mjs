@@ -73,10 +73,10 @@ test("el despacho usa el par donde hay conteo y repite ventas donde no", () => {
 test("reporte de la cadena: cuadra por código y no adivina lo que no está", () => {
   const m = mapearReporte({
     cadena: "HIPER LAS PALMAS, S.R.L.", fecha_reporte: "03/11/2026",
-    lineas: [
-      { tienda: "HLP-03 · LUPERON", producto: "MINIS GALL. JENGIBRE 8 UN", codigo_cadena: "LP-40253", unidades: 2 },
-      { tienda: "HLP-19 · BOCA CHICA", producto: "MINIS CHEESEC BITES CHINOLA 4 UN", codigo_cadena: null, unidades: 4 },
-      { tienda: "HLP-08 · LOS MINA", producto: "MINIS BROWNIE 2 UN", codigo_cadena: "LP-40290", unidades: 3 },
+    tiendas: [
+      { tienda: "HLP-03 · LUPERON", ventas: ["LP-40253 | MINIS GALL. JENGIBRE 8 UN | 2"] },
+      { tienda: "HLP-19 · BOCA CHICA", ventas: ["- | MINIS CHEESEC BITES CHINOLA 4 UN | 4"] },
+      { tienda: "HLP-08 · LOS MINA", ventas: ["LP-40290 | MINIS BROWNIE 2 UN | 3", "algo ilegible"] },
     ],
     dudas: [],
   });
@@ -84,7 +84,12 @@ test("reporte de la cadena: cuadra por código y no adivina lo que no está", ()
   assert.equal(m.lineas[0].producto.codigo, "P14");
   assert.equal(m.lineas[1].tienda.nombre, "Las Palmas Boca Chica");
   assert.equal(m.lineas[1].producto.codigo, "P06");
+  assert.equal(m.lineas[1].unidades, 4);
+  assert.equal(m.lineas[1].original.codigo_cadena, null);
   assert.equal(m.lineas[2].producto, null, "el brownie no es de Minis");
+  assert.equal(m.lineas[2].original.codigo_cadena, "LP-40290");
+  assert.equal(m.lineas[3].producto, null, "lo que no tiene la forma esperada queda para revisar");
+  assert.equal(m.lineas[3].unidades, 0);
   assert.equal(m.tiendas, 3);
   const r = N.registrarVentas(m.lineas.filter((l) => l.tienda && l.producto).map((l) => ({ tienda: l.tienda.id, producto: l.producto.codigo, cantidad: l.unidades })));
   assert.equal(r.tiendas, 2);
