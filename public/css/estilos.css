@@ -1,7 +1,7 @@
 /* Panadería El Trigal (empresa ficticia): portada, panel y vista en vivo.
-   Mundo "Suspiro y chispitas": el bizcocho dominicano de cumpleaños. Bloques de color
-   de glaseado (arándano, tostado, mora, caramelo, vainilla, pistacho) que chorrean sobre
-   tarjetas blancas, tinta de chocolate y chispitas de colores en la portada. Los
+   Mundo "Suspiro y chispitas": el bizcocho dominicano de cumpleaños. Tarjetas lisas de
+   glaseado (arándano, tostado, mora, caramelo, vainilla, pistacho) sobre suspiro azul,
+   tinta de chocolate y chispitas de colores en la portada. Los
    estados conservan su significado (rojo urgente, ámbar atender, verde bien).
    La ventana de WhatsApp NO usa este archivo (tiene css/whatsapp.css). */
 
@@ -34,11 +34,6 @@
   --pistacho: #c0e3a1;
   --coco: #f1e9df;
 
-  /* bizcocho y relleno de los pasteles */
-  --bizcocho: #f8e6c4;
-  --bizcocho-oscuro: #eed3a3;
-  --crema: #fffaf0;
-
   /* estados */
   --azul-fuerte: #2f5fd0;
   --rojo: #b3122b;
@@ -59,9 +54,8 @@
   --alto-barra: 68px;
   --salida: cubic-bezier(.16, 1, .3, 1);
 
-  /* chispitas y goteo de glaseado (dibujados aquí, sin imágenes) */
+  /* chispitas (dibujadas aquí, sin imágenes) */
   --chispitas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg stroke-linecap='round' stroke-width='5' fill='none'%3E%3Cpath d='M18 22l10-6' stroke='%2393b7f0'/%3E%3Cpath d='M62 14l9 7' stroke='%23e3c79a'/%3E%3Cpath d='M112 26l4-11' stroke='%23fde5a0'/%3E%3Cpath d='M140 58l-10 5' stroke='%23c0e3a1'/%3E%3Cpath d='M92 64l10 3' stroke='%23cdb7f0'/%3E%3Cpath d='M40 70l-4 10' stroke='%23f6be88'/%3E%3Cpath d='M14 110l11 2' stroke='%23cdb7f0'/%3E%3Cpath d='M60 118l7-8' stroke='%2393b7f0'/%3E%3Cpath d='M104 104l-2 11' stroke='%23e3c79a'/%3E%3Cpath d='M146 122l-9-6' stroke='%23f6be88'/%3E%3Cpath d='M30 148l10 2' stroke='%23c0e3a1'/%3E%3Cpath d='M126 150l6-9' stroke='%23fde5a0'/%3E%3C/g%3E%3C/svg%3E");
-  --goteo: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2727%27 y=%270%27 width=%277%27 height=%2711%27 rx=%273.5%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2774%27 y=%270%27 width=%276%27 height=%279%27 rx=%273%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27119%27 y=%270%27 width=%277%27 height=%2713%27 rx=%273.5%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27171%27 y=%270%27 width=%276%27 height=%2710%27 rx=%273%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3Crect x=%27214%27 y=%270%27 width=%278%27 height=%2723%27 rx=%274%27/%3E%3Crect x=%27232%27 y=%270%27 width=%276%27 height=%2712%27 rx=%273%27/%3E%3C/svg%3E");
   color-scheme: light;
 }
 
@@ -138,30 +132,19 @@ html { scrollbar-color: var(--linea-2) transparent; }
 .barra h1::before { content: ""; width: 14px; height: 30px; border-radius: 999px; background: var(--tono); transform: rotate(14deg); flex: none; }
 .contenido { padding: 26px 32px 56px; display: flex; flex-direction: column; gap: 22px; max-width: 1440px; }
 
-/* Cifras: un bloque de glaseado que chorrea sobre su nombre */
-/* Cifras: cada una es un pastel de capas servido en su plato. Arriba el glaseado con la
-   cifra (y su goteo), abajo el bizcocho con dos capas de relleno y el nombre, y debajo
-   el plato. La cereza va solo en "Ventas de hoy". */
-.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 30px 22px; padding: 16px 8px 14px; }
-.cifra { position: relative; display: grid; grid-template-rows: auto 1fr; min-width: 0; container-type: inline-size; --tono-cifra: var(--arandano); filter: drop-shadow(0 8px 10px rgba(74, 36, 25, .16)); }
+/* Cifras: una tarjeta lisa de glaseado, con el nombre arriba y el valor debajo */
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; }
+.cifra { --tono-cifra: var(--arandano); position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; min-width: 0; min-height: 118px; padding: 16px; background: var(--tono-cifra); border-radius: var(--radio); box-shadow: var(--sombra); container-type: inline-size; }
 .cifras .cifra:nth-child(6n+2) { --tono-cifra: var(--tostado); }
 .cifras .cifra:nth-child(6n+3) { --tono-cifra: var(--mora); }
 .cifras .cifra:nth-child(6n+4) { --tono-cifra: var(--caramelo); }
 .cifras .cifra:nth-child(6n+5) { --tono-cifra: var(--vainilla); }
 .cifras .cifra:nth-child(6n+6) { --tono-cifra: var(--pistacho); }
-/* El plato: un óvalo blanco un poco más ancho que el pastel */
-.cifra::after { content: ""; position: absolute; left: -5%; right: -5%; bottom: -10px; height: 20px; border-radius: 50%; background: var(--superficie); box-shadow: inset 0 -3px 0 var(--linea), 0 4px 8px -4px rgba(74, 36, 25, .3); z-index: -1; }
-/* La cereza */
-.cifra.cereza::before { content: ""; position: absolute; top: -26px; left: 50%; width: 34px; height: 38px; margin-left: -17px; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2734%27 height=%2738%27 viewBox=%270 0 34 38%27%3E%3Cpath d=%27M17 18C17 10 20 4 27 1%27 fill=%27none%27 stroke=%27%232e6b2a%27 stroke-width=%272.6%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%2716%27 cy=%2725%27 r=%2712%27 fill=%27%23c0182d%27/%3E%3Cellipse cx=%2711.5%27 cy=%2720.5%27 rx=%273.6%27 ry=%272.4%27 fill=%27%23fff%27 opacity=%27.55%27 transform=%27rotate%28-30 11.5 20.5%29%27/%3E%3C/svg%3E") center / contain no-repeat; z-index: 3; }
-.cifra-valor { grid-row: 1; position: relative; z-index: 2; display: flex; align-items: flex-end; min-height: 96px; padding: 30px 16px 14px; background: var(--tono-cifra); border-radius: 22px 22px 0 0; font-size: clamp(16px, 12cqi, 30px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
-.cifra-valor::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 28px; background: var(--tono-cifra); -webkit-mask: var(--goteo) repeat-x 0 0 / 240px 28px; mask: var(--goteo) repeat-x 0 0 / 240px 28px; }
+.cifra-valor { font-size: clamp(16px, 12cqi, 30px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
 .cifra-valor > span { white-space: nowrap; }
 .cifra-valor.alerta { color: var(--rojo); }
-/* El bizcocho: miga dorada con dos capas de relleno de crema hacia abajo */
-.cifra-nombre { grid-row: 2; position: relative; padding: 30px 16px 40px; min-height: calc(2 * 1.3em + 70px); line-height: 1.3; font-size: 14px; font-weight: 700; color: var(--tinta); border-radius: 0 0 8px 8px;
-  background:
-    linear-gradient(var(--bizcocho), var(--bizcocho)) 0 0 / 100% calc(100% - 36px) no-repeat,
-    linear-gradient(to bottom, var(--crema) 0 7px, var(--bizcocho) 7px 18px, var(--crema) 18px 25px, var(--bizcocho-oscuro) 25px 36px) 0 100% / 100% 36px no-repeat; }
+.cifra-nombre { line-height: 1.3; font-size: 14px; font-weight: 700; color: var(--tinta); }
+.cifra:has(.delta) .cifra-nombre { padding-right: 60px; }
 .delta { position: absolute; top: 9px; right: 9px; display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 700; letter-spacing: 0; background: var(--superficie); padding: 1px 8px; border-radius: 999px; }
 .delta svg { width: 9px; height: 9px; }
 .delta.sube { color: var(--verde); }
@@ -299,7 +282,7 @@ th:last-child, td:last-child { padding-right: 0; }
   .barra h1 { font-size: 20px; }
   .contenido { padding: 16px; }
   .fila, .fila.tres { grid-template-columns: 1fr; }
-  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 16px; padding: 16px 4px 12px; }
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .tabla-envoltura.sin-recorte { overflow-x: auto; }
   .tabla-fija th { position: static; }
 }
@@ -311,11 +294,9 @@ body:has(.portada:not([hidden])) { background: radial-gradient(ellipse 60% 55% a
 .portada > header, .intro > header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .portada main { align-self: center; display: flex; flex-direction: column; gap: 40px; padding: 32px 0; }
 .portada h1 { font-size: clamp(36px, 5.4vw, 72px); font-weight: 800; letter-spacing: -.04em; line-height: 1; max-width: 13em; text-wrap: balance; }
-/* Las tres opciones son cajas de bizcocho: glaseado blanco que chorrea sobre el color */
+/* Las tres opciones son cajas lisas de glaseado */
 .opciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .opciones a { --tono-caja: var(--arandano); position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 14px; min-height: 230px; padding: 22px; background: var(--tono-caja); border-radius: 24px; box-shadow: var(--sombra); text-decoration: none; overflow: hidden; transition: transform .35s var(--salida), box-shadow .2s; }
-.opciones a::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 30px; background: var(--superficie); }
-.opciones a::after { content: ""; position: absolute; left: 0; right: 0; top: 30px; height: 28px; background: var(--superficie); -webkit-mask: var(--goteo) repeat-x 0 0 / 240px 28px; mask: var(--goteo) repeat-x 0 0 / 240px 28px; }
 .opciones a:nth-child(2) { --tono-caja: var(--tostado); }
 .opciones a:nth-child(3) { --tono-caja: var(--pistacho); }
 .opciones a:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: var(--sombra-flotante); }
@@ -327,7 +308,7 @@ body:has(.portada:not([hidden])) { background: radial-gradient(ellipse 60% 55% a
 @media (max-width: 760px) {
   .portada, .intro { padding: 16px; }
   .opciones { grid-template-columns: 1fr; gap: 12px; }
-  .opciones a { min-height: 0; flex-direction: row; align-items: center; padding: 50px 18px 18px; }
+  .opciones a { min-height: 0; flex-direction: row; align-items: center; padding: 18px; }
   .opciones b { flex: 1; font-size: 20px; }
 }
 
@@ -361,8 +342,7 @@ body:has(.portada:not([hidden])) { background: radial-gradient(ellipse 60% 55% a
 dialog.hoja { border: 0; padding: 0; border-radius: 24px; width: min(720px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); background: var(--superficie); color: var(--tinta); box-shadow: var(--sombra-flotante); display: flex; flex-direction: column; overflow: hidden; }
 dialog.hoja:not([open]) { display: none; }
 dialog.hoja::backdrop { background: rgba(58, 31, 25, .4); }
-.hoja-cabecera { position: relative; padding: 16px 14px 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--vainilla); flex: none; margin-bottom: 14px; }
-.hoja-cabecera::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 28px; background: var(--vainilla); -webkit-mask: var(--goteo) repeat-x 0 0 / 240px 28px; mask: var(--goteo) repeat-x 0 0 / 240px 28px; }
+.hoja-cabecera { position: relative; padding: 16px 14px 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--vainilla); flex: none; }
 .hoja-cabecera h2 { font-size: 17px; }
 .hoja-cabecera .icono-boton:hover { background: rgba(58, 31, 25, .08); }
 .hoja-cuerpo { padding: 14px 22px 22px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }

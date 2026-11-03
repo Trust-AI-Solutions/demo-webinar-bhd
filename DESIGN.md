@@ -117,12 +117,12 @@ components:
     textColor: "{colors.tinta}"
     rounded: "{rounded.tarjeta}"
     padding: "18px 20px"
-  # kpi-frosting es el pastel de capas: glaseado (valor) + bizcocho #f8e6c4 con crema #fffaf0 (nombre) + plato blanco ovalado; cereza solo en "Ventas de hoy".
+  # kpi-frosting es una tarjeta lisa de glaseado: nombre arriba, valor debajo, sin goteo, capas, plato ni cereza.
   kpi-frosting:
     backgroundColor: "{colors.arandano}"
     textColor: "{colors.tinta}"
     rounded: "{rounded.tarjeta}"
-    padding: "30px 16px 14px"
+    padding: "16px"
     typography: "{typography.cifra}"
   nav-item-active:
     backgroundColor: "{colors.arandano}"
@@ -145,13 +145,13 @@ La ventana de WhatsApp (`whatsapp.html`, `css/whatsapp.css`) queda fuera de este
 
 **Creative North Star: "Suspiro y chispitas"**
 
-El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un pastel de capas servido en su plato: el valor va en el glaseado, que chorrea sobre el bizcocho con el nombre y dos capas de crema; solo "Ventas de hoy" lleva una cereza; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.
+El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es una tarjeta lisa de glaseado, con el nombre arriba y el valor grande debajo; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.
 
 La densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.
 
 **Key Characteristics:**
 - Fondo suspiro azul, tinta de chocolate, seis glaseados pastel siempre con tinta oscura encima.
-- Borde que gotea (máscara SVG `--goteo`) bajo cada bloque de color.
+- Bloques de color lisos, con esquinas redondeadas y bordes rectos: nada de goteo ni pasteles dibujados.
 - Todo control es una pastilla redonda.
 - Chispitas como textura (portada, botón y cabecera del asistente) y como celebración (pedido de WhatsApp).
 - Logo de cupcake sobre una ficha de chocolate inclinada −4°.
@@ -222,7 +222,7 @@ Sombras cálidas de chocolate, suaves; la profundidad la dan sobre todo los bloq
 
 - Radios generosos: tarjetas y cifras 18px, cajas de la portada y ventanas 24px, pedidos 16px, campos de ventana 12px.
 - Todo control (botones, menú, segmentos, filtros, insignias, contadores) es una pastilla de 999px.
-- **The Drip Rule.** Un bloque de glaseado termina con el borde que gotea (`--goteo`, 240×28px, repetido en horizontal), no con una línea recta. Se usa en cifras, cajas de la portada (glaseado blanco sobre color) y cabeceras de ventana.
+- **The Flat Frosting Rule.** Un bloque de glaseado es un color liso con esquinas redondeadas y borde recto. Sin goteo, capas de bizcocho, platos ni cerezas: la pastelería está en los colores y las chispitas, no en dibujos.
 - Marcas de título: una chispita (12×5px, girada −35°) antes de cada título de tarjeta; una barra de 14×30px girada 14° antes del título de la barra.
 - Separadores de filas punteados en línea 2.
 
@@ -249,10 +249,10 @@ Sombras cálidas de chocolate, suaves; la profundidad la dan sobre todo los bloq
 - Menú lateral de pastillas con icono de trazo 18px; activa en el glaseado de la sección y 700; contador en coco, o rojo si es urgente.
 
 ### Cifra de glaseado (firma)
-- Bloque de color con el valor (cifra) abajo y el borde que gotea sobre el nombre en blanco. La comparación es una pastilla blanca arriba a la derecha con flecha y porcentaje, verde o roja; el detalle va en `title`.
+- Tarjeta lisa del glaseado de su posición, 18px de radio, 16px de relleno: el nombre arriba (14px 700) y el valor debajo. La comparación es una pastilla blanca arriba a la derecha con flecha y porcentaje, verde o roja; el detalle va en `title`.
 
 ### Ventana (`dialog.hoja`)
-- 24px de radio, cabecera vainilla que gotea, cuerpo con 22px de margen, acciones a la derecha. Fondo de atrás en chocolate al 40%.
+- 24px de radio, cabecera vainilla de borde recto, cuerpo con 22px de margen, acciones a la derecha. Fondo de atrás en chocolate al 40%.
 
 ### Asistente
 - Panel lateral de 460px (780px ampliado) sobre suspiro, cabecera de chocolate con chispitas. Burbuja del usuario arandano, de la IA blanca con sombra; los pasos de la IA se marcan con chispitas pistacho y la actual en azul fuerte.

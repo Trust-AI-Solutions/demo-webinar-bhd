@@ -184,7 +184,7 @@ try {
   await hoja.locator("input[name=direccion]").fill("Av. Luperón 100");
   await pagina.screenshot({ path: `${CAPTURAS}nuevo-pedido.png` });
   await hoja.locator("button[type=submit]").click();
-  await pagina.locator('.columna[data-estado="nuevo"] .pedido:has-text("Hotel Brisas")').waitFor({ timeout: 3000 });
+  await pagina.locator('.columna[data-estado="nuevo"] .pedido.nuevo-llegado:has-text("Hotel Brisas")').waitFor({ timeout: 3000 });
   verificar(true, "el pedido a mano entra en Nuevo");
 
   await pagina.click("#importar-documento");

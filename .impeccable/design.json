@@ -486,7 +486,7 @@
       "name": "Cifra de glaseado",
       "kind": "custom",
       "refersTo": "kpi-frosting",
-      "description": "Firma del sistema: el valor en un bloque de glaseado que chorrea sobre su nombre.",
+      "description": "Firma del sistema: una tarjeta lisa de glaseado, con el nombre arriba y el valor debajo.",
       "html": "<div class=\"ds-cifra\"><div class=\"ds-cifra-valor\">RD$6,916</div><div class=\"ds-cifra-nombre\">Ventas de hoy</div></div>",
       "css": ".ds-cifra{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;width:180px;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);overflow:hidden}.ds-cifra-valor{position:relative;display:flex;align-items:flex-end;min-height:96px;padding:30px 16px 14px;background:#93b7f0;color:#3a1f19;font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-cifra-valor::after{content:'';position:absolute;left:0;right:0;top:100%;height:28px;background:#93b7f0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px;mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px}.ds-cifra-nombre{padding:30px 16px 14px;font-size:14px;font-weight:600;color:#66463d}"
     },
@@ -533,10 +533,10 @@
   ],
   "narrative": {
     "northStar": "Suspiro y chispitas",
-    "overview": "El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un bloque de glaseado que chorrea sobre su nombre; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.\n\nLa densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.",
+    "overview": "El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es una tarjeta lisa de glaseado; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.\n\nLa densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.",
     "keyCharacteristics": [
       "Fondo suspiro azul, tinta de chocolate, seis glaseados pastel siempre con tinta oscura encima.",
-      "Borde que gotea (máscara SVG `--goteo`) bajo cada bloque de color.",
+      "Bloques de color lisos, con esquinas redondeadas y bordes rectos.",
       "Todo control es una pastilla redonda.",
       "Chispitas como textura (portada, botón y cabecera del asistente) y como celebración (pedido de WhatsApp).",
       "Logo de cupcake sobre una ficha de chocolate inclinada −4°."
@@ -568,8 +568,8 @@
         "section": "typography"
       },
       {
-        "name": "The Drip Rule",
-        "body": "Un bloque de glaseado termina con el borde que gotea (--goteo, 240×28px, repetido en horizontal), no con una línea recta. Se usa en cifras, cajas de la portada (glaseado blanco sobre color) y cabeceras de ventana.",
+        "name": "The Flat Frosting Rule",
+        "body": "Un bloque de glaseado es un color liso con esquinas redondeadas y borde recto. Sin goteo, capas de bizcocho, platos ni cerezas.",
         "section": "shapes"
       }
     ],

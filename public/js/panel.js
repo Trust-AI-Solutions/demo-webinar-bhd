@@ -20,9 +20,9 @@ const sinParentesis = (t) => t.replace(/ \(.*\)$/, "");
 
 // ---------- piezas ----------
 
-// Una cifra es un pastel de capas: el valor en el glaseado y el nombre en el bizcocho; la comparación va en una flecha con su detalle al pasar el cursor.
-function cifra(nombre, valor, extra = "", { alerta = false, cereza = false } = {}) {
-  return `<div class="cifra${cereza ? " cereza" : ""}"><div class="cifra-nombre">${nombre}</div><div class="cifra-valor${alerta ? " alerta" : ""}"><span>${valor}</span>${extra}</div></div>`;
+// Una cifra es una tarjeta de glaseado: el nombre arriba y el valor debajo; la comparación va en una flecha con su detalle al pasar el cursor.
+function cifra(nombre, valor, extra = "", { alerta = false } = {}) {
+  return `<div class="cifra"><div class="cifra-nombre">${nombre}</div><div class="cifra-valor${alerta ? " alerta" : ""}"><span>${valor}</span>${extra}</div></div>`;
 }
 function delta(actual, previo, contra) {
   if (!previo) return "";
@@ -93,7 +93,7 @@ function pintarInicio(raiz) {
   const mes = `${d.hoy.slice(0, 8)}01`;
   raiz.innerHTML = `
     <div class="cifras">
-      ${cifra("Ventas de hoy", rd(i.hoyV.ventas_sin_itbis), "", { cereza: true })}
+      ${cifra("Ventas de hoy", rd(i.hoyV.ventas_sin_itbis))}
       ${cifra(`Ventas de ${nombreMes(d.hoy)}`, rd(i.mes.ventas_sin_itbis), delta(i.mes.ventas_sin_itbis, i.mesAnt.ventas_sin_itbis, "frente al mismo corte del mes pasado"))}
       ${cifra("Margen bruto", porcentaje(i.mes.margen_pct))}
       ${cifra("Por cobrar", rd(i.cxc.total_por_cobrar))}
