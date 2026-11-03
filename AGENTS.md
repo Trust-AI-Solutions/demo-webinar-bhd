@@ -5,7 +5,8 @@ Demo en vivo para el webinar de BHD: el panel de negocio y el asistente de Whats
 ## Reglas
 
 - Solo datos ficticios. Nada de empresas del beta (Minis, Hulkcell, Engomas, Delidom, Rodelo) ni de clientes reales.
-- Ningún secreto en el repo. La clave de Anthropic y `CLAVE_DEMO` viven en Netlify y en LastPass.
+- Ningún secreto en el repo. La clave de Anthropic y `CLAVE_DEMO` viven en Netlify, en Render y en LastPass.
+- Publicar solo en cuentas de Trust, nunca en el espacio de trabajo de un cliente (por ejemplo, el de Minis en Render).
 - Todo lo que ve el público, en español dominicano, sin jerga técnica.
 - La ventana de WhatsApp (`whatsapp.html`, `css/whatsapp.css`) no cambia de aspecto.
 - Diseño: seguir `DESIGN.md`. Sin textos de ayuda; color solo cuando significa algo.
@@ -25,6 +26,7 @@ Demo en vivo para el webinar de BHD: el panel de negocio y el asistente de Whats
 | `public/js/ia.js` | Conversación con `/api/ia` y lectura de documentos |
 | `public/js/panel.js`, `pedidos-ui.js`, `whatsapp.js` | Pantallas |
 | `netlify/functions/ia/` | La función que llama a Claude (`ia.mjs`) y sus instrucciones por modo (`config.mjs`) |
+| `servidor.mjs`, `render.yaml` | La misma demo en Render: un servidor de Node que entrega `public/` y usa la función de `netlify/functions/ia/` |
 | `intro/` | La intro animada (React, kit de stageshow). Se compila con `npm run intro` a `public/intro/` |
 | `ejemplos/generar.mjs` | Genera los documentos de ejemplo de `public/ejemplos/` |
 | `pruebas/` | Pruebas de datos y función (`npm run pruebas`) y del navegador con un "Claude" de guion |

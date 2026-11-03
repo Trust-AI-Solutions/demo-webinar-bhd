@@ -73,6 +73,21 @@ public/*.html ── conversación ──▶ /api/ia (netlify/functions/ia) ─�
 Protecciones incluidas: límite de 40 consultas por minuto por visitante (`rateLimit` en la
 función), conversaciones de hasta 90 mensajes, y `noindex` para que los buscadores no lo listen.
 
+## Publicar en Render
+
+El mismo sitio corre en Render como un "Web Service" de Node con `servidor.mjs`, que entrega
+`public/` y atiende `/api/ia` con la misma función de Netlify (sin código duplicado). Mantiene el
+límite de 40 consultas por minuto por visitante. Las dos versiones pueden estar publicadas a la vez.
+
+1. En Render, dentro del espacio de trabajo de Trust (nunca en el de un cliente):
+   **New → Blueprint** con este repo (lee `render.yaml`), o **New → Web Service** con
+   `npm ci --omit=dev` y `node servidor.mjs`.
+2. En **Environment**, cargar `ANTHROPIC_API_KEY` y `CLAVE_DEMO` desde LastPass.
+3. El plan gratuito se duerme tras 15 minutos sin visitas y tarda cerca de un minuto en
+   despertar: abrir el sitio unos minutos antes del webinar.
+
+Para probarlo en local: `npm start` (puerto 3000) con las claves en el entorno de la terminal.
+
 ## Intro animada de la portada
 
 La portada abre con una animación de unos 15 segundos (encargo de un bizcocho por WhatsApp → panel → pregunta sobre insumos y respuesta), hecha con el kit de stageshow (React). El código está en `intro/` y se compila a `public/intro/` con:

@@ -1,0 +1,19 @@
+# Render: el mismo sitio que en Netlify, servido por servidor.mjs (sitio + /api/ia).
+# Las claves NO van aquí: se cargan en Render → servicio → Environment, desde LastPass.
+services:
+  - type: web
+    name: demo-webinar-bhd
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci --omit=dev
+    startCommand: node servidor.mjs
+    healthCheckPath: /salud
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CLAVE_DEMO
+        sync: false

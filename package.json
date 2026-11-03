@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Demo para el webinar con BHD: panel de negocio y asistente de WhatsApp de una panaderia ficticia, conectados a Claude.",
   "scripts": {
+    "start": "node servidor.mjs",
     "pruebas": "node --test pruebas/*.prueba.mjs",
     "intro": "esbuild intro/main.tsx --bundle --minify --format=esm --target=es2020 --jsx=automatic --loader:.woff2=file --asset-names=[name] --outdir=public/intro --entry-names=intro --define:process.env.NODE_ENV=\\\"production\\\""
   },
