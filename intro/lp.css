@@ -1,5 +1,5 @@
-/* Intro de Panadería El Trigal: el mismo diseño sobrio del panel (blanco,
-   tinta casi negra, un color de marca) sobre el fondo de la página. La página es
+/* Intro de Panadería El Trigal: el mismo mundo del panel, "Suspiro y chispitas"
+   (glaseados de colores, tinta de chocolate), sobre el mantel de la portada. La página es
    el fondo: sin placa. Un margen de 40px. */
 @font-face {
   font-family: "Inter Intro";
@@ -10,17 +10,20 @@
 }
 
 .lp {
-  --lp-marca: #8a4a1f;
-  --lp-tinta: #1c1917;
-  --lp-tinta-2: #57524c;
-  --lp-linea: #ebe7e1;
-  --lp-suave: #f3f1ed;
+  --lp-marca: #4a2419;
+  --lp-tinta: #3a1f19;
+  --lp-tinta-2: #66463d;
+  --lp-linea: #f4dfe6;
+  --lp-suave: #fdecf1;
+  --lp-fresa: #f8a7c1;
+  --lp-pistacho: #c0e3a1;
+  --lp-vainilla: #fde5a0;
   --lp-wa: #128c4a;
 }
 
 .lp .ss-stage {
   --gutter: 40px;
-  --ss-accent: var(--lp-marca);
+  --ss-accent: #d6336c;
   --ss-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Intro", "Segoe UI", system-ui, sans-serif;
   font-family: var(--ss-font);
   overflow: hidden;
@@ -71,7 +74,9 @@
 }
 
 .lp .lp-item[data-on] {
-  background: var(--lp-suave);
+  background: var(--lp-fresa);
+  border-radius: 999px;
+  font-weight: 700;
   color: var(--lp-tinta);
   font-weight: 500;
 }
@@ -110,36 +115,36 @@
 /* Cifras: el nombre arriba, la cifra debajo */
 .lp .lp-kpis {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1fr);
-  border: 1px solid var(--lp-linea);
-  border-radius: 8px;
-  background: #fff;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 10px;
 }
 
 .lp .lp-kpi {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 20px -14px rgba(74, 36, 25, 0.35);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
   height: 78px;
   padding: 12px 14px;
-  border-left: 1px solid var(--lp-linea);
 }
 
-.lp .lp-kpi:first-child {
-  border-left: 0;
-}
+.lp .lp-kpi:nth-child(1) { background: var(--lp-vainilla); }
+.lp .lp-kpi:nth-child(2) { background: var(--lp-pistacho); }
+.lp .lp-kpi:nth-child(3) { background: var(--lp-fresa); }
 
 .lp .lp-kpi__ph {
   display: block;
   height: 14px;
   border-radius: 3px;
-  background: var(--lp-suave);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .lp .lp-kpi__valor {
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--lp-tinta);
@@ -147,14 +152,16 @@
 
 .lp .lp-kpi__nombre {
   font-size: 12px;
-  color: var(--lp-tinta-2);
+  font-weight: 600;
+  color: var(--lp-tinta);
   white-space: nowrap;
 }
 
 /* Lista de pedidos */
 .lp .lp-card {
-  border: 1px solid var(--lp-linea);
-  border-radius: 8px;
+  border: 0;
+  box-shadow: 0 8px 20px -14px rgba(74, 36, 25, 0.35);
+  border-radius: 16px;
   background: #fff;
 }
 
@@ -167,7 +174,7 @@
 
 .lp .lp-card__title {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--lp-tinta);
 }
 
@@ -238,7 +245,7 @@
 .lp .lp-pill--chip {
   display: inline-block;
   margin: 0;
-  box-shadow: 0 10px 22px -8px rgba(28, 25, 23, 0.5);
+  box-shadow: 0 10px 22px -8px rgba(74, 36, 25, 0.5);
 }
 
 /* ---------- WhatsApp en el teléfono: cruza el borde derecho del panel ---------- */

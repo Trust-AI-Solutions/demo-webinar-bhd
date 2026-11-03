@@ -27,7 +27,7 @@ function cifra(nombre, valor, extra = "", { alerta = false } = {}) {
 function delta(actual, previo, contra) {
   if (!previo) return "";
   const cambio = Math.round(((actual - previo) / previo) * 1000) / 10;
-  return `<span class="delta ${cambio >= 0 ? "sube" : "baja"}" title="${cambio >= 0 ? "+" : ""}${cambio} % ${contra}">${cambio >= 0 ? "▲" : "▼"} ${Math.abs(cambio)} %</span>`;
+  return `<span class="delta ${cambio >= 0 ? "sube" : "baja"}" title="${cambio >= 0 ? "+" : ""}${cambio} % ${contra}">${ICONOS[cambio >= 0 ? "sube" : "baja"]}${Math.abs(cambio)} %</span>`;
 }
 const tarjeta = (titulo, cuerpo, { periodo, accion = "", id = "" } = {}) =>
   `<section class="tarjeta"${id ? ` id="${id}"` : ""}><div class="cabecera"><h2>${titulo}${periodo ? ` <span class="periodo">· ${periodo}</span>` : ""}</h2>${accion}</div>${cuerpo}</section>`;
@@ -42,12 +42,12 @@ const listaAlertas = (lista, { detalle = true } = {}) => lista.length
 
 function destruirGraficos() { while (graficos.length) graficos.pop().destroy(); }
 function opcionesBase({ horizontal = false } = {}) {
-  const ejeValor = { grid: { color: "#efebe6" }, border: { display: false }, ticks: { color: "#736c64", font: { size: 11 }, maxTicksLimit: horizontal ? 5 : 6, callback: (v) => `RD$${num(v / 1000)}k` } };
-  const ejeCat = { grid: { display: false }, border: { color: "#d9d3cb" }, ticks: { color: "#736c64", font: { size: 11 }, autoSkip: true, maxRotation: 0 } };
+  const ejeValor = { grid: { color: "#f6e3ea" }, border: { display: false }, ticks: { color: "#7a5a51", font: { size: 13 }, maxTicksLimit: horizontal ? 5 : 6, callback: (v) => `RD$${num(v / 1000)}k` } };
+  const ejeCat = { grid: { display: false }, border: { color: "#e9c8d3" }, ticks: { color: "#7a5a51", font: { size: 13 }, autoSkip: true, maxRotation: 0 } };
   return {
     responsive: true, maintainAspectRatio: false, animation: { duration: 300 }, indexAxis: horizontal ? "y" : "x",
     interaction: { mode: "index", intersect: false },
-    plugins: { legend: { display: false }, tooltip: { backgroundColor: "#1c1917", padding: 10, cornerRadius: 6, callbacks: { label: (c) => ` ${c.dataset.label}: ${rd(c.parsed[horizontal ? "x" : "y"])}` } } },
+    plugins: { legend: { display: false }, tooltip: { backgroundColor: "#3a1f19", padding: 10, cornerRadius: 6, callbacks: { label: (c) => ` ${c.dataset.label}: ${rd(c.parsed[horizontal ? "x" : "y"])}` } } },
     scales: horizontal ? { x: ejeValor, y: ejeCat } : { x: ejeCat, y: ejeValor },
   };
 }
@@ -57,7 +57,7 @@ function grafico(id, config) {
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
   graficos.push(new Chart(lienzo, config));
 }
-const barras = (label, datos) => ({ label, data: datos, backgroundColor: "#8a4a1f", borderRadius: 3, borderSkipped: "start", maxBarThickness: 24 });
+const barras = (label, datos) => ({ label, data: datos, backgroundColor: "#d6336c", borderRadius: 6, borderSkipped: "start", maxBarThickness: 24 });
 const linea = (label, datos, color) => ({ label, data: datos, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: .3 });
 
 // ---------- pantallas ----------
@@ -79,6 +79,7 @@ function mostrar(vista) {
     if (b.dataset.vista === vista) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
   });
   $("#titulo").textContent = VISTAS[vista].titulo;
+  document.body.dataset.vista = vista;
   destruirGraficos();
   VISTAS[vista].pintar($("#vista"));
   pintarIconos($("#vista"));
@@ -121,7 +122,7 @@ function pintarInicio(raiz) {
   const semanas = { desde: N.sumarDias(lunes, -84), hasta: N.sumarDias(lunes, -1), agruparPor: "semana" };
   const sg = N.resumenVentas({ ...semanas, sucursal: "Gazcue" }).grupos;
   const sp = N.resumenVentas({ ...semanas, sucursal: "Los Prados" }).grupos;
-  grafico("g-sucursales", { type: "line", data: { labels: sg.map((g) => fechaCorta(g.grupo)), datasets: [linea("Gazcue", sg.map((g) => g.ventas), "#2a63ad"), linea("Los Prados", sp.map((g) => g.ventas), "#c75a2a")] }, options: opcionesBase() });
+  grafico("g-sucursales", { type: "line", data: { labels: sg.map((g) => fechaCorta(g.grupo)), datasets: [linea("Gazcue", sg.map((g) => g.ventas), "#6b46c1"), linea("Los Prados", sp.map((g) => g.ventas), "#b5560f")] }, options: opcionesBase() });
 
   const cats = N.resumenVentas({ desde: mes, agruparPor: "categoria" }).grupos;
   grafico("g-categorias", { type: "bar", data: { labels: cats.map((g) => g.grupo), datasets: [barras("Ventas", cats.map((g) => g.ventas))] }, options: opcionesBase({ horizontal: true }) });
@@ -289,6 +290,27 @@ function actualizarContadores() {
   ca.textContent = urgentes; ca.classList.toggle("oculto", !urgentes);
 }
 
+// Chispitas: al llegar un pedido por WhatsApp saltan granitos de colores desde el pedido nuevo
+// (o desde "Pedidos" en el menú si se está en otra pantalla).
+const COLORES_CHISPITAS = ["#d6336c", "#2a63ad", "#8a4300", "#22652a", "#7b4fc9", "#e08a00"];
+function chispitas(id) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const origen = (id && document.querySelector(`.pedido[data-id="${id}"]`)) || document.querySelector('#nav [data-vista="pedidos"]');
+  const caja = origen?.getBoundingClientRect() ?? { left: innerWidth - 300, top: innerHeight - 80, width: 200, height: 40 };
+  const capa = document.createElement("div");
+  capa.className = "chispitas";
+  capa.setAttribute("aria-hidden", "true");
+  const x = caja.left + caja.width / 2, y = caja.top + Math.min(caja.height, 60) / 2;
+  for (let i = 0; i < 60; i++) {
+    const angulo = Math.random() * Math.PI * 2, fuerza = 80 + Math.random() * 220;
+    const g = document.createElement("i");
+    g.style.cssText = `--x:${x + (Math.random() - .5) * caja.width * .6}px;--y:${y}px;--dx:${Math.cos(angulo) * fuerza}px;--dy:${Math.sin(angulo) * fuerza}px;--r:${Math.round(Math.random() * 720 - 360)}deg;--c:${COLORES_CHISPITAS[i % COLORES_CHISPITAS.length]};animation-delay:${Math.random() * 120}ms`;
+    capa.appendChild(g);
+  }
+  document.body.appendChild(capa);
+  setTimeout(() => capa.remove(), 1600);
+}
+
 function aviso(texto) {
   const el = document.createElement("div");
   const p = document.createElement("p");
@@ -381,6 +403,7 @@ function iniciar() {
       ultimoPedidoNuevo = p?.id ?? null;
       const como = { manual: "Pedido registrado", documento: "Pedido creado desde el documento" }[p?.origen] ?? "Nuevo pedido por WhatsApp";
       if (p) aviso(`${como}: ${p.id} de ${p.cliente}, ${rd(p.total)}`);
+      if (p?.origen === "asistente") requestAnimationFrame(() => chispitas(p.id));
     }
     if (evento.tipo === "atencion") aviso("Un cliente de WhatsApp pide hablar con una persona");
     if (evento.tipo === "restablecido") ultimoPedidoNuevo = null;

@@ -28,7 +28,7 @@ Everything on screen is real and working, not a slideshow: the AI answers from t
 ## Capabilities and Constraints
 
 - Static site in `public/` (plain HTML, CSS, ES modules; Chart.js 4.4.1 vendored), one Netlify function `netlify/functions/ia` that calls Claude. No build step, no framework.
-- Fictional company "Panadería y Repostería El Trigal, SRL": bakery, two branches (Gazcue with the main oven, Los Prados), 63 menu products, 28 production ingredients, 120 customers (walk-in people plus colmados, cafeterías, hotels), about 10,500 tickets over six months ending today; five planted situations for the AI to find. Changed from a hardware store on 03/11/2026 (Jorge). It must not resemble any beta client: no consignment, no supermarket reports, no "minis", no assistant called "Dulce".
+- Fictional company "Panadería y Repostería El Trigal, SRL": bakery, two branches (Gazcue with the main oven, Los Prados), 63 menu products, 28 production ingredients, 120 customers (walk-in people plus colmados, cafeterías, hotels), about 10,500 tickets over six months ending today; five planted situations for the AI to find. Changed from a hardware store on 03/11/2026 (Jorge). It must not resemble any beta client: no real supermarket names, no "minis", no assistant called "Dulce". Exception approved by Jorge (03/11/2026): a consignment sales-report reader like the beta one, with a fictional chain (Minimarkets La Canasta) and bakery products.
 - The WhatsApp window (`whatsapp.html` and its styles) stays exactly as it is; it must keep looking like WhatsApp.
 - All client-visible text in Spanish (Dominican), no internal jargon; data always labelled as fictional.
 - No real company from the Trust beta (or any real business) may appear.

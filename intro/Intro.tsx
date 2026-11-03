@@ -102,19 +102,10 @@ function WhatsApp({ s, width }: { s: S; width: number }) {
     <Phone width={width} frame="pro" dark wallpaper="linear-gradient(#075e54 0 128px, #efeae2 128px)" className="lp-phone">
       <div className="lp-wa-head">
         <span className="lp-wa-foto" aria-hidden>
-          <svg viewBox="0 0 24 24" width="22" height="22">
-            <path d="M12 22V6.5" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" />
-            <g fill="#fff">
-              <ellipse cx="12" cy="4.3" rx="1.7" ry="2.7" />
-              <ellipse cx="9.2" cy="8.6" rx="1.5" ry="2.6" transform="rotate(-38 9.2 8.6)" />
-              <ellipse cx="14.8" cy="8.6" rx="1.5" ry="2.6" transform="rotate(38 14.8 8.6)" />
-              <ellipse cx="9.2" cy="12.8" rx="1.5" ry="2.6" transform="rotate(-38 9.2 12.8)" />
-              <ellipse cx="14.8" cy="12.8" rx="1.5" ry="2.6" transform="rotate(38 14.8 12.8)" />
-            </g>
-            <g fill="#ebbb4c">
-              <ellipse cx="9.2" cy="17" rx="1.5" ry="2.6" transform="rotate(-38 9.2 17)" />
-              <ellipse cx="14.8" cy="17" rx="1.5" ry="2.6" transform="rotate(38 14.8 17)" />
-            </g>
+          <svg viewBox="0 0 32 32" width="26" height="26">
+            <path d="M8.5 17h15l-2.2 10.2a1.5 1.5 0 0 1-1.5 1.2h-7.6a1.5 1.5 0 0 1-1.5-1.2z" fill="#f6be88" />
+            <path d="M7 17.4c-1.4-.3-2.2-1.6-1.8-3 .4-1.5 1.9-2.1 3.1-1.8-.3-2.2 1.3-4 3.4-4 .3-2.1 2.2-3.6 4.3-3.6s4 1.5 4.3 3.6c2.1 0 3.7 1.8 3.4 4 1.2-.3 2.7.3 3.1 1.8.4 1.4-.4 2.7-1.8 3z" fill="#f8a7c1" />
+            <circle cx="16" cy="4.6" r="2.2" fill="#d6336c" />
           </svg>
         </span>
         <span className="lp-wa-name">
