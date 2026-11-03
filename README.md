@@ -18,8 +18,10 @@ Muestra dos herramientas conectadas a Claude (Anthropic) sobre una empresa **inv
 
 La empresa, sus clientes y sus cifras son ficticios. No hay datos de ninguna empresa del beta ni
 de clientes reales. Hasta el 03/11/2026 la empresa inventada era una ferretería; ahora es una
-panadería. Para que no se parezca a ningún cliente del beta: no vende en consignación, no hay
-reportes de supermercado, no hay productos "minis" y el asistente no tiene nombre propio. El brief y el contexto del evento viven en el segundo cerebro:
+panadería. Para que no se parezca a ningún cliente del beta: no hay nombres de supermercados
+reales, no hay productos "minis" y el asistente no tiene nombre propio. Única excepción, aprobada
+por Jorge el 03/11/2026: el lector de reportes de consignación, con una cadena ficticia
+(Minimarkets La Canasta) y productos de panadería. El brief y el contexto del evento viven en el segundo cerebro:
 `trusts-ai-solution/outputs/webinar-bhd-2026-11/mockup-brief.md`.
 
 ## Cómo funciona
