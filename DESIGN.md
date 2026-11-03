@@ -117,6 +117,7 @@ components:
     textColor: "{colors.tinta}"
     rounded: "{rounded.tarjeta}"
     padding: "18px 20px"
+  # kpi-frosting es el pastel de capas: glaseado (valor) + bizcocho #f8e6c4 con crema #fffaf0 (nombre) + plato blanco ovalado; cereza solo en "Ventas de hoy".
   kpi-frosting:
     backgroundColor: "{colors.arandano}"
     textColor: "{colors.tinta}"
@@ -144,7 +145,7 @@ La ventana de WhatsApp (`whatsapp.html`, `css/whatsapp.css`) queda fuera de este
 
 **Creative North Star: "Suspiro y chispitas"**
 
-El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un bloque de glaseado que chorrea sobre su nombre; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.
+El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un pastel de capas servido en su plato: el valor va en el glaseado, que chorrea sobre el bizcocho con el nombre y dos capas de crema; solo "Ventas de hoy" lleva una cereza; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.
 
 La densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.
 

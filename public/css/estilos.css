@@ -34,6 +34,11 @@
   --pistacho: #c0e3a1;
   --coco: #f1e9df;
 
+  /* bizcocho y relleno de los pasteles */
+  --bizcocho: #f8e6c4;
+  --bizcocho-oscuro: #eed3a3;
+  --crema: #fffaf0;
+
   /* estados */
   --azul-fuerte: #2f5fd0;
   --rojo: #b3122b;
@@ -134,18 +139,29 @@ html { scrollbar-color: var(--linea-2) transparent; }
 .contenido { padding: 26px 32px 56px; display: flex; flex-direction: column; gap: 22px; max-width: 1440px; }
 
 /* Cifras: un bloque de glaseado que chorrea sobre su nombre */
-.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
-.cifra { display: grid; grid-template-rows: auto 1fr; background: var(--superficie); border-radius: var(--radio); box-shadow: var(--sombra); min-width: 0; overflow: hidden; container-type: inline-size; --tono-cifra: var(--arandano); }
+/* Cifras: cada una es un pastel de capas servido en su plato. Arriba el glaseado con la
+   cifra (y su goteo), abajo el bizcocho con dos capas de relleno y el nombre, y debajo
+   el plato. La cereza va solo en "Ventas de hoy". */
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 30px 22px; padding: 16px 8px 14px; }
+.cifra { position: relative; display: grid; grid-template-rows: auto 1fr; min-width: 0; container-type: inline-size; --tono-cifra: var(--arandano); filter: drop-shadow(0 8px 10px rgba(74, 36, 25, .16)); }
 .cifras .cifra:nth-child(6n+2) { --tono-cifra: var(--tostado); }
 .cifras .cifra:nth-child(6n+3) { --tono-cifra: var(--mora); }
 .cifras .cifra:nth-child(6n+4) { --tono-cifra: var(--caramelo); }
 .cifras .cifra:nth-child(6n+5) { --tono-cifra: var(--vainilla); }
 .cifras .cifra:nth-child(6n+6) { --tono-cifra: var(--pistacho); }
-.cifra-valor { grid-row: 1; position: relative; display: flex; align-items: flex-end; min-height: 96px; padding: 30px 16px 14px; background: var(--tono-cifra); font-size: clamp(16px, 12cqi, 30px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
+/* El plato: un óvalo blanco un poco más ancho que el pastel */
+.cifra::after { content: ""; position: absolute; left: -5%; right: -5%; bottom: -10px; height: 20px; border-radius: 50%; background: var(--superficie); box-shadow: inset 0 -3px 0 var(--linea), 0 4px 8px -4px rgba(74, 36, 25, .3); z-index: -1; }
+/* La cereza */
+.cifra.cereza::before { content: ""; position: absolute; top: -26px; left: 50%; width: 34px; height: 38px; margin-left: -17px; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2734%27 height=%2738%27 viewBox=%270 0 34 38%27%3E%3Cpath d=%27M17 18C17 10 20 4 27 1%27 fill=%27none%27 stroke=%27%232e6b2a%27 stroke-width=%272.6%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%2716%27 cy=%2725%27 r=%2712%27 fill=%27%23c0182d%27/%3E%3Cellipse cx=%2711.5%27 cy=%2720.5%27 rx=%273.6%27 ry=%272.4%27 fill=%27%23fff%27 opacity=%27.55%27 transform=%27rotate%28-30 11.5 20.5%29%27/%3E%3C/svg%3E") center / contain no-repeat; z-index: 3; }
+.cifra-valor { grid-row: 1; position: relative; z-index: 2; display: flex; align-items: flex-end; min-height: 96px; padding: 30px 16px 14px; background: var(--tono-cifra); border-radius: 22px 22px 0 0; font-size: clamp(16px, 12cqi, 30px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
 .cifra-valor::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 28px; background: var(--tono-cifra); -webkit-mask: var(--goteo) repeat-x 0 0 / 240px 28px; mask: var(--goteo) repeat-x 0 0 / 240px 28px; }
 .cifra-valor > span { white-space: nowrap; }
 .cifra-valor.alerta { color: var(--rojo); }
-.cifra-nombre { grid-row: 2; padding: 30px 16px 14px; min-height: calc(2 * 1.3em + 44px); line-height: 1.3; font-size: 14px; font-weight: 600; color: var(--tinta-2); }
+/* El bizcocho: miga dorada con dos capas de relleno de crema hacia abajo */
+.cifra-nombre { grid-row: 2; position: relative; padding: 30px 16px 40px; min-height: calc(2 * 1.3em + 70px); line-height: 1.3; font-size: 14px; font-weight: 700; color: var(--tinta); border-radius: 0 0 8px 8px;
+  background:
+    linear-gradient(var(--bizcocho), var(--bizcocho)) 0 0 / 100% calc(100% - 36px) no-repeat,
+    linear-gradient(to bottom, var(--crema) 0 7px, var(--bizcocho) 7px 18px, var(--crema) 18px 25px, var(--bizcocho-oscuro) 25px 36px) 0 100% / 100% 36px no-repeat; }
 .delta { position: absolute; top: 9px; right: 9px; display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 700; letter-spacing: 0; background: var(--superficie); padding: 1px 8px; border-radius: 999px; }
 .delta svg { width: 9px; height: 9px; }
 .delta.sube { color: var(--verde); }
@@ -283,7 +299,7 @@ th:last-child, td:last-child { padding-right: 0; }
   .barra h1 { font-size: 20px; }
   .contenido { padding: 16px; }
   .fila, .fila.tres { grid-template-columns: 1fr; }
-  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 16px; padding: 16px 4px 12px; }
   .tabla-envoltura.sin-recorte { overflow-x: auto; }
   .tabla-fija th { position: static; }
 }

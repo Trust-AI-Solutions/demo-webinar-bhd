@@ -70,9 +70,11 @@ async function atenderArchivo(req, res) {
   try {
     if (!(await stat(archivo)).isFile()) throw new Error("no es archivo");
     const datos = await readFile(archivo);
-    // El HTML siempre fresco (para ver cada cambio publicado); lo demás, una hora.
-    const cache = extname(archivo) === ".html" ? "no-cache" : "public, max-age=3600";
-    res.writeHead(200, { "content-type": TIPOS[extname(archivo)] ?? "application/octet-stream", "cache-control": cache, ...CABECERAS });
+    // Siempre se revalida (con la fecha del archivo), para que cada cambio publicado se vea al recargar.
+    const fecha = (await stat(archivo)).mtime.toUTCString();
+    if (req.headers["if-modified-since"] === fecha) { res.writeHead(304, CABECERAS); return res.end(); }
+    const cache = "no-cache";
+    res.writeHead(200, { "content-type": TIPOS[extname(archivo)] ?? "application/octet-stream", "cache-control": cache, "last-modified": fecha, ...CABECERAS });
     res.end(req.method === "HEAD" ? undefined : datos);
   } catch {
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8", ...CABECERAS });
