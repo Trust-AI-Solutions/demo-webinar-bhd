@@ -1,157 +1,111 @@
-# Demo para el webinar con BHD · Panadería El Trigal
+# Demo para el webinar con BHD · Tres pymes, tres soluciones con IA
 
-Demo en vivo para el webinar "Oportunidad de IA para tu empresa" (BHD, noviembre de 2026).
-Muestra dos herramientas conectadas a Claude (Anthropic) sobre una empresa **inventada**:
+Demo en vivo para el webinar "Oportunidad de IA para tu empresa" (BHD, 10 de noviembre de 2026).
+Muestra, con **datos ficticios**, las soluciones de la fase beta para tres clientes reales, que
+autorizaron mostrar su nombre (confirmado el 03/11/2026). Una barra arriba de cada pantalla
+permite ir y volver entre las tres (o Alt+1, Alt+2, Alt+3; Alt+0 vuelve al inicio).
 
-- **Panel del negocio** (`panel.html`): ventas, insumos y menú, clientes y cobros, pedidos y alertas,
-  más "Pregúntale a tu negocio", un asistente que responde preguntas consultando las cifras.
-  En **Pedidos**: "Nuevo pedido" (a mano, con el total calculado) e "Importar PDF o foto": la IA lee
-  una orden de compra, la hoja del repartidor o el reporte de ventas de la cadena donde la panadería
-  deja empacados en consignación, y propone el pedido, los cambios o la conciliación; una persona
-  revisa y aplica. En **Ventas**, la consignación compara lo entregado con lo que la cadena reporta
-  vendido, tienda por tienda.
-- **Asistente de WhatsApp** (`whatsapp.html`): precios, encargos de bizcochos y bandejas,
-  cotizaciones y pedidos. Pasa a una persona cuando hay descuentos, crédito, diseños especiales,
-  alergias o reclamos.
-- **Los dos a la vez** (`en-vivo.html`): el pedido que hace el cliente por WhatsApp aparece en el
-  panel en el momento, con un aviso.
+| Solución | Qué se ve | Agentes de IA |
+|---|---|---|
+| **Minis by Mónica** (`/minis/`) | Panel de consignación (stock por tienda, nivel par), despacho del día por ruta con hojas de reparto y de producción, choferes por WhatsApp | `minis-chofer`: el chofer reporta el conteo de la tienda por WhatsApp; no cierra la visita si falta un producto. `minis-reporte`: lee el reporte de ventas de la cadena en PDF |
+| **Grupo Rodelo** (`/rodelo/`) | Rodelo Copilot: resumen ejecutivo, chat ejecutivo, reportes matinales por gerencia, centro de alertas e indicadores | `rodelo-copiloto`: responde preguntas del negocio con cifras de los datos y termina con una recomendación |
+| **Delidom** (`/delidom/`) | Central de Pedidos: pedidos de hoy por ruta (pendiente → preparación → despachado), nuevo pedido, ticket de 72 mm, historial | `delidom-lector`: transcribe un WhatsApp pegado, una orden de compra en PDF o una foto; el catálogo se asigna en el navegador y una persona confirma |
 
-La empresa, sus clientes y sus cifras son ficticios. No hay datos de ninguna empresa del beta ni
-de clientes reales. Hasta el 03/11/2026 la empresa inventada era una ferretería; ahora es una
-panadería. Para que no se parezca a ningún cliente del beta: no hay nombres de supermercados
-reales, no hay productos "minis" y el asistente no tiene nombre propio. Única excepción, aprobada
-por Jorge el 03/11/2026: el lector de reportes de consignación, con una cadena ficticia
-(Minimarkets La Canasta) y productos de panadería. El brief y el contexto del evento viven en el segundo cerebro:
-`trusts-ai-solution/outputs/webinar-bhd-2026-11/mockup-brief.md`.
+Cada solución copia el aspecto y el comportamiento de lo que se construyó para el cliente. Las
+tiendas, clientes, productos, precios, personas, teléfonos y documentos son inventados. Lo que
+**no** se muestra: el asistente de ventas "Dulce" de Minis (fue solo una propuesta), los nombres
+de los sistemas que alimentan a Rodelo y cualquier dato o documento real de los clientes.
 
 ## Cómo funciona
 
 ```
-navegador                                   Netlify                      Anthropic
-public/*.html ── conversación ──▶ /api/ia (netlify/functions/ia) ──▶ Claude
-     ▲                                          │ (agrega instrucciones,
-     │ resultados de herramientas               │  herramientas y la clave)
-     └──── public/js/herramientas.js ◀── pide una herramienta ──┘
+navegador                                           Netlify o Render                 Anthropic
+public/<solución>/ ── conversación + modo ──▶ /api/ia (netlify/functions/ia) ──▶ Claude
+       ▲                                          │ agrega las instrucciones y
+       │ resultado de la herramienta              │ herramientas del agente (modos.mjs)
+       └── public/<solución>/js/herramientas ◀── pide una herramienta ──┘
            (consulta los datos ficticios en el navegador)
 ```
 
-- Los datos se generan en el navegador (`public/js/datos.js`) con una semilla fija: 63 productos en
-  el menú, 28 insumos de producción (con existencia y uso diario por sucursal), 120 clientes
-  (personas y negocios: colmados, cafeterías, hoteles), 2 sucursales (Gazcue, con el horno
-  principal, y Los Prados), 4 vendedores y unos 10,500 tickets de los últimos 6 meses, siempre
-  hasta el día de hoy. No hay base de datos.
-- Lo que se crea durante la demo (pedidos, cotizaciones, avisos) se guarda en el navegador y se
-  comparte entre las ventanas abiertas. "Restablecer la demo" lo borra.
-- La clave de Anthropic solo existe en Netlify. El navegador nunca la ve.
-- Modelo: `claude-opus-5-5` con esfuerzo `low` (respuestas rápidas). Se puede cambiar con las
-  variables `MODELO_IA` y `ESFUERZO_IA` sin tocar el código. Leer un PDF o una foto usa esfuerzo
-  `medium` (variable `ESFUERZO_DOCUMENTO`).
-- "Importar PDF o foto" hace una sola consulta: envía el archivo (las fotos se reducen a 1600 px en
-  el navegador; PDF de hasta 4 MB) con el menú, los clientes y los pedidos abiertos, y la IA
-  responde con la herramienta `proponer_resultado`. Nada se aplica sin aprobarlo en pantalla.
+- Los datos se generan en el navegador con una semilla fija y anclados al día de hoy
+  (`public/<solución>/js/datos.js`). No hay base de datos.
+- Lo que se crea durante la demo (visitas, despachos, pedidos, alertas resueltas) se guarda en el
+  navegador, por solución (`public/comun/estado.js`). "Restablecer" en la barra lo borra para esa
+  solución; "Restablecer la demo" en la portada, para las tres.
+- La clave de Anthropic solo existe en el servidor. El navegador nunca la ve.
+- Cada agente se registra en `netlify/functions/ia/modos.mjs`, con sus instrucciones en
+  `minis.mjs`, `rodelo.mjs` y `delidom.mjs`, y sus herramientas en
+  `public/<solución>/js/definiciones.js` (una sola vez, con la etiqueta que ve la persona).
+- Modelo: `claude-opus-5-5`, esfuerzo `low` en los chats y `medium` en los lectores de documentos.
+  Se cambia con `MODELO_IA`, `ESFUERZO_IA` y `ESFUERZO_DOCUMENTO` sin tocar el código.
+- Los lectores (`minis-reporte`, `delidom-lector`) solo transcriben; el código empareja cada línea
+  con el catálogo y nunca adivina en un empate. Nada se aplica sin aprobarlo en pantalla.
 
-### Situaciones sembradas en los datos (para que la IA las encuentre)
-
-1. La sucursal Los Prados vende alrededor de un tercio menos en las últimas 4 semanas.
-2. La mantequilla en Gazcue alcanza para poco más de un día de producción.
-3. Hotel Brisas de Gazcue pasó su límite de crédito y tiene facturas con más de 60 días de atraso.
-4. La mantequilla y la crema subieron hace 6 semanas y el precio de los bizcochos no se ajustó: el
-   margen de "Bizcochos y tortas" cayó.
-5. Hay productos del menú sin ventas en 90 días (pan de centeno con semillas y bizcocho de
-   zanahoria sin azúcar).
-
-## Publicar en Netlify
-
-1. En Netlify: **Add new project → Import an existing project → GitHub** y elegir
-   `Trust-AI-Solutions/demo-webinar-bhd`. Netlify lee `netlify.toml` (publica `public/`, función en
-   `netlify/functions/`). No hace falta comando de build.
-2. En **Project configuration → Environment variables**, agregar (alcance: Functions):
-   - `ANTHROPIC_API_KEY`: la clave del equipo. Está en LastPass; no se escribe en ningún otro lugar.
-   - `CLAVE_DEMO` (opcional, recomendado): una palabra que la demo pide antes de usar la IA, para
-     que quien encuentre el enlace no gaste la clave. Guardarla también en LastPass.
-3. Volver a desplegar (**Deploys → Trigger deploy**) para que la función lea las variables.
-4. Abrir el sitio, probar una pregunta en el panel y una en WhatsApp.
-
-Protecciones incluidas: límite de 40 consultas por minuto por visitante (`rateLimit` en la
-función), conversaciones de hasta 90 mensajes, y `noindex` para que los buscadores no lo listen.
+Lo que está sembrado en los datos para que la IA lo encuentre, y el orden sugerido para
+mostrarlo, está en [GUION-DEMO.md](GUION-DEMO.md).
 
 ## Publicar en Render
 
-El mismo sitio corre en Render como un "Web Service" de Node con `servidor.mjs`, que entrega
-`public/` y atiende `/api/ia` con la misma función de Netlify (sin código duplicado). Mantiene el
-límite de 40 consultas por minuto por visitante. Las dos versiones pueden estar publicadas a la vez.
+`servidor.mjs` entrega `public/` y atiende `/api/ia` con la misma función que Netlify.
 
-1. En Render, dentro del espacio de trabajo de Trust (nunca en el de un cliente):
-   **New → Blueprint** con este repo (lee `render.yaml`), o **New → Web Service** con
+1. En Render, dentro del espacio de trabajo de Trust **Demo AI Solutions** (nunca en el de un
+   cliente): **New → Blueprint** con este repo (lee `render.yaml`), o **New → Web Service** con
    `npm ci --omit=dev` y `node servidor.mjs`.
 2. En **Environment**, cargar `ANTHROPIC_API_KEY` y `CLAVE_DEMO` desde LastPass.
 3. El plan gratuito se duerme tras 15 minutos sin visitas y tarda cerca de un minuto en
    despertar: abrir el sitio unos minutos antes del webinar.
+4. Si un push no despliega solo, **Manual Deploy → Deploy latest commit** (o reconectar el repo de
+   GitHub en Settings).
 
-Para probarlo en local: `npm start` (puerto 3000) con las claves en el entorno de la terminal.
+## Publicar en Netlify
 
-## Intro animada de la portada
+1. **Add new project → Import an existing project → GitHub** y elegir
+   `Trust-AI-Solutions/demo-webinar-bhd`. Netlify lee `netlify.toml` (publica `public/`, función en
+   `netlify/functions/`). No hace falta comando de build.
+2. En **Environment variables** (alcance: Functions): `ANTHROPIC_API_KEY` y, recomendado,
+   `CLAVE_DEMO` (una palabra que la demo pide antes de usar la IA). Las dos están en LastPass.
+3. Volver a desplegar para que la función lea las variables.
 
-La portada abre con una animación de unos 15 segundos (encargo de un bizcocho por WhatsApp → panel → pregunta sobre insumos y respuesta), hecha con el kit de stageshow (React). El código está en `intro/` y se compila a `public/intro/` con:
+Protecciones: 40 consultas por minuto por visitante, conversaciones de hasta 90 mensajes,
+archivos de hasta 4 MB y `noindex`.
 
-```bash
-npm install
-npm run intro
-```
+## Documentos de ejemplo
 
-El resultado compilado se sube al repo, así que Netlify no compila nada. "Comenzar" muestra la portada; al volver desde otra vista se va directo a la portada, y "Ver la introducción" la repite. Notas del ensayo: `intro/REHEARSAL.md`.
+Se generan con `npm run ejemplos` (necesita Playwright, ver abajo):
 
-## PDF de ejemplo
+- `public/minis/ejemplos/reporte-ventas-las-palmas.pdf`: reporte de ventas de Hiper Las Palmas
+  (cadena ficticia) con las 8 tiendas que faltan hoy y un brownie que no es de Minis.
+- `public/delidom/ejemplos/orden-compra-la-cadena.pdf`: orden de compra de Supermercado La Cadena
+  con fardos, códigos de barra, una fecha ambigua y un producto que no está en el catálogo.
+- `public/delidom/ejemplos/pedido-escrito-a-mano.jpg`: un pedido escrito a mano.
 
-`public/ejemplos/` trae cuatro documentos ficticios para la demo (se generan con
-`node ejemplos/generar.mjs`):
-
-- `orden-de-compra-meson-del-cafe.pdf`: orden de compra de una cafetería, con un pan de masa madre
-  que no está en el menú y un bizcocho para el viernes.
-- `reporte-de-entregas-ruta-manana.pdf`: hoja de reparto de la ruta de la mañana, con un número de
-  pedido que no existe.
-- `reporte-ventas-la-canasta.pdf`: reporte semanal de ventas de Minimarkets La Canasta (cadena
-  ficticia donde la panadería deja empacados en consignación). En Naco reportan 32 panes de molde
-  vendidos y solo se entregaron 30, y en Piantini aparece una galleta que no es de El Trigal.
-- `foto-encargo-escrito-a-mano.jpg`: foto de un encargo escrito a mano, con una torta de
-  guanábana que no está en el menú. Sirve para probar la lectura de fotos.
- Los pedidos de esa ruta (P-1302, P-1305, P-1306 y P-1307) son fijos
-en `datos.js`, así que el PDF coincide cualquier día.
-
-## Probar sin gastar la clave
+## Pruebas
 
 ```bash
-npm install
-npm run pruebas                  # datos, herramientas y función (con Anthropic simulado)
-node pruebas/navegador.mjs       # punta a punta en Chromium con un "Claude" de guion
+npm run pruebas
 ```
 
-`pruebas/navegador.mjs` guarda capturas en `pruebas/capturas/` (no se suben al repo).
+Pruebas de datos, herramientas y agentes de las tres soluciones, de la función y del servidor.
 
-Para probar con la IA real en local: `npx netlify dev` con `ANTHROPIC_API_KEY` en el entorno de
-la terminal (nunca en un archivo del repo).
+```bash
+npm i --no-save playwright && npx playwright install chromium
+npm run navegador
+```
+
+Recorre las tres soluciones en un navegador con un "Claude" de guion (intercepta `/api/ia`), sin
+gastar la clave, y guarda capturas en `pruebas/capturas/`. Para probar con la IA real en local:
+`npm start` con `ANTHROPIC_API_KEY` en el entorno de la terminal.
 
 ## Estructura
 
 ```
-public/                  sitio estático
-  index.html             portada (elige la vista)
-  panel.html             panel del negocio
-  whatsapp.html          asistente de WhatsApp
-  en-vivo.html           WhatsApp y panel lado a lado
-  js/datos.js            empresa y datos ficticios
-  js/negocio.js          consultas (las usan el panel y la IA)
-  js/herramientas.js     lo que hace cada herramienta, en el navegador
-  js/definiciones.js     herramientas de la IA (nombre, etiqueta, descripción, parámetros)
-  js/ia.js               conversación con /api/ia y lectura de documentos
-  js/pedidos.js          crear y actualizar pedidos (WhatsApp, formulario y documentos)
-  js/pedidos-ui.js       ventanas "Nuevo pedido" e "Importar PDF o foto"
-  ejemplos/              PDF ficticios de ejemplo
-  vendor/                Chart.js 4.4.1 (licencia MIT), incluido para no depender de un CDN
-netlify/functions/ia/    función que llama a Claude (instrucciones en config.mjs)
-ejemplos/generar.mjs     genera los PDF de ejemplo
-pruebas/                 pruebas automáticas
-GUION-DEMO.md            guion sugerido para el webinar
-AGENTS.md                mapa y reglas para agentes (y personas) que trabajen en el repo
-DESIGN.md                reglas de diseño
+public/index.html            portada con las tres soluciones
+public/comun/                barra para cambiar de solución, conversación con la IA, estado, clave, formato
+public/minis/                Minis by Mónica (panel, despacho, choferes)
+public/rodelo/               Grupo Rodelo (Rodelo Copilot)
+public/delidom/              Delidom (Central de Pedidos)
+netlify/functions/ia/        la función que llama a Claude y los agentes de cada solución
+servidor.mjs, render.yaml    la misma demo en Render
+ejemplos/                    generadores de los documentos de ejemplo
+pruebas/                     pruebas (npm run pruebas) y recorrido en el navegador (npm run navegador)
 ```

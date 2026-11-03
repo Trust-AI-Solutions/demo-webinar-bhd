@@ -2,24 +2,17 @@
   "name": "demo-webinar-bhd",
   "private": true,
   "type": "module",
-  "description": "Demo para el webinar con BHD: panel de negocio y asistente de WhatsApp de una panaderia ficticia, conectados a Claude.",
+  "description": "Demo para el webinar con BHD: las soluciones de IA de Minis by Mónica, Grupo Rodelo y Delidom, con datos ficticios, conectadas a Claude.",
   "scripts": {
     "start": "node servidor.mjs",
     "pruebas": "node --test pruebas/*.prueba.mjs",
-    "intro": "esbuild intro/main.tsx --bundle --minify --format=esm --target=es2020 --jsx=automatic --loader:.woff2=file --asset-names=[name] --outdir=public/intro --entry-names=intro --define:process.env.NODE_ENV=\\\"production\\\""
+    "ejemplos": "node ejemplos/minis.mjs && node ejemplos/delidom.mjs",
+    "navegador": "node pruebas/navegador.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.135.0"
   },
   "engines": {
     "node": ">=20"
-  },
-  "devDependencies": {
-    "esbuild": "0.25.11",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "lucide-react": "0.468.0",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1"
   }
 }

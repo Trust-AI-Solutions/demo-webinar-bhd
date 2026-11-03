@@ -4,9 +4,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import funcion, { validarSolicitud } from "../netlify/functions/ia/ia.mjs";
+import { MODOS } from "../netlify/functions/ia/modos.mjs";
+
+// Un agente de conversación y un agente lector cualesquiera del registro.
+const CHAT = Object.keys(MODOS).find((m) => !MODOS[m].documento);
+const LECTOR = Object.keys(MODOS).find((m) => MODOS[m].documento);
 
 const solicitud = (cuerpo, cabeceras = {}) => new Request("http://localhost/api/ia", { method: "POST", headers: { "content-type": "application/json", ...cabeceras }, body: JSON.stringify(cuerpo) });
-const valido = { modo: "panel", fecha: "2026-11-10", hora: "10:15", mensajes: [{ role: "user", content: "¿Cómo van las ventas?" }] };
+const valido = { modo: CHAT ?? LECTOR, fecha: "2026-11-10", hora: "10:15", mensajes: [{ role: "user", content: "¿Cómo van las ventas?" }] };
 
 test("validación de la solicitud", () => {
   assert.equal(validarSolicitud(valido, JSON.stringify(valido)), null);
@@ -41,7 +46,7 @@ test("arma la solicitud a Claude con instrucciones, herramientas y respaldo", as
     return Response.json({ id: "msg_1", type: "message", role: "assistant", model: "claude-opus-5-5", stop_reason: "end_turn", content: [{ type: "text", text: "Hola" }], usage: { input_tokens: 1, output_tokens: 1 } });
   };
   try {
-    const r = await funcion(solicitud({ ...valido, modo: "whatsapp" }), {});
+    const r = await funcion(solicitud(valido), {});
     assert.equal(r.status, 200);
     const cuerpo = await r.json();
     assert.equal(cuerpo.content[0].text, "Hola");
@@ -56,28 +61,31 @@ test("arma la solicitud a Claude con instrucciones, herramientas y respaldo", as
   assert.equal(c.fallbacks, "default");
   assert.equal(c.output_config.effort, "low");
   assert.equal(c.thinking, undefined);
-  assert.deepEqual(c.tools.map((t) => t.name), ["buscar_productos", "crear_cotizacion", "registrar_pedido", "pasar_a_persona"]);
+  assert.deepEqual(c.tools.map((t) => t.name), MODOS[valido.modo].herramientas.map((t) => t.name));
   assert.ok(c.tools.every((t) => Object.keys(t).join() === "name,description,input_schema"), "a Claude solo van name, description e input_schema");
-  assert.match(c.system[0].text, /asistente de WhatsApp/);
+  assert.equal(c.system[0].text, MODOS[valido.modo].instrucciones);
+  assert.match(c.system[0].text, /ficticios/, "cada agente lleva las reglas de la demo");
   assert.match(c.system[1].text, /2026-11-10/);
 });
 
-test("modo documento: un solo PDF o foto, con más espacio y esfuerzo medio", async () => {
+test("agente lector: un PDF, una foto o un texto pegado, con esfuerzo medio", { skip: !LECTOR }, async () => {
   const pdf = { type: "document", source: { type: "base64", media_type: "application/pdf", data: "JVBERi0x" } };
-  const doc = { ...valido, modo: "documento", mensajes: [{ role: "user", content: [pdf, { type: "text", text: "CATÁLOGO…" }] }] };
+  const doc = { ...valido, modo: LECTOR, mensajes: [{ role: "user", content: [pdf, { type: "text", text: "CATÁLOGO…" }] }] };
   assert.equal(validarSolicitud(doc, JSON.stringify(doc)), null);
   assert.ok(validarSolicitud({ ...doc, mensajes: [{ role: "user", content: [pdf, pdf] }] }), "dos archivos");
   assert.ok(validarSolicitud({ ...doc, mensajes: [{ role: "user", content: [{ type: "image", source: { type: "url", url: "https://x" } }] }] }), "imagen por URL");
-  assert.ok(validarSolicitud({ ...valido, mensajes: [{ role: "user", content: [pdf] }] }), "archivos fuera del modo documento");
+  if (CHAT) assert.ok(validarSolicitud({ ...valido, modo: CHAT, mensajes: [{ role: "user", content: [pdf] }] }), "archivos fuera de un agente lector");
   assert.ok(validarSolicitud(doc, "x".repeat(5_600_000)), "demasiado grande");
   assert.equal(validarSolicitud(doc, "x".repeat(2_000_000)), null);
+  const pegado = { ...doc, mensajes: [{ role: "user", content: [{ type: "text", text: "Mensaje recibido: 4 galones de chinola" }] }] };
+  assert.equal(validarSolicitud(pegado, JSON.stringify(pegado)), null, "texto pegado sin archivo");
 
   process.env.ANTHROPIC_API_KEY = "clave-de-prueba";
   const original = globalThis.fetch;
   let capturada;
   globalThis.fetch = async (url, init) => {
     capturada = JSON.parse(init.body);
-    return Response.json({ id: "msg_2", type: "message", role: "assistant", model: "claude-opus-5-5", stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "proponer_resultado", input: { tipo: "otro", resumen: "x", dudas: [] } }], usage: { input_tokens: 1, output_tokens: 1 } });
+    return Response.json({ id: "msg_2", type: "message", role: "assistant", model: "claude-opus-5-5", stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: MODOS[LECTOR].herramientas[0].name, input: {} }], usage: { input_tokens: 1, output_tokens: 1 } });
   };
   try {
     const r = await funcion(solicitud(doc), {});
@@ -86,16 +94,17 @@ test("modo documento: un solo PDF o foto, con más espacio y esfuerzo medio", as
     globalThis.fetch = original;
   }
   assert.equal(capturada.output_config.effort, "medium");
-  assert.deepEqual(capturada.tools.map((t) => t.name), ["proponer_resultado"]);
-  assert.match(capturada.system[0].text, /Lees documentos/);
+  assert.deepEqual(capturada.tools.map((t) => t.name), MODOS[LECTOR].herramientas.map((t) => t.name));
+  assert.equal(capturada.system[0].text, MODOS[LECTOR].instrucciones);
   assert.equal(capturada.messages[0].content[0].type, "document");
 });
 
-test("cada herramienta definida tiene su función en el navegador, y al revés", async () => {
-  const { DEFINICIONES } = await import("../public/js/definiciones.js");
-  const { EJECUTAR } = await import("../public/js/herramientas.js");
-  for (const modo of ["panel", "whatsapp"]) {
-    assert.deepEqual(DEFINICIONES[modo].map((h) => h.name).sort(), Object.keys(EJECUTAR[modo]).sort(), modo);
-    for (const h of DEFINICIONES[modo]) assert.ok(h.etiqueta && h.description && h.input_schema, h.name);
+test("cada agente tiene instrucciones y herramientas completas", () => {
+  assert.ok(Object.keys(MODOS).length > 0);
+  for (const [nombre, m] of Object.entries(MODOS)) {
+    assert.match(nombre, /^(minis|rodelo|delidom)-/, nombre);
+    assert.ok(m.instrucciones.length > 200, nombre);
+    assert.ok(m.herramientas.length > 0, nombre);
+    for (const h of m.herramientas) assert.ok(h.name && h.description && h.input_schema?.type === "object", `${nombre}: ${h.name}`);
   }
 });

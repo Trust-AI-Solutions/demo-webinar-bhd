@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delidom · Central de Pedidos</title>
+<meta name="description" content="Demostración de la central de pedidos de Delidom con IA, con datos ficticios.">
+<meta name="robots" content="noindex">
+<link rel="preload" href="../fuentes/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/delidom.css">
+</head>
+<body>
+
+<header class="cab">
+  <div class="marca">
+    <div class="logo" aria-hidden="true">🧃</div>
+    <div>
+      <h1>Delidom · Central de Pedidos</h1>
+      <div class="fecha" id="hoy-fecha"></div>
+    </div>
+    <button type="button" id="modo-pizarra" class="modo-pizarra-btn" aria-pressed="false" title="Pantalla grande para la pizarra de despacho (Esc para salir)">🖥 <span>Modo pizarra</span></button>
+    <span class="demo">VERSIÓN DEMO</span>
+  </div>
+</header>
+
+<nav class="pestanas" aria-label="Pantallas">
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-ir="hoy" aria-selected="true">📋 Pedidos <span class="cont" id="cont-hoy">0</span></button>
+    <button type="button" role="tab" data-ir="nuevo" aria-selected="false">➕ Nuevo pedido</button>
+    <button type="button" role="tab" data-ir="pegar" aria-selected="false">✨ Pegar mensaje o PDF</button>
+    <button type="button" role="tab" data-ir="hist" aria-selected="false">🗓 Historial</button>
+  </div>
+</nav>
+
+<main>
+  <!-- ============ PEDIDOS DE HOY ============ -->
+  <section class="pantalla act" id="p-hoy" role="tabpanel">
+    <h2 class="tit">Pedidos de hoy</h2>
+    <p class="baj">Se actualiza en tiempo real para todo el equipo · Los despachados pasan al final del día</p>
+    <div class="barra-sup" id="kpis"></div>
+
+    <aside class="filtro-ruta" aria-label="Filtros de pedidos">
+      <div class="filtro-cab"><b>Filtros</b><button type="button" class="enlace" id="f-limpiar">Limpiar</button></div>
+      <label for="f-buscar">Cliente o producto</label>
+      <input type="search" id="f-buscar" placeholder="Buscar cliente o producto">
+      <label for="f-ruta">Ruta</label>
+      <select id="f-ruta"></select>
+      <label for="f-estado">Estado</label>
+      <select id="f-estado">
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendientes</option>
+        <option value="preparacion">En preparación</option>
+      </select>
+    </aside>
+
+    <div class="fichas-rutas" id="fichas-rutas" role="group" aria-label="Pedidos por despachar en cada ruta"></div>
+    <div class="estado-visual" aria-label="Cómo va el día: pedidos por estado">
+      <div class="estado-visual-cab"><b>Cómo va el día</b><span id="ev-total">0 pedidos</span></div>
+      <div class="estado-visual-barra"><span class="seg pen" id="seg-pen"></span><span class="seg pre" id="seg-pre"></span><span class="seg des" id="seg-des"></span></div>
+      <div class="estado-visual-leyenda" id="ev-leyenda"></div>
+    </div>
+    <div id="pizarra"></div>
+    <details class="despachados" id="despachados">
+      <summary>✓ Despachados hoy · <span id="n-des">0</span><span class="des-total" id="des-total"></span> <span class="flecha">▸</span></summary>
+      <div class="des-lista" id="lista-des"></div>
+    </details>
+  </section>
+
+  <!-- ============ NUEVO PEDIDO ============ -->
+  <section class="pantalla" id="p-nuevo" role="tabpanel">
+    <h2 class="tit">Nuevo pedido</h2>
+    <p class="baj">Elija el cliente y la dirección se completa sola, o agregue uno nuevo</p>
+    <form class="tarj" id="form-nuevo" novalidate>
+      <div class="campo">
+        <label for="sel-cli">Cliente</label>
+        <select id="sel-cli"></select>
+        <div class="autocompletado" id="auto-cli" hidden></div>
+      </div>
+      <div class="nuevo-cli" id="nuevo-cli" hidden>
+        <div class="campo"><label for="nc-nombre">Nombre del cliente</label><input type="text" id="nc-nombre" placeholder="Ej.: Cafetería El Buen Sabor"></div>
+        <div class="campo"><label for="nc-dir">Dirección de entrega</label><input type="text" id="nc-dir" placeholder="Calle, número, sector"></div>
+        <div class="fila2c">
+          <div class="campo"><label for="nc-tel">Teléfono / WhatsApp</label><input type="tel" id="nc-tel" placeholder="809-000-0000"></div>
+          <div class="campo"><label for="nc-ruta">Ruta</label><select id="nc-ruta"></select></div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="buscar-prod">Productos</label>
+        <input type="search" id="buscar-prod" class="prods-busca" placeholder="Buscar producto (chinola, pulpa, 12 oz…)">
+        <div class="prods" id="prods-form"></div>
+      </div>
+
+      <div class="fila2c">
+        <div class="campo"><label for="in-fecha">Fecha de entrega</label><input type="date" id="in-fecha"><div class="fecha-eco" id="eco-fecha"></div><div class="aviso-ambar" id="aviso-fecha" hidden>⚠ Esta fecha ya pasó.</div></div>
+        <div class="campo"><label for="sel-canal">Canal</label><select id="sel-canal"><option>Llamada</option><option>WhatsApp</option><option>Correo</option><option>En persona</option></select></div>
+      </div>
+      <div class="campo"><label for="in-nota">Nota para despacho <span style="font-weight:500;text-transform:none;letter-spacing:0">(opcional)</span></label><input type="text" id="in-nota" placeholder="Ej.: entregar antes de las 9:00 a. m. · OC #4471"></div>
+      <div class="error-caja" id="err-nuevo" role="alert" hidden></div>
+      <button class="btn-ppal" type="submit">Guardar pedido</button>
+    </form>
+  </section>
+
+  <!-- ============ PEGAR MENSAJE / PDF ============ -->
+  <section class="pantalla" id="p-pegar" role="tabpanel">
+    <h2 class="tit">Pegar mensaje, o subir el PDF o la foto</h2>
+    <p class="baj">La IA lee el mensaje de WhatsApp, el correo o la orden de compra —en PDF o fotografiada— y arma el pedido. Nada se guarda hasta que usted confirme.</p>
+    <div class="pegar-grid">
+      <div class="tarj">
+        <div class="campo" style="margin-top:0">
+          <label for="wa-txt">Mensaje recibido</label>
+          <textarea id="wa-txt" rows="6" placeholder="Pegue aquí el mensaje del cliente…"></textarea>
+          <div class="ejemplos" id="ejemplos-texto" aria-label="Mensajes de ejemplo"></div>
+        </div>
+        <button class="btn-ppal" type="button" id="leer-texto">✨ Leer con IA</button>
+
+        <div class="suelta" id="suelta">
+          <div class="suelta-tit">📄 Arrastre aquí la orden de compra</div>
+          <div class="suelta-sub">PDF o foto (JPG, PNG) · o toque el botón para buscarla</div>
+          <button class="btn-sec" type="button" id="buscar-archivo">Buscar el archivo…</button>
+          <input type="file" id="archivo" accept="application/pdf,image/jpeg,image/png,image/webp" hidden>
+          <div class="ejemplos" id="ejemplos-archivo" style="justify-content:center" aria-label="Archivos de ejemplo"></div>
+          <div class="suelta-archivo" id="suelta-nombre" hidden></div>
+        </div>
+      </div>
+
+      <div id="ia-lado">
+        <div class="pensando" id="ia-pensando" hidden>Leyendo<span class="puntos"></span></div>
+        <div class="error-caja" id="ia-error" role="alert" hidden></div>
+        <div class="ia-vacio" id="ia-vacio"><b>Aquí aparece el borrador</b>La IA copia lo que dice el pedido; el panel lo calza con el catálogo y usted revisa antes de crearlo.</div>
+        <div class="tarj" id="ia-res" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HISTORIAL ============ -->
+  <section class="pantalla" id="p-hist" role="tabpanel">
+    <h2 class="tit">Historial de pedidos</h2>
+    <p class="baj">Filtre por cliente o fecha y exporte el reporte</p>
+    <div class="hist-rapidos" id="hist-rapidos" role="group" aria-label="Rangos rápidos de fecha">
+      <button type="button" data-rango="hoy" aria-pressed="false">Hoy</button>
+      <button type="button" data-rango="ayer" aria-pressed="false">Ayer</button>
+      <button type="button" data-rango="7dias" aria-pressed="true">Últimos 7 días</button>
+      <button type="button" data-rango="mes" aria-pressed="false">Este mes</button>
+    </div>
+    <div class="filtros">
+      <div class="campo"><label for="h-cliente">Cliente</label><select id="h-cliente"></select></div>
+      <div class="campo"><label for="h-desde">Desde</label><input type="date" id="h-desde"></div>
+      <div class="campo"><label for="h-hasta">Hasta</label><input type="date" id="h-hasta"></div>
+    </div>
+    <div class="hist-contador" id="hist-contador"></div>
+    <details class="por-producto"><summary>Ver el conteo por producto</summary><ul id="hist-por-producto"></ul></details>
+    <div class="tabla-wrap"><table class="hist" id="hist-tabla"></table></div>
+    <div class="hist-pie"><span id="hist-conteo"></span><button type="button" class="btn-sec" id="hist-exportar">⬇ Exportar a Excel</button></div>
+  </section>
+</main>
+
+<footer class="pie">Versión de demostración · Datos ficticios · Programa IA aplicada a Negocios — PyMEs RD (The Trust for the Americas · MICM · Banco BHD)</footer>
+
+<dialog class="ventana" id="ventana-ticket" aria-labelledby="ticket-titulo">
+  <div class="ventana-cab"><h2 id="ticket-titulo">🖨 Ticket de despacho · 72 mm</h2><button type="button" data-cerrar aria-label="Cerrar">×</button></div>
+  <div class="ventana-cuerpo">
+    <iframe id="ticket-marco" title="Vista previa del ticket"></iframe>
+    <button type="button" class="btn-ppal" id="ticket-imprimir">Imprimir ticket</button>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

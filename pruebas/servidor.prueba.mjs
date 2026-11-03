@@ -17,9 +17,10 @@ test("entrega el sitio, la salud y los ejemplos; no sale de public/", async () =
     assert.equal(inicio.status, 200);
     assert.match(inicio.headers.get("content-type"), /text\/html/);
     assert.equal(inicio.headers.get("x-robots-tag"), "noindex");
-    assert.match(await inicio.text(), /Panadería El Trigal/);
+    assert.match(await inicio.text(), /Minis by Mónica/);
+    for (const c of ["minis", "rodelo", "delidom"]) assert.equal((await fetch(`${base}/${c}/`)).status, 200, c);
     assert.equal((await fetch(`${base}/salud`)).status, 200);
-    assert.equal((await fetch(`${base}/ejemplos/reporte-ventas-la-canasta.pdf`)).headers.get("content-type"), "application/pdf");
+    assert.equal((await fetch(`${base}/delidom/ejemplos/orden-compra-la-cadena.pdf`)).headers.get("content-type"), "application/pdf");
     assert.equal((await fetch(`${base}/no-existe.html`)).status, 404);
     assert.equal((await fetch(`${base}/..%2Fpackage.json`)).status, 404);
     assert.equal((await fetch(`${base}/%2e%2e/servidor.mjs`)).status, 404);

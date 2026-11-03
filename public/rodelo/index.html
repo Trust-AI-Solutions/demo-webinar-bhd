@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rodelo Copilot · Demo</title>
+<meta name="description" content="Réplica con datos ficticios del panel ejecutivo con IA de Grupo Rodelo.">
+<meta name="robots" content="noindex">
+<link rel="preload" href="../fuentes/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/rodelo.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark">R</div><div><div class="brandname">Rodelo Copilot</div><div class="brandsub">Panel ejecutivo · Grupo Rodelo</div></div></div>
+  <nav class="nav" aria-label="Secciones">
+    <button class="active" data-view="inicio"><span class="icon">⌂</span><span class="label">Inicio</span></button>
+    <button data-view="chat"><span class="icon">◌</span><span class="label">Chat Ejecutivo</span></button>
+    <button data-view="reportes"><span class="icon">▤</span><span class="label">Reportes</span></button>
+    <button data-view="alertas"><span class="icon">🔔</span><span class="label">Alertas</span><span class="badge" id="navAlertBadge" hidden>0</span></button>
+    <button data-view="indicadores"><span class="icon">◉</span><span class="label">Indicadores</span></button>
+  </nav>
+  <div class="pilot"><span class="dot"></span><strong>Solo lectura</strong><br>Lee las fuentes del negocio cada mañana.<br>No escribe en ninguna de ellas.<br><span style="opacity:.7">IA aplicada a Negocios — PyMEs RD · Trust · MICM · BHD</span></div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="titleblock"><h1 id="pageTitle">Resumen ejecutivo</h1><p id="pageSubtitle">Rodelo Copilot · Fuentes del negocio, actualizadas cada mañana</p></div>
+    <div class="top-actions">
+      <div class="usuario-chip"><span class="nivel-tag">Dirección</span><b>Usuario de demostración</b></div>
+      <button class="btn" id="refreshBtn" type="button">↻ Actualizar</button>
+      <span class="pill">Solo lectura</span>
+    </div>
+  </header>
+  <section class="content">
+
+    <!-- INICIO -->
+    <div class="view active" id="view-inicio">
+      <div class="heading-row"><div><h2 id="saludo">Buenos días 👋</h2><p id="saludoSub">Resumen ejecutivo</p></div></div>
+      <div class="grid-kpi" id="kpiGrid"></div>
+      <div class="dashboard-grid">
+        <div class="card section-card"><div class="section-title">Ventas (RD$) · Último día vs. ~4 semanas antes <span class="subtle">Comparativo automático</span></div><div class="bars" id="ventasBars"></div></div>
+        <div class="card section-card"><div class="section-title">Riesgos prioritarios <span class="subtle">Desde el motor de alertas</span></div><div class="risk-list" id="riskList"></div></div>
+        <div class="card section-card"><div class="section-title">Recomendación accionable</div><div class="recommend"><div class="rec-icon">💡</div><p id="recomendacion"></p><button class="btn primary" id="verAnalisis" type="button">Ver análisis en el Chat</button></div></div>
+      </div>
+      <div class="lower-grid">
+        <div class="card section-card"><div class="section-title">Ventas y utilidad por día <span class="subtle">Últimos 8 días con facturación</span></div><table class="table"><thead><tr><th>Fecha</th><th>Ventas</th><th>Utilidad</th><th>Facturas</th></tr></thead><tbody id="ventasTabla"></tbody></table></div>
+        <div class="card section-card"><div class="section-title">Alertas activas <button class="btn ghost" data-view-link="alertas" type="button">Ver todas →</button></div><div id="alertasMini"></div></div>
+      </div>
+      <div class="footer-note">El Copilot lee las fuentes del negocio, actualizadas cada mañana. Es de solo lectura: no escribe en ninguna de ellas. Todos los datos de esta demostración son ficticios.</div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="view" id="view-chat">
+      <div class="chat-layout">
+        <div class="card chatbox">
+          <div class="chat-head"><div><strong>Chat Ejecutivo</strong><div class="online">● Copilot disponible</div></div><button class="btn" id="clearChat" type="button">Limpiar conversación</button></div>
+          <div class="messages" id="messages" aria-live="polite"></div>
+          <form class="chat-input" id="chatForm"><input id="chatInput" placeholder="Pregunte por indicadores, clientes, inventario, producción…" aria-label="Su consulta" autocomplete="off"><button class="btn primary" id="sendChat" type="submit">Consultar</button></form>
+        </div>
+        <aside class="card suggestions">
+          <h3>Consultas sugeridas</h3><p>Las respuestas se calculan sobre los datos del negocio, actualizados cada mañana.</p>
+          <div id="sugerencias"></div>
+          <div class="data-note"><strong>Nota:</strong> el chat es de solo lectura. No modifica pedidos, inventario ni facturas.</div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- REPORTES -->
+    <div class="view" id="view-reportes">
+      <div class="heading-row"><div><h2>Reportes matinales por gerencia</h2><p>Cada gerencia recibe a las 6:00 a. m. un correo con indicadores, alertas de su área y una recomendación. Aquí queda el archivo de lo enviado.</p></div></div>
+      <div class="report-grid" id="reportGrid"></div>
+      <div class="card section-card"><div class="section-title">Historial de envíos <span class="subtle">De lunes a sábado, 6:00 a. m.</span></div><div id="reportesHistorial"></div></div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div class="view" id="view-alertas">
+      <div class="heading-row"><div><h2>Centro de alertas</h2><p>Incongruencias detectadas automáticamente por el motor (cada hora). Márquelas como vistas o resueltas para dar seguimiento.</p></div></div>
+      <div class="toolbar">
+        <select id="severityFilter" aria-label="Severidad"><option value="all">Todas las severidades</option><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select>
+        <select id="statusFilter" aria-label="Estado"><option value="all">Todos los estados</option><option value="nueva">Nueva</option><option value="vista">Vista</option><option value="resuelta">Resuelta</option></select>
+        <input id="alertSearch" placeholder="Buscar por descripción, tipo o entidad…" aria-label="Buscar alertas">
+      </div>
+      <div class="alerts-layout"><div class="card" id="alertsTable"></div><aside class="card detail empty" id="alertDetail">Seleccione una alerta para ver el detalle y la acción recomendada.</aside></div>
+    </div>
+
+    <!-- INDICADORES -->
+    <div class="view" id="view-indicadores">
+      <div class="heading-row"><div><h2>Indicadores y comparativos</h2><p>Tendencias históricas del negocio para priorizar acciones.</p></div><button class="btn" id="exportarPdf" type="button">⤓ Exportar a PDF</button></div>
+      <div class="tabs">
+        <button class="tab active" data-tab="ventas" type="button">Ventas</button>
+        <button class="tab" data-tab="inventario" type="button">Inventario</button>
+        <button class="tab" data-tab="produccion" type="button">Producción</button>
+        <button class="tab" data-tab="comercial" type="button">Comercial</button>
+      </div>
+      <div class="indicator-grid"><div class="card chart-card"><div class="section-title" id="indicatorTitle"></div><div id="indicatorChart"></div></div><div class="card summary-list" id="indicatorSummary"></div></div>
+    </div>
+
+  </section>
+</main>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><h3 id="modalTitle"></h3><button class="close" id="closeModal" type="button" aria-label="Cerrar">×</button></div><div class="modal-body" id="modalBody"></div><div class="modal-foot"><button class="btn" id="modalCloseBtn" type="button">Cerrar</button></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

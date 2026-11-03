@@ -1,55 +1,26 @@
 # Product
 
-<!-- impeccable:product-schema 1 -->
-
-## Platform
-
-web
+Demo en vivo para el webinar "Oportunidad de IA para tu empresa" de BHD (10/11/2026, 5 PM, en línea, unas 300 pymes inscritas de una base de 1,056). Se presenta en pantalla compartida durante el bloque de casos (minutos 12–22).
 
 ## Users
 
-- Presenters: Jorge Márquez and Laura Kretly (Trust AI Solutions, The Trust for the Americas) drive the demo live on a laptop and share the screen during the BHD webinar "Oportunidad de IA para tu empresa" (10/11/2026, 60 minutes).
-- Audience: owners and managers of Dominican SMEs, clients of Banco BHD with pre-approved credit (about 1,050 invited, target 300). Non-technical, often passive in webinars. They only watch through Teams/Zoom screen share (compressed video, mixed screen sizes); they do not use the site themselves.
+- **Quien presenta:** Jorge y Laura (The Trust). Necesitan ir y volver entre tres soluciones sin perderse, y que la IA responda bien a la primera.
+- **Quien mira:** dueños y gerentes de pymes dominicanas, clientes de BHD. Tienen que reconocer su propio negocio en una de las tres.
 
 ## Product Purpose
 
-A live, working mock-up that shows what AI does inside a business like theirs: a business panel the owner can question in plain Spanish, and a WhatsApp assistant that quotes, takes cake orders and other orders that land in the panel. Success: in a few minutes an owner understands "this could run in my business" and wants the free diagnosis offered at the end of the webinar.
-
-## Positioning
-
-Everything on screen is real and working, not a slideshow: the AI answers from the business's own numbers (it looks them up before answering, never invents figures), and a customer's WhatsApp order appears in the panel the moment it is placed.
-
-## Operating Context
-
-- Shown inside a webinar agenda run by BHD; the demo competes with slides and talking heads for attention on a shared screen.
-- Presenter flow: start page, then side-by-side view (WhatsApp + panel), then the panel and its "Pregúntale a tu negocio" chat. Script in `GUION-DEMO.md`.
-- AI answers take 5 to 20 seconds; the screen must stay readable and alive while the AI works.
+Mostrar con casos reales (Minis by Mónica, Grupo Rodelo, Delidom) lo que hace la IA en una pyme, para que la audiencia pida el diagnóstico gratuito al cierre del webinar. Los tres clientes autorizaron mostrar su nombre (03/11/2026). Los datos son ficticios.
 
 ## Capabilities and Constraints
 
-- Static site in `public/` (plain HTML, CSS, ES modules; Chart.js 4.4.1 vendored), one Netlify function `netlify/functions/ia` that calls Claude. No build step, no framework.
-- Fictional company "Panadería y Repostería El Trigal, SRL": bakery, two branches (Gazcue with the main oven, Los Prados), 63 menu products, 28 production ingredients, 120 customers (walk-in people plus colmados, cafeterías, hotels), about 10,500 tickets over six months ending today; five planted situations for the AI to find. Changed from a hardware store on 03/11/2026 (Jorge). It must not resemble any beta client: no real supermarket names, no "minis", no assistant called "Dulce". Exception approved by Jorge (03/11/2026): a consignment sales-report reader like the beta one, with a fictional chain (Minimarkets La Canasta) and bakery products.
-- The WhatsApp window (`whatsapp.html` and its styles) stays exactly as it is; it must keep looking like WhatsApp.
-- All client-visible text in Spanish (Dominican), no internal jargon; data always labelled as fictional.
-- No real company from the Trust beta (or any real business) may appear.
-
-## Brand Commitments
-
-- Main typeface: SF Pro (requested by Jorge, 29/10/2026), served as the system font on Apple devices; Inter is the bundled fallback elsewhere.
-- The fictional company's own name stays. The page must not impersonate BHD, Trust, or any real brand.
-
-## Evidence on Hand
-
-- Fictional data generator: `public/js/datos.js`. Demo script: `GUION-DEMO.md`.
-- No real testimonials, customers, prices or results may be shown in the mock-up.
+- Tres soluciones, cada una con el aspecto de lo que se construyó para el cliente, y una barra común para cambiar entre ellas.
+- Agentes de IA reales (Claude) sobre datos ficticios: el chofer de Minis por WhatsApp, el lector de reportes de Minis, el copiloto de Rodelo y el lector de pedidos de Delidom.
+- Nada se aplica sin que una persona lo apruebe en pantalla. Toda cifra sale de los datos, no del modelo.
+- No se muestra: datos o documentos reales, cadenas de supermercado reales, el asistente "Dulce" (no se construyó), los sistemas que alimentan a Rodelo (no los cubre el financiamiento de BHD).
+- Sin base de datos ni inicio de sesión. Lo creado en la demo vive en el navegador.
 
 ## Product Principles
 
-1. Readable on a shared screen first: large, high-contrast, one obvious focal point per view.
-2. Show the mechanism, not a claim: the AI working on real-looking numbers is the proof.
-3. A business owner should recognise their own business, not a tech product.
-4. Honest about being a demo: fictional data is always labelled.
-
-## Accessibility & Inclusion
-
-- Legibility under video compression and on small laptop screens: generous type sizes, strong contrast, no meaning carried by color alone.
+- Que se lea a través de una pantalla compartida y comprimida: letra grande, poca densidad.
+- Que el dueño vea su problema antes que la tecnología: nada de jerga técnica.
+- Que la IA se equivoque a la vista y con red: dudas marcadas, empates sin adivinar, aprobación humana.

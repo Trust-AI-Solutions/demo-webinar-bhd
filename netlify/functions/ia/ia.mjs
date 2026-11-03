@@ -1,12 +1,13 @@
-// Función de Netlify que conecta la demo con Claude. La clave de Anthropic vive solo
-// aquí, como variable de entorno ANTHROPIC_API_KEY en Netlify (nunca en el código ni
-// en el navegador). El navegador envía la conversación; esta función agrega las
-// instrucciones y las herramientas del modo pedido ("panel", "whatsapp" o "documento") y devuelve
-// la respuesta de Claude. Las herramientas se ejecutan en el navegador sobre los datos
-// ficticios, y su resultado vuelve aquí en el siguiente mensaje.
+// Función de Netlify (y de Render, vía servidor.mjs) que conecta la demo con Claude. La
+// clave de Anthropic vive solo aquí, como variable de entorno ANTHROPIC_API_KEY (nunca en
+// el código ni en el navegador). El navegador envía la conversación y el modo (el agente:
+// "minis-chofer", "rodelo-copiloto", "delidom-lector"...); esta función agrega las
+// instrucciones y las herramientas de ese agente (modos.mjs) y devuelve la respuesta de
+// Claude. Las herramientas se ejecutan en el navegador sobre los datos ficticios, y su
+// resultado vuelve aquí en el siguiente mensaje.
 
 import Anthropic from "@anthropic-ai/sdk";
-import { INSTRUCCIONES, HERRAMIENTAS } from "./config.mjs";
+import { MODOS } from "./modos.mjs";
 
 const MODELO_POR_DEFECTO = "claude-opus-5-5";
 const MAX_MENSAJES = 90;
@@ -15,11 +16,12 @@ const MAX_BYTES = 350_000;
 const MAX_BYTES_DOCUMENTO = 5_500_000;
 const TIPOS_IMAGEN = ["image/jpeg", "image/png", "image/webp"];
 
+// Un agente lector recibe un solo mensaje: un PDF o una foto (o ninguno, si es un texto pegado) más texto.
 function validarDocumento(m) {
   if (m.length !== 1 || !Array.isArray(m[0].content)) return "Envía un solo documento.";
   const bloques = m[0].content;
   const archivos = bloques.filter((b) => b?.type === "document" || b?.type === "image");
-  if (archivos.length !== 1) return "Envía un solo documento.";
+  if (archivos.length > 1) return "Envía un solo documento.";
   for (const b of bloques) {
     if (b?.type === "text") { if (typeof b.text !== "string") return "Contenido no válido."; continue; }
     if (b?.type === "document" && b.source?.type === "base64" && b.source.media_type === "application/pdf" && typeof b.source.data === "string") continue;
@@ -35,10 +37,10 @@ const json = (cuerpo, status = 200) => Response.json(cuerpo, { status });
 // Valida lo que llega del navegador. Exportada para las pruebas.
 export function validarSolicitud(cuerpo, texto) {
   if (!cuerpo || typeof cuerpo !== "object") return "Solicitud vacía.";
-  if (!["panel", "whatsapp", "documento"].includes(cuerpo.modo)) return "Modo no válido.";
+  if (typeof cuerpo.modo !== "string" || !Object.hasOwn(MODOS, cuerpo.modo)) return "Modo no válido.";
   const m = cuerpo.mensajes;
   if (!Array.isArray(m) || m.length === 0) return "Faltan los mensajes.";
-  if (cuerpo.modo === "documento") {
+  if (MODOS[cuerpo.modo].documento) {
     if ((texto?.length ?? 0) > MAX_BYTES_DOCUMENTO) return "El archivo es demasiado grande. Prueba con un PDF más liviano o una foto.";
     const problema = validarDocumento(m);
     if (problema) return problema;
@@ -74,19 +76,20 @@ export default async (req, context) => {
 
   const cliente = new Anthropic({ apiKey, maxRetries: 2, timeout: 55_000 });
   const hora = typeof cuerpo.hora === "string" ? cuerpo.hora.slice(0, 5) : "";
+  const modo = MODOS[cuerpo.modo];
   try {
     const respuesta = await cliente.beta.messages.create({
       model: env("MODELO_IA") || MODELO_POR_DEFECTO,
       max_tokens: 8000,
       // La parte fija de las instrucciones se guarda en caché; la fecha va aparte.
       system: [
-        { type: "text", text: INSTRUCCIONES[cuerpo.modo], cache_control: { type: "ephemeral" } },
+        { type: "text", text: modo.instrucciones, cache_control: { type: "ephemeral" } },
         { type: "text", text: `Fecha de hoy: ${cuerpo.fecha}${hora ? `, hora ${hora}` : ""} (hora de República Dominicana).` },
       ],
-      tools: HERRAMIENTAS[cuerpo.modo],
+      tools: modo.herramientas,
       messages: cuerpo.mensajes,
       // Leer un documento pide un poco más de cuidado que una pregunta.
-      output_config: { effort: cuerpo.modo === "documento" ? env("ESFUERZO_DOCUMENTO") || "medium" : env("ESFUERZO_IA") || "low" },
+      output_config: { effort: modo.documento ? env("ESFUERZO_DOCUMENTO") || "medium" : env("ESFUERZO_IA") || "low" },
       // Si el modelo declina una consulta, el servidor la reintenta con el modelo de respaldo recomendado.
       fallbacks: "default",
       betas: ["server-side-fallback-2026-07-01"],
