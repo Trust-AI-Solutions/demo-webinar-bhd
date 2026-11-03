@@ -22,7 +22,7 @@ consignación, las tiendas visitadas y los dos avisos de los choferes:
 En la tabla: Del Sol Moca sin conteo hace 6 días y Del Sol Baní sin conteo nunca.
 
 **Despacho.** "Las ventas de la cadena llegan en un PDF." Usar el reporte de ejemplo
-(Hiper Las Palmas). Tarda entre uno y dos minutos (son unas 110 líneas): mientras lee, contar que antes eran 37 páginas copiadas a mano en Excel. La IA lo transcribe, el código lo empareja con tiendas y productos, y el
+(Hiper Las Palmas). Tarda unos 30 a 40 segundos (son unas 110 líneas): mientras lee, contar que antes eran 37 páginas copiadas a mano en Excel. La IA lo transcribe, el código lo empareja con tiendas y productos, y el
 brownie queda marcado porque no es de Minis. **Registrar ventas**: el contador llega a 28 de 28.
 Mostrar la cuadrícula por ruta (en azul, lo calculado por nivel par), confirmar y abrir las hojas
 de reparto y de producción.
