@@ -50,7 +50,7 @@ function reiniciar() {
   conversacion.reiniciar();
   const c = N.chofer(contexto.chofer);
   $("#chat").innerHTML = `<div class="wa-aviso">Demostración con datos ficticios. Usted escribe como el chofer; responde un asistente de IA.</div>`;
-  agregar("bot", textoEnriquecido(`¡Dios te bendiga, ${c.nombre.split(" ")[0]}! 🚚 Soy el asistente de reparto de *Minis by Mónica*. Cuando llegues a una tienda, dime cuál es y te voy pidiendo el conteo.`));
+  agregar("bot", textoEnriquecido(`¡Buenas, ${c.nombre.split(" ")[0]}! 🚚 Soy el asistente de reparto de *Minis by Mónica*. Cuando llegues a una tienda, dime cuál es y te voy pidiendo el conteo.`));
   $("#sugerencias").innerHTML = sugerencias().map((s) => `<button type="button" title="${escapar(s)}">${escapar(s)}</button>`).join("");
 }
 
