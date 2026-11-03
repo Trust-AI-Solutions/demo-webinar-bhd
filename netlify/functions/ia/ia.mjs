@@ -74,13 +74,15 @@ export default async (req, context) => {
   const problema = validarSolicitud(cuerpo, texto);
   if (problema) return json({ error: problema }, 400);
 
-  const cliente = new Anthropic({ apiKey, maxRetries: 2, timeout: 55_000 });
   const hora = typeof cuerpo.hora === "string" ? cuerpo.hora.slice(0, 5) : "";
   const modo = MODOS[cuerpo.modo];
+  // Un reporte de ventas transcrito línea por línea pasa de 8,000 tokens: los lectores
+  // tienen más espacio y más tiempo (en Render no hay límite de 60 s por consulta).
+  const cliente = new Anthropic({ apiKey, maxRetries: 2, timeout: modo.documento ? 170_000 : 55_000 });
   try {
     const respuesta = await cliente.beta.messages.create({
       model: env("MODELO_IA") || MODELO_POR_DEFECTO,
-      max_tokens: 8000,
+      max_tokens: modo.documento ? 24000 : 8000,
       // La parte fija de las instrucciones se guarda en caché; la fecha va aparte.
       system: [
         { type: "text", text: modo.instrucciones, cache_control: { type: "ephemeral" } },

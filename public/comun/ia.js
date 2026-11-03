@@ -104,6 +104,7 @@ export async function leerDocumento(modo, { archivo = null, texto = "", contexto
   partes.push({ type: "text", text: `${encabezado}\n\n${contexto}\n\nEntrega el resultado con ${herramienta}.` });
   const r = await llamarServidor(modo, [{ role: "user", content: partes }]);
   if (r.stop_reason === "refusal") throw new Error(r.aviso || "No se pudo leer este documento.");
+  if (r.stop_reason === "max_tokens") throw new Error("El documento es demasiado largo para leerlo de una vez. Pruebe con menos páginas.");
   const uso = r.content?.find((b) => b.type === "tool_use" && b.name === herramienta);
   if (!uso) throw new Error("No se pudo leer el documento. Pruebe de nuevo o con una foto más nítida.");
   return uso.input;
