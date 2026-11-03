@@ -7,7 +7,8 @@ Demo en vivo para el webinar de BHD: las soluciones de IA de la fase beta para *
 - Los nombres de las tres empresas se pueden mostrar: lo autorizaron (confirmado por Jorge el 03/11/2026). Todo lo demás es ficticio: tiendas, cadenas, clientes, productos, precios, personas, teléfonos, correos, números de documento.
 - Nunca copiar datos, documentos, capturas ni identificadores reales de los repos de los clientes (`pymes-rd-agentes`, `rodelo-copilot`, `Minisbymonica`, `trusts-ai-solution`): solo la forma de las pantallas, de los agentes y de los datos.
 - Sin nombres de cadenas reales (Bravo, Nacional, Jumbo, La Sirena, Plaza Lama, Olé, Aprezio…).
-- Rodelo: nunca nombrar los sistemas que lo alimentan (ni en pantalla ni en las instrucciones del agente); decir "fuentes del negocio".
+- Rodelo: dentro de la demo y en las instrucciones del agente, nunca nombrar los sistemas que lo alimentan; decir "fuentes del negocio". La única excepción es el caso en la portada, que dice "CRM, SAP y Google Drive" (pedido por Jorge el 03/11/2026).
+- La portada presenta cada caso real (el problema, la solución entregada y el resultado según el dueño) con las cifras que Trust aprobó. Sin nombrar la cadena de supermercados de Minis.
 - Minis: no mostrar "Dulce" ni Mini Lovers (fueron una propuesta, no se construyeron).
 - Ningún secreto en el repo. La clave de Anthropic y `CLAVE_DEMO` viven en Netlify, en Render y en LastPass.
 - Publicar solo en cuentas de Trust (Render: espacio "Demo AI Solutions"), nunca en el espacio de trabajo de un cliente.

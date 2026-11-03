@@ -16,7 +16,7 @@ Mostrar con casos reales (Minis by Mónica, Grupo Rodelo, Delidom) lo que hace l
 - Tres soluciones, cada una con el aspecto de lo que se construyó para el cliente, y una barra común para cambiar entre ellas.
 - Agentes de IA reales (Claude) sobre datos ficticios: el chofer de Minis por WhatsApp, el lector de reportes de Minis, el copiloto de Rodelo y el lector de pedidos de Delidom.
 - Nada se aplica sin que una persona lo apruebe en pantalla. Toda cifra sale de los datos, no del modelo.
-- No se muestra: datos o documentos reales, cadenas de supermercado reales, el asistente "Dulce" (no se construyó), los sistemas que alimentan a Rodelo (no los cubre el financiamiento de BHD).
+- No se muestra: datos o documentos reales, cadenas de supermercado reales, el asistente "Dulce" (no se construyó), los sistemas que alimentan a Rodelo dentro de la demo (no los cubre el financiamiento de BHD; la portada solo dice que integramos CRM, SAP y Google Drive).
 - Sin base de datos ni inicio de sesión. Lo creado en la demo vive en el navegador.
 
 ## Product Principles
