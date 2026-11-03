@@ -7,7 +7,7 @@
       "suspiro": {
         "role": "neutral",
         "displayName": "Suspiro",
-        "canonical": "#fff6f8",
+        "canonical": "#f4f8fd",
         "tonalRamp": [
           "#4c0011",
           "#85001d",
@@ -37,7 +37,7 @@
       "suave": {
         "role": "neutral",
         "displayName": "Suave",
-        "canonical": "#fdecf1",
+        "canonical": "#e8f0fa",
         "tonalRamp": [
           "#450719",
           "#780d2c",
@@ -97,7 +97,7 @@
       "linea": {
         "role": "neutral",
         "displayName": "Línea",
-        "canonical": "#f4dfe6",
+        "canonical": "#dfe7f2",
         "tonalRamp": [
           "#391420",
           "#632238",
@@ -112,7 +112,7 @@
       "linea-2": {
         "role": "neutral",
         "displayName": "Línea 2",
-        "canonical": "#e9c8d3",
+        "canonical": "#c5d3e6",
         "tonalRamp": [
           "#371621",
           "#5f2639",
@@ -139,10 +139,10 @@
           "#f9efec"
         ]
       },
-      "fresa": {
+      "arandano": {
         "role": "secondary",
-        "displayName": "Glaseado fresa",
-        "canonical": "#f8a7c1",
+        "displayName": "Glaseado arandano",
+        "canonical": "#93b7f0",
         "tonalRamp": [
           "#47061b",
           "#7b0a2e",
@@ -154,10 +154,10 @@
           "#fde7ee"
         ]
       },
-      "cielo": {
+      "tostado": {
         "role": "secondary",
-        "displayName": "Glaseado cielo",
-        "canonical": "#a9d8f5",
+        "displayName": "Glaseado tostado",
+        "canonical": "#e3c79a",
         "tonalRamp": [
           "#082d45",
           "#0e4f77",
@@ -244,10 +244,10 @@
           "#f7f3ed"
         ]
       },
-      "fresa-fuerte": {
+      "azul-fuerte": {
         "role": "primary",
-        "displayName": "Fresa fuerte",
-        "canonical": "#d6336c",
+        "displayName": "Azul fuerte",
+        "canonical": "#2f5fd0",
         "tonalRamp": [
           "#400d1f",
           "#6e1635",
@@ -472,7 +472,7 @@
       "refersTo": "button-primary",
       "description": "Acción principal: pastilla de chocolate.",
       "html": "<button class=\"ds-boton\">Guardar pedido</button>",
-      "css": ".ds-boton{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#4a2419;color:#fff;border:2px solid transparent;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:transform .25s cubic-bezier(.16,1,.3,1),background .15s}.ds-boton:hover{background:#63332a;transform:translateY(-1px)}.ds-boton:focus-visible{outline:3px solid #d6336c;outline-offset:2px}"
+      "css": ".ds-boton{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#4a2419;color:#fff;border:2px solid transparent;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:transform .25s cubic-bezier(.16,1,.3,1),background .15s}.ds-boton:hover{background:#63332a;transform:translateY(-1px)}.ds-boton:focus-visible{outline:3px solid #2f5fd0;outline-offset:2px}"
     },
     {
       "name": "Botón secundario",
@@ -480,7 +480,7 @@
       "refersTo": "button-secondary",
       "description": "Acción secundaria: pastilla blanca con borde.",
       "html": "<button class=\"ds-boton-sec\">Cancelar</button>",
-      "css": ".ds-boton-sec{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;color:#3a1f19;border:2px solid #e9c8d3;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:background .15s,border-color .15s}.ds-boton-sec:hover{background:#fdecf1;border-color:#f8a7c1}.ds-boton-sec:focus-visible{outline:3px solid #d6336c;outline-offset:2px}"
+      "css": ".ds-boton-sec{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;color:#3a1f19;border:2px solid #c5d3e6;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:background .15s,border-color .15s}.ds-boton-sec:hover{background:#e8f0fa;border-color:#93b7f0}.ds-boton-sec:focus-visible{outline:3px solid #2f5fd0;outline-offset:2px}"
     },
     {
       "name": "Cifra de glaseado",
@@ -488,7 +488,7 @@
       "refersTo": "kpi-frosting",
       "description": "Firma del sistema: el valor en un bloque de glaseado que chorrea sobre su nombre.",
       "html": "<div class=\"ds-cifra\"><div class=\"ds-cifra-valor\">RD$6,916</div><div class=\"ds-cifra-nombre\">Ventas de hoy</div></div>",
-      "css": ".ds-cifra{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;width:180px;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);overflow:hidden}.ds-cifra-valor{position:relative;display:flex;align-items:flex-end;min-height:96px;padding:30px 16px 14px;background:#f8a7c1;color:#3a1f19;font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-cifra-valor::after{content:'';position:absolute;left:0;right:0;top:100%;height:28px;background:#f8a7c1;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px;mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px}.ds-cifra-nombre{padding:30px 16px 14px;font-size:14px;font-weight:600;color:#66463d}"
+      "css": ".ds-cifra{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;width:180px;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);overflow:hidden}.ds-cifra-valor{position:relative;display:flex;align-items:flex-end;min-height:96px;padding:30px 16px 14px;background:#93b7f0;color:#3a1f19;font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-cifra-valor::after{content:'';position:absolute;left:0;right:0;top:100%;height:28px;background:#93b7f0;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px;mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px}.ds-cifra-nombre{padding:30px 16px 14px;font-size:14px;font-weight:600;color:#66463d}"
     },
     {
       "name": "Tarjeta",
@@ -496,7 +496,7 @@
       "refersTo": "card",
       "description": "Contenedor blanco; el periodo va en el título.",
       "html": "<section class=\"ds-tarjeta\"><h2>Ventas por día <span>· 30 días</span></h2></section>",
-      "css": ".ds-tarjeta{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);padding:18px 20px;color:#3a1f19}.ds-tarjeta h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.ds-tarjeta h2::before{content:'';width:12px;height:5px;border-radius:999px;background:#f8a7c1;transform:rotate(-35deg)}.ds-tarjeta h2 span{color:#7a5a51;font-weight:500}"
+      "css": ".ds-tarjeta{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);padding:18px 20px;color:#3a1f19}.ds-tarjeta h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.ds-tarjeta h2::before{content:'';width:12px;height:5px;border-radius:999px;background:#93b7f0;transform:rotate(-35deg)}.ds-tarjeta h2 span{color:#7a5a51;font-weight:500}"
     },
     {
       "name": "Insignias de estado",
@@ -520,22 +520,22 @@
       "refersTo": "nav-item-active",
       "description": "Pastillas; la activa en el glaseado de su sección.",
       "html": "<nav class=\"ds-nav\"><button class=\"ds-activo\">Inicio</button><button>Ventas</button><button>Alertas <span>3</span></button></nav>",
-      "css": ".ds-nav{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;display:flex;flex-direction:column;gap:4px;width:220px}.ds-nav button{display:flex;align-items:center;gap:10px;border:0;background:none;padding:9px 12px;border-radius:999px;font-size:14.5px;font-weight:500;color:#66463d;text-align:left;transition:background .2s,transform .3s cubic-bezier(.16,1,.3,1)}.ds-nav button:hover{background:#fdecf1;color:#3a1f19;transform:translateX(3px)}.ds-nav button:focus-visible{outline:3px solid #d6336c;outline-offset:2px}.ds-nav .ds-activo{background:#f8a7c1;color:#3a1f19;font-weight:700}.ds-nav span{margin-left:auto;font-size:13px;font-weight:700;padding:1px 7px;border-radius:999px;background:#b3122b;color:#fff}"
+      "css": ".ds-nav{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;display:flex;flex-direction:column;gap:4px;width:220px}.ds-nav button{display:flex;align-items:center;gap:10px;border:0;background:none;padding:9px 12px;border-radius:999px;font-size:14.5px;font-weight:500;color:#66463d;text-align:left;transition:background .2s,transform .3s cubic-bezier(.16,1,.3,1)}.ds-nav button:hover{background:#e8f0fa;color:#3a1f19;transform:translateX(3px)}.ds-nav button:focus-visible{outline:3px solid #2f5fd0;outline-offset:2px}.ds-nav .ds-activo{background:#93b7f0;color:#3a1f19;font-weight:700}.ds-nav span{margin-left:auto;font-size:13px;font-weight:700;padding:1px 7px;border-radius:999px;background:#b3122b;color:#fff}"
     },
     {
       "name": "Campo",
       "kind": "input",
       "refersTo": "input",
-      "description": "Campo de ventana; foco en fresa fuerte.",
+      "description": "Campo de ventana; foco en azul fuerte.",
       "html": "<input class=\"ds-campo\" placeholder=\"Cliente\">",
-      "css": ".ds-campo{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;font-size:14px;color:#3a1f19;border:2px solid #f4dfe6;background:#fff;border-radius:12px;padding:7px 11px}.ds-campo:focus-visible{outline:none;border-color:#d6336c}"
+      "css": ".ds-campo{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;font-size:14px;color:#3a1f19;border:2px solid #dfe7f2;background:#fff;border-radius:12px;padding:7px 11px}.ds-campo:focus-visible{outline:none;border-color:#2f5fd0}"
     }
   ],
   "narrative": {
     "northStar": "Suspiro y chispitas",
-    "overview": "El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un bloque de glaseado que chorrea sobre su nombre; el fondo es suspiro, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.\n\nLa densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.",
+    "overview": "El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un bloque de glaseado que chorrea sobre su nombre; el fondo es suspiro azul, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.\n\nLa densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.",
     "keyCharacteristics": [
-      "Fondo suspiro, tinta de chocolate, seis glaseados pastel siempre con tinta oscura encima.",
+      "Fondo suspiro azul, tinta de chocolate, seis glaseados pastel siempre con tinta oscura encima.",
       "Borde que gotea (máscara SVG `--goteo`) bajo cada bloque de color.",
       "Todo control es una pastilla redonda.",
       "Chispitas como textura (portada, botón y cabecera del asistente) y como celebración (pedido de WhatsApp).",
@@ -554,7 +554,7 @@
       },
       {
         "name": "The Chart Series Rule",
-        "body": "Una serie: fresa fuerte (fresa-fuerte). Dos sucursales: mora profunda (serie-gazcue) para Gazcue y caramelo profundo (serie-los-prados) para Los Prados. Los glaseados pastel no son colores de serie.",
+        "body": "Una serie: azul fuerte (azul-fuerte). Dos sucursales: mora profunda (serie-gazcue) para Gazcue y caramelo profundo (serie-los-prados) para Los Prados. Los glaseados pastel no son colores de serie.",
         "section": "colors"
       },
       {
@@ -578,7 +578,7 @@
       "**Do** mostrar una pastilla \"Datos ficticios\" por página y no quitarla nunca.",
       "**Do** usar SF Pro en Apple e Inter incluida en lo demás.",
       "**Do** mantener el cuerpo en 15px y todo texto pequeño en 13px o más.",
-      "**Do** pintar los gráficos de una serie en fresa fuerte y los de dos sucursales en mora profunda (Gazcue) y caramelo profundo (Los Prados).",
+      "**Do** pintar los gráficos de una serie en azul fuerte y los de dos sucursales en mora profunda (Gazcue) y caramelo profundo (Los Prados).",
       "**Do** animar solo con salida exponencial (`cubic-bezier(.16, 1, .3, 1)`).",
       "**Do** apagar todo movimiento con `prefers-reduced-motion`."
     ],

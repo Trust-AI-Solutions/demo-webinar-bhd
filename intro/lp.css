@@ -13,9 +13,9 @@
   --lp-marca: #4a2419;
   --lp-tinta: #3a1f19;
   --lp-tinta-2: #66463d;
-  --lp-linea: #f4dfe6;
-  --lp-suave: #fdecf1;
-  --lp-fresa: #f8a7c1;
+  --lp-linea: #dfe7f2;
+  --lp-suave: #e8f0fa;
+  --lp-arandano: #93b7f0;
   --lp-pistacho: #c0e3a1;
   --lp-vainilla: #fde5a0;
   --lp-wa: #128c4a;
@@ -23,7 +23,7 @@
 
 .lp .ss-stage {
   --gutter: 40px;
-  --ss-accent: #d6336c;
+  --ss-accent: #2f5fd0;
   --ss-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Intro", "Segoe UI", system-ui, sans-serif;
   font-family: var(--ss-font);
   overflow: hidden;
@@ -74,7 +74,7 @@
 }
 
 .lp .lp-item[data-on] {
-  background: var(--lp-fresa);
+  background: var(--lp-arandano);
   border-radius: 999px;
   font-weight: 700;
   color: var(--lp-tinta);
@@ -133,7 +133,7 @@
 
 .lp .lp-kpi:nth-child(1) { background: var(--lp-vainilla); }
 .lp .lp-kpi:nth-child(2) { background: var(--lp-pistacho); }
-.lp .lp-kpi:nth-child(3) { background: var(--lp-fresa); }
+.lp .lp-kpi:nth-child(3) { background: var(--lp-arandano); }
 
 .lp .lp-kpi__ph {
   display: block;

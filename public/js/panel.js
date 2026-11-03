@@ -42,8 +42,8 @@ const listaAlertas = (lista, { detalle = true } = {}) => lista.length
 
 function destruirGraficos() { while (graficos.length) graficos.pop().destroy(); }
 function opcionesBase({ horizontal = false } = {}) {
-  const ejeValor = { grid: { color: "#f6e3ea" }, border: { display: false }, ticks: { color: "#7a5a51", font: { size: 13 }, maxTicksLimit: horizontal ? 5 : 6, callback: (v) => `RD$${num(v / 1000)}k` } };
-  const ejeCat = { grid: { display: false }, border: { color: "#e9c8d3" }, ticks: { color: "#7a5a51", font: { size: 13 }, autoSkip: true, maxRotation: 0 } };
+  const ejeValor = { grid: { color: "#e6edf7" }, border: { display: false }, ticks: { color: "#7a5a51", font: { size: 13 }, maxTicksLimit: horizontal ? 5 : 6, callback: (v) => `RD$${num(v / 1000)}k` } };
+  const ejeCat = { grid: { display: false }, border: { color: "#c5d3e6" }, ticks: { color: "#7a5a51", font: { size: 13 }, autoSkip: true, maxRotation: 0 } };
   return {
     responsive: true, maintainAspectRatio: false, animation: { duration: 300 }, indexAxis: horizontal ? "y" : "x",
     interaction: { mode: "index", intersect: false },
@@ -57,7 +57,7 @@ function grafico(id, config) {
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
   graficos.push(new Chart(lienzo, config));
 }
-const barras = (label, datos) => ({ label, data: datos, backgroundColor: "#d6336c", borderRadius: 6, borderSkipped: "start", maxBarThickness: 24 });
+const barras = (label, datos) => ({ label, data: datos, backgroundColor: "#2f5fd0", borderRadius: 6, borderSkipped: "start", maxBarThickness: 24 });
 const linea = (label, datos, color) => ({ label, data: datos, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, tension: .3 });
 
 // ---------- pantallas ----------
@@ -292,7 +292,7 @@ function actualizarContadores() {
 
 // Chispitas: al llegar un pedido por WhatsApp saltan granitos de colores desde el pedido nuevo
 // (o desde "Pedidos" en el menú si se está en otra pantalla).
-const COLORES_CHISPITAS = ["#d6336c", "#2a63ad", "#8a4300", "#22652a", "#7b4fc9", "#e08a00"];
+const COLORES_CHISPITAS = ["#2f5fd0", "#0f766e", "#8a4300", "#22652a", "#7b4fc9", "#e08a00"];
 function chispitas(id) {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const origen = (id && document.querySelector(`.pedido[data-id="${id}"]`)) || document.querySelector('#nav [data-vista="pedidos"]');
