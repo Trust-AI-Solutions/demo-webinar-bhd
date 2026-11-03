@@ -164,8 +164,8 @@ Pastel de bizcocho sobre suspiro, con chocolate para la tinta y tres colores de 
 - **Azul fuerte** (azul-fuerte): foco del teclado, cursor y casillas, la serie única de los gráficos, el paso activo del asistente.
 
 ### Secondary: los glaseados
-- **Arándano** (arandano), **Tostado** (tostado), **Mora** (mora), **Caramelo** (caramelo), **Vainilla** (vainilla), **Pistacho** (pistacho): bloques de cifra en ese orden, cajas de la portada (arandano, tostado, pistacho), columnas de pedidos por estado, burbuja del usuario (arandano), cabecera de las ventanas (vainilla).
-- Cada sección del panel tiene su glaseado (`--tono`): Inicio arandano, Ventas tostado, Insumos vainilla, Cobros caramelo, Pedidos pistacho, Alertas mora. Pinta el menú activo, la marca del título y los segmentos activos.
+- **Arándano** (arandano), **Tostado** (tostado), **Mora** (mora), **Caramelo** (caramelo), **Vainilla** (vainilla), **Pistacho** (pistacho): bloques de cifra en ese orden, cajas de la portada (arandano, tostado, pistacho), columnas de pedidos por estado, burbuja del usuario (arándano), cabecera de las ventanas (vainilla).
+- Cada sección del panel tiene su glaseado (`--tono`): Inicio arándano, Ventas tostado, Insumos vainilla, Cobros caramelo, Pedidos pistacho, Alertas mora. Pinta el menú activo, la marca del título y los segmentos activos.
 - **Coco** (coco): insignia neutra y contadores sin urgencia.
 
 ### Tertiary: estados
