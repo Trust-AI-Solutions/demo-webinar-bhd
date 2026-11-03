@@ -57,6 +57,7 @@ test("arma la solicitud a Claude con instrucciones, herramientas y respaldo", as
   assert.equal(c.output_config.effort, "low");
   assert.equal(c.thinking, undefined);
   assert.deepEqual(c.tools.map((t) => t.name), ["buscar_productos", "crear_cotizacion", "registrar_pedido", "pasar_a_persona"]);
+  assert.ok(c.tools.every((t) => Object.keys(t).join() === "name,description,input_schema"), "a Claude solo van name, description e input_schema");
   assert.match(c.system[0].text, /asistente de WhatsApp/);
   assert.match(c.system[1].text, /2026-11-10/);
 });
@@ -88,4 +89,13 @@ test("modo documento: un solo PDF o foto, con más espacio y esfuerzo medio", as
   assert.deepEqual(capturada.tools.map((t) => t.name), ["proponer_resultado"]);
   assert.match(capturada.system[0].text, /Lees documentos/);
   assert.equal(capturada.messages[0].content[0].type, "document");
+});
+
+test("cada herramienta definida tiene su función en el navegador, y al revés", async () => {
+  const { DEFINICIONES } = await import("../public/js/definiciones.js");
+  const { EJECUTAR } = await import("../public/js/herramientas.js");
+  for (const modo of ["panel", "whatsapp"]) {
+    assert.deepEqual(DEFINICIONES[modo].map((h) => h.name).sort(), Object.keys(EJECUTAR[modo]).sort(), modo);
+    for (const h of DEFINICIONES[modo]) assert.ok(h.etiqueta && h.description && h.input_schema, h.name);
+  }
 });

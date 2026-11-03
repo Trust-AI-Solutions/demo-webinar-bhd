@@ -1,25 +1,12 @@
-// Herramientas que la IA puede usar. Las definiciones (nombre, descripción y
-// parámetros) viven en la función de Netlify; aquí se ejecutan, en el navegador,
-// sobre los datos ficticios. El asistente de WhatsApp nunca ve costos ni márgenes.
+// Lo que hace cada herramienta de la IA, en el navegador, sobre los datos ficticios.
+// Las definiciones (nombre, etiqueta, descripción y parámetros) están en definiciones.js.
+// El asistente de WhatsApp nunca ve costos ni márgenes.
 
 import * as N from "./negocio.js";
 import { modificarEstado, siguienteNumero } from "./estado.js";
 import { calcularLineas, costoEnvio, crearPedido } from "./pedidos.js";
+import { ETIQUETAS } from "./definiciones.js";
 
-const ETIQUETAS = {
-  resumen_ventas: "Revisando las ventas",
-  consultar_menu: "Revisando el menú",
-  consultar_insumos: "Revisando los insumos",
-  cuentas_por_cobrar: "Revisando las cuentas por cobrar",
-  buscar_clientes: "Buscando clientes",
-  ver_pedidos: "Revisando los pedidos",
-  ver_alertas: "Revisando las alertas",
-  ver_consignacion: "Revisando la consignación",
-  buscar_productos: "Buscando en el menú",
-  crear_cotizacion: "Preparando la cotización",
-  registrar_pedido: "Registrando el pedido",
-  pasar_a_persona: "Avisando al equipo",
-};
 export const etiquetaHerramienta = (nombre) => ETIQUETAS[nombre] ?? "Consultando";
 
 const texto = (v) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
@@ -91,8 +78,10 @@ const WHATSAPP = {
   },
 };
 
+export const EJECUTAR = { panel: PANEL, whatsapp: WHATSAPP };
+
 export async function ejecutarHerramienta(modo, nombre, entrada) {
-  const tabla = modo === "whatsapp" ? WHATSAPP : PANEL;
+  const tabla = EJECUTAR[modo] ?? {};
   const funcion = tabla[nombre];
   if (!funcion) return { error: `Herramienta desconocida: ${nombre}` };
   try {

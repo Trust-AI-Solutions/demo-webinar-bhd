@@ -4,8 +4,9 @@
 
 import * as N from "./negocio.js";
 import { modificarEstado, siguienteNumero } from "./estado.js";
+import { ESTADOS_PEDIDO } from "./definiciones.js";
 
-export const ESTADOS = ["nuevo", "en preparación", "listo para entrega", "en ruta", "entregado"];
+export const ESTADOS = ESTADOS_PEDIDO;
 const r2 = (n) => Math.round(n * 100) / 100;
 const numero = (v) => (Number.isFinite(Number(v)) && Number(v) > 0 ? Math.floor(Number(v)) : 0);
 

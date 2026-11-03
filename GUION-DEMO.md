@@ -65,14 +65,14 @@ no de suposiciones.
 
 1. **Nuevo pedido:** "Así se anota un pedido de mostrador o de teléfono." Escribir `Colmado`
    y escoger un cliente (se llena el teléfono), buscar `pan de agua`, poner la cantidad. El total
-   con ITBIS y entrega sale solo. Guardar: aparece en "Nuevo", marcado "a mano".
-2. **Importar PDF o foto → Orden de compra → Ver PDF:** mostrar el papel de la cafetería. Volver
+   con ITBIS y entrega sale solo. Guardar: aparece en "Nuevo".
+2. **Importar PDF o foto → Orden de compra → Ver:** mostrar el papel de la cafetería. Volver
    y pulsar **Leer con IA**. La IA relaciona cada línea con el menú y marca el pan de masa madre,
    que la panadería no hace. **Crear el pedido**.
 3. **Importar PDF o foto → Hoja del repartidor → Leer con IA:** la IA pasa los pedidos entregados
    a "Entregado", anota que una cafetería estaba cerrada y avisa que el P-1319 no existe.
    **Aplicar**.
-4. **Importar PDF o foto → Reporte de ventas de La Canasta → Ver PDF:** "Así llega cada semana el
+4. **Importar PDF o foto → Reporte de ventas de La Canasta → Ver:** "Así llega cada semana el
    reporte de la cadena donde dejamos galletas y pan de molde en consignación." **Leer con IA**: la
    IA pasa cada línea a los productos de El Trigal, marca la galleta de coco que no es nuestra y
    pinta en rojo Naco, que reporta 32 panes de molde vendidos cuando se entregaron 30.

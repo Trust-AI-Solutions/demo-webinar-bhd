@@ -129,12 +129,12 @@ try {
   await pagina.fill("#inv-texto", "televisor plasma");
   verificar(await pagina.locator("#t-inv .vacio").count() === 1, "la búsqueda sin resultados lo dice");
   await pagina.goto(`${base}/panel.html#inicio`);
-  verificar((await pagina.locator(".indicador").count()) === 6, "inicio muestra 6 indicadores");
+  verificar((await pagina.locator(".cifra").count()) === 6, "inicio muestra 6 cifras");
   verificar((await pagina.locator("#inicio-alertas li").count()) === 5, "inicio muestra 5 alertas");
 
   // Asistente del panel
   await pagina.click("#abrir-asistente");
-  await pagina.click("#sugerencias .chip >> nth=0");
+  await pagina.click("#sugerencias button >> nth=0");
   await pagina.waitForSelector(".burbuja.ia");
   const respuestaPanel = await pagina.locator(".burbuja.ia").last().innerText();
   verificar(/vendió RD\$[\d,]+/.test(respuestaPanel), `el asistente del panel responde con cifras (${respuestaPanel.split("\n")[0]})`);
@@ -184,8 +184,8 @@ try {
   await hoja.locator("input[name=direccion]").fill("Av. Luperón 100");
   await pagina.screenshot({ path: `${CAPTURAS}nuevo-pedido.png` });
   await hoja.locator("button[type=submit]").click();
-  await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Hotel Brisas")').waitFor({ timeout: 3000 });
-  verificar(/a mano/.test(await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Hotel Brisas")').first().innerText()), "el pedido a mano entra en Nuevo, marcado como hecho a mano");
+  await pagina.locator('.columna[data-estado="nuevo"] .pedido:has-text("Hotel Brisas")').waitFor({ timeout: 3000 });
+  verificar(true, "el pedido a mano entra en Nuevo");
 
   await pagina.click("#importar-documento");
   await pagina.click("dialog.hoja [data-ejemplo='0']");
@@ -194,7 +194,7 @@ try {
   await pagina.screenshot({ path: `${CAPTURAS}importar-orden.png` });
   await pagina.click("dialog.hoja [data-aplicar]");
   await pagina.locator('.pedido:has-text("Mesón del Café")').first().waitFor({ timeout: 3000 });
-  verificar(/Cotizar aparte: 12 × Pan de masa madre/.test(await pagina.locator('.columna[data-chip=trigo] .pedido:has-text("Mesón del Café")').innerText()), "la orden de compra crea el pedido y anota lo que falta cotizar");
+  verificar(/Cotizar aparte: 12 × Pan de masa madre/.test(await pagina.locator('.columna[data-estado="nuevo"] .pedido:has-text("Mesón del Café")').innerText()), "la orden de compra crea el pedido y anota lo que falta cotizar");
 
   await pagina.click("#importar-documento");
   await pagina.click("dialog.hoja [data-ejemplo='1']");
@@ -203,8 +203,8 @@ try {
   await pagina.screenshot({ path: `${CAPTURAS}importar-reporte.png` });
   await pagina.click("dialog.hoja [data-aplicar]");
   await pagina.waitForTimeout(300);
-  verificar(await pagina.locator('.columna[data-chip=harina] .pedido:has-text("P-1302")').count() === 1, "P-1302 pasa a Entregado");
-  verificar(/Novedad: Cafetería cerrada/.test(await pagina.locator('.pedido:has-text("P-1305")').innerText()), "P-1305 muestra la novedad del repartidor");
+  verificar(await pagina.locator('.columna[data-estado="entregado"] .pedido:has-text("P-1302")').count() === 1, "P-1302 pasa a Entregado");
+  verificar(/Cafetería cerrada/.test(await pagina.locator('.pedido:has-text("P-1305")').innerText()), "P-1305 muestra la novedad del repartidor");
   await pagina.screenshot({ path: `${CAPTURAS}pedidos-actualizados.png`, fullPage: true });
   await pagina.click("#importar-documento");
   await pagina.click("dialog.hoja [data-ejemplo='2']");
@@ -213,8 +213,8 @@ try {
   await pagina.screenshot({ path: `${CAPTURAS}importar-ventas.png` });
   await pagina.click("dialog.hoja [data-aplicar]");
   await pagina.goto(`${base}/panel.html#ventas`);
-  await pagina.locator("#consignacion .indicador").first().waitFor();
-  verificar(/no cuadra|Reportan 32 vendidos y se entregaron 30/.test(await pagina.locator("#consignacion").innerText()), "Ventas muestra la consignación y lo que no cuadra");
+  await pagina.locator("#consignacion .cifra").first().waitFor();
+  verificar(/32 de 30/.test(await pagina.locator("#consignacion").innerText()), "Ventas muestra la consignación y lo que no cuadra");
   await pagina.locator("#consignacion").screenshot({ path: `${CAPTURAS}consignacion.png` });
   await pagina.evaluate(() => localStorage.removeItem("demo-el-trigal-v1"));
 

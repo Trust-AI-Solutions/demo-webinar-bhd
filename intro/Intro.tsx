@@ -1,10 +1,10 @@
 import { Bar, Bubble, Collapse, Count, Field, Fly, Phone, Roll, Stage, Stamp, Stream, Text, Thread, Window, type Act, type Rect } from './kit'
 import './lp.css'
 
-// Intro de la demo de Panadería El Trigal (empresa ficticia), en el mundo
-// "Etiquetas de vitrina". Una historia de sistema con un cursor al final:
+// Intro de la demo de Panadería El Trigal (empresa ficticia), con el mismo
+// diseño sobrio del panel. Una historia de sistema con un cursor al final:
 // una clienta encarga un bizcocho por WhatsApp, el encargo viaja como una
-// etiqueta al panel del negocio (la fila nueva abre y "Pedidos abiertos" sube
+// pastilla al panel del negocio (la fila nueva abre y "Pedidos abiertos" sube
 // de 10 a 11), y el dueño le pregunta al panel qué insumos comprar; la
 // respuesta sale de sus cifras. Se reproduce una vez y se queda en el resultado.
 // Palabras reales: la conversación, el pedido, "Pedidos abiertos", la
@@ -57,7 +57,7 @@ async function script(a: Act<S>) {
   await a.wait(500)
 
   // El pedido sale del mensaje y viaja al panel: la fila nueva abre arriba de
-  // la lista mientras la muestra viaja; al llegar, el contador sube.
+  // la lista mientras la pastilla viaja; al llegar, el contador sube.
   a.mark('pedido')
   const list = a.rect('list', { layout: true })
   const row = a.rect('row-new', { layout: true })
@@ -158,13 +158,11 @@ function Pedidos({ s }: { s: S }) {
   return (
     <section className="lp-card lp-pedidos">
       <div className="lp-card__head">
-        <span className="lp-swatch" data-chip="menta" />
         <Text className="lp-card__title">Pedidos nuevos</Text>
       </div>
       <div className="lp-list" data-target="list">
         <Collapse open={s.open} reveal="clip">
           <div className="lp-row lp-row--new" data-target="row-new" data-landed={s.landed || undefined}>
-            <span className="lp-band" />
             <span className="lp-row__name">Ana Pérez</span>
             <span className="lp-tag">WhatsApp</span>
             <span className="lp-pill" data-target="pill-new">
@@ -174,7 +172,6 @@ function Pedidos({ s }: { s: S }) {
         </Collapse>
         {OLD.map((r, i) => (
           <div key={i} className="lp-row">
-            <Bar w={12} h={12} r={2} tone={2} />
             <Bar w={r.a} h={6} tone={3} />
             <Bar w={r.b} h={6} tone={2} style={{ marginLeft: 'auto' }} />
           </div>
@@ -188,23 +185,12 @@ function Panel({ s }: { s: S }) {
   return (
     <Window title="Panel del negocio" className="lp-window">
       <div className="lp-body">
-        <aside className="lp-carta">
+        <aside className="lp-nav">
           <span className="lp-marca">Panadería El Trigal</span>
-          {[
-            { chip: 'corteza', w: 40, on: true },
-            { chip: 'anil', w: 48 },
-            { chip: 'trigo', w: 58 },
-            { chip: 'guayaba', w: 66 },
-            { chip: 'menta', w: 50 },
-            { chip: 'cereza', w: 44 },
-          ].map((n, i) => (
-            <div key={i} className="lp-tira" data-chip={n.chip} data-on={n.on || undefined}>
-              {n.on ? <span className="lp-tira__txt">Inicio</span> : (
-                <>
-                  <span className="lp-swatch" />
-                  <Bar w={n.w} h={6} tone={2} />
-                </>
-              )}
+          <div className="lp-item" data-on>Inicio</div>
+          {[48, 58, 66, 50, 44].map((w, i) => (
+            <div key={i} className="lp-item">
+              <Bar w={w} h={6} tone={2} />
             </div>
           ))}
         </aside>
@@ -220,7 +206,6 @@ function Panel({ s }: { s: S }) {
             {/* La respuesta abre en su lugar y empuja lo de abajo, sin taparlo */}
             <Collapse open={s.asked} reveal="drop">
               <div className="lp-answer">
-                <div className="lp-answer__band">Respuesta con sus cifras</div>
                 <div className="lp-answer__body">
                   <Collapse open={s.phase === 'thinking'}>
                     <span className="lp-thinking">Revisando los insumos…</span>
@@ -233,19 +218,17 @@ function Panel({ s }: { s: S }) {
             </Collapse>
           </div>
           <div className="lp-kpis">
-            <div className="lp-kpi" data-chip="corteza">
-              <div className="lp-kpi__campo"><span className="lp-kpi__ph" style={{ width: 74 }} /></div>
-              <div className="lp-kpi__etiqueta"><Bar w={56} h={6} tone={3} /></div>
+            <div className="lp-kpi">
+              <Bar w={56} h={6} tone={2} />
+              <span className="lp-kpi__ph" style={{ width: 74 }} />
             </div>
-            <div className="lp-kpi" data-chip="menta">
-              <div className="lp-kpi__campo">
-                <Count className="lp-kpi__valor" value={s.pedidos} duration={800} />
-              </div>
-              <div className="lp-kpi__etiqueta"><span className="lp-kpi__nombre">Pedidos abiertos</span></div>
+            <div className="lp-kpi">
+              <span className="lp-kpi__nombre">Pedidos abiertos</span>
+              <Count className="lp-kpi__valor" value={s.pedidos} duration={800} />
             </div>
-            <div className="lp-kpi" data-chip="guayaba">
-              <div className="lp-kpi__campo"><span className="lp-kpi__ph" style={{ width: 82 }} /></div>
-              <div className="lp-kpi__etiqueta"><Bar w={48} h={6} tone={3} /></div>
+            <div className="lp-kpi">
+              <Bar w={48} h={6} tone={2} />
+              <span className="lp-kpi__ph" style={{ width: 82 }} />
             </div>
           </div>
           <Pedidos s={s} />

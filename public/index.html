@@ -10,58 +10,33 @@
 <link rel="stylesheet" href="intro/intro.css">
 </head>
 <body>
-<!--
-THESIS: la portada son las etiquetas de la vitrina de la panadería: tres etiquetas atadas con un cordel, abiertas en abanico; cada una es una forma de ver la demo. Rechaza la portada de tres tarjetas iguales.
-OWN-WORLD: papel de estraza, cintas Corteza, Añil y verde WhatsApp con tarjeta blanca, nudo de cordel sobre el que gira el abanico, SF Pro (Inter fuera de Apple).
-STORY: el público entiende que es una panadería como las que conoce y que todo lo que verá funciona; quien presenta escoge una etiqueta.
-FIRST VIEWPORT: a la izquierda el titular grande y el lema; a la derecha el abanico de tres muestras que se abre al cargar. La acción es tocar una muestra.
-FORM: etiquetas de vitrina (antes carta de colores; mismo esqueleto, mundo de panadería).
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
--->
 <section class="intro" id="intro" aria-label="Introducción">
   <header>
-    <span class="marca"><span class="logo" data-icono="logo"></span><span><b>Panadería El Trigal</b><small>Santo Domingo · empresa ficticia</small></span></span>
-    <span class="ficticio">Demostración con datos ficticios</span>
+    <span class="marca"><span class="logo" data-icono="logo"></span>Panadería El Trigal</span>
+    <span class="ficticio">Datos ficticios</span>
   </header>
   <div class="intro__escena" id="intro-escena"></div>
   <div class="intro__acciones">
-    <button class="boton intro__comenzar" id="comenzar" type="button">Comenzar <span data-icono="flecha"></span></button>
-    <button class="boton secundario pequeno" id="ver-de-nuevo" type="button">Ver de nuevo</button>
+    <button class="boton intro__comenzar" id="comenzar" type="button">Comenzar</button>
+    <button class="boton secundario intro__comenzar" id="ver-de-nuevo" type="button">Ver de nuevo</button>
   </div>
 </section>
 
 <div class="portada" id="portada" hidden>
   <header>
-    <span class="marca"><span class="logo" data-icono="logo"></span><span><b>Panadería El Trigal</b><small>Santo Domingo · empresa ficticia</small></span></span>
-    <span class="ficticio">Demostración con datos ficticios</span>
+    <span class="marca"><span class="logo" data-icono="logo"></span>Panadería El Trigal</span>
+    <span class="ficticio">Datos ficticios</span>
   </header>
-
-  <section class="escena">
-    <div>
-      <h1>Así trabaja la IA en una empresa como la suya</h1>
-      <p class="lema">Una panadería con dos sucursales, unos 60 productos y seis meses de ventas. El dueño le pregunta a su negocio en sus palabras, y los clientes encargan y piden por WhatsApp a cualquier hora.</p>
-      <p class="instruccion">Escoja una etiqueta</p>
-    </div>
-    <nav class="abanico cerrado" id="abanico" aria-label="Vistas de la demo">
-      <svg class="remache" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#c49a62"/><circle cx="12" cy="12" r="10.5" fill="none" stroke="#8a4a1f" stroke-width="1.2" stroke-dasharray="2.2 1.6"/><circle cx="12" cy="12" r="3.6" fill="#f3ece1"/><path d="M4.5 7.5 19.5 16.5M4.5 16.5 19.5 7.5" stroke="#8a4a1f" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg>
-      <a href="whatsapp.html" data-chip="whatsapp">
-        <span class="campo"><span data-icono="whatsapp"></span><h2>WhatsApp</h2></span>
-        <span class="etiqueta"><p><b>Asistente de WhatsApp.</b> Precios, encargos de bizcochos, cotizaciones y pedidos. Pasa a una persona cuando hace falta.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
-      </a>
-      <a href="panel.html" data-chip="anil">
-        <span class="campo"><span data-icono="ventas"></span><h2>Panel</h2></span>
-        <span class="etiqueta"><p><b>Panel del negocio.</b> Ventas, insumos, cobros, pedidos y alertas, con un asistente que responde sobre las cifras.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
-      </a>
-      <a href="en-vivo.html" data-chip="corteza">
-        <span class="campo"><span data-icono="pantalla"></span><h2>Los dos a la vez</h2></span>
-        <span class="etiqueta"><p><b>En vivo.</b> WhatsApp y panel lado a lado: el pedido del cliente aparece en el panel en el momento.</p><span class="ir">Abrir <span data-icono="flecha"></span></span></span>
-      </a>
+  <main>
+    <h1>Así trabaja la IA en una panadería como la suya</h1>
+    <nav class="opciones" aria-label="Vistas de la demo">
+      <a class="whatsapp" href="whatsapp.html"><span data-icono="whatsapp"></span><b>WhatsApp <span data-icono="flecha"></span></b></a>
+      <a href="panel.html"><span data-icono="ventas"></span><b>Panel <span data-icono="flecha"></span></b></a>
+      <a href="en-vivo.html"><span data-icono="pantalla"></span><b>Los dos a la vez <span data-icono="flecha"></span></b></a>
     </nav>
-  </section>
-
+  </main>
   <footer>
     <button class="boton secundario pequeno" id="restablecer" type="button">Restablecer la demo</button>
-    <span id="restablecido">Borra los pedidos, encargos, cotizaciones y avisos creados durante la demo.</span>
     <button class="boton secundario pequeno" id="ver-intro" type="button">Ver la introducción</button>
   </footer>
 </div>
@@ -69,19 +44,16 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   import { ICONOS } from "./js/iconos.js";
   import { restablecerDemo } from "./js/estado.js";
   document.querySelectorAll("[data-icono]").forEach((el) => { el.innerHTML = ICONOS[el.dataset.icono] ?? ""; });
-  // Primero la introducción animada; "Comenzar" muestra la portada y abre el abanico.
-  // Si ya se vio en esta pestaña (por ejemplo, al volver desde el panel), se va directo a la portada.
+  // Primero la introducción animada; "Comenzar" muestra la portada. Si ya se vio en esta
+  // pestaña (por ejemplo, al volver desde el panel), se va directo a la portada.
   const intro = document.getElementById("intro");
   const portada = document.getElementById("portada");
-  const abrirAbanico = () => requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById("abanico").classList.remove("cerrado")));
   const vista = () => { try { return sessionStorage.getItem("demo-intro-vista") === "1"; } catch { return false; } };
   const marcarVista = (v) => { try { v ? sessionStorage.setItem("demo-intro-vista", "1") : sessionStorage.removeItem("demo-intro-vista"); } catch { /* ignorar */ } };
   const mostrarPortada = () => {
     marcarVista(true);
     intro.hidden = true;
     portada.hidden = false;
-    document.getElementById("abanico").classList.add("cerrado");
-    abrirAbanico();
     portada.querySelector("a")?.focus({ preventScroll: true });
   };
   const mostrarIntro = () => {
@@ -95,9 +67,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   document.getElementById("ver-de-nuevo").addEventListener("click", () => window.repetirIntro?.());
   document.getElementById("ver-intro").addEventListener("click", mostrarIntro);
   if (vista()) mostrarPortada();
-  document.getElementById("restablecer").addEventListener("click", () => {
+  const restablecer = document.getElementById("restablecer");
+  restablecer.addEventListener("click", () => {
     restablecerDemo();
-    document.getElementById("restablecido").textContent = "Listo: la demo volvió a su estado inicial.";
+    restablecer.textContent = "Listo";
+    setTimeout(() => { restablecer.textContent = "Restablecer la demo"; }, 2000);
   });
 </script>
 <script type="module" src="intro/intro.js"></script>

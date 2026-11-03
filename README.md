@@ -82,7 +82,7 @@ npm install
 npm run intro
 ```
 
-El resultado compilado se sube al repo, así que Netlify no compila nada. "Comenzar" muestra la portada con el abanico; al volver desde otra vista se va directo a la portada, y "Ver la introducción" la repite. Notas del ensayo: `intro/REHEARSAL.md`.
+El resultado compilado se sube al repo, así que Netlify no compila nada. "Comenzar" muestra la portada; al volver desde otra vista se va directo a la portada, y "Ver la introducción" la repite. Notas del ensayo: `intro/REHEARSAL.md`.
 
 ## PDF de ejemplo
 
@@ -124,14 +124,17 @@ public/                  sitio estático
   en-vivo.html           WhatsApp y panel lado a lado
   js/datos.js            empresa y datos ficticios
   js/negocio.js          consultas (las usan el panel y la IA)
-  js/herramientas.js     herramientas que la IA puede usar
+  js/herramientas.js     lo que hace cada herramienta, en el navegador
+  js/definiciones.js     herramientas de la IA (nombre, etiqueta, descripción, parámetros)
   js/ia.js               conversación con /api/ia y lectura de documentos
   js/pedidos.js          crear y actualizar pedidos (WhatsApp, formulario y documentos)
   js/pedidos-ui.js       ventanas "Nuevo pedido" e "Importar PDF o foto"
   ejemplos/              PDF ficticios de ejemplo
   vendor/                Chart.js 4.4.1 (licencia MIT), incluido para no depender de un CDN
-netlify/functions/ia/    función que llama a Claude (instrucciones y herramientas en config.mjs)
+netlify/functions/ia/    función que llama a Claude (instrucciones en config.mjs)
 ejemplos/generar.mjs     genera los PDF de ejemplo
 pruebas/                 pruebas automáticas
 GUION-DEMO.md            guion sugerido para el webinar
+AGENTS.md                mapa y reglas para agentes (y personas) que trabajen en el repo
+DESIGN.md                reglas de diseño
 ```

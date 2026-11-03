@@ -10,45 +10,32 @@
 <script src="vendor/chart-4.4.1.umd.js"></script>
 </head>
 <body>
-<!--
-THESIS: el panel es la vitrina de la panadería: cada cifra es una etiqueta de vitrina (cinta de color + tarjeta blanca). Rechaza el panel SaaS de tarjetas blancas iguales.
-OWN-WORLD: papel de estraza, cintas con nombre (Corteza, Añil, Guayaba, Menta, Cereza, Mora, Trigo, Harina, Cacao), tinta de horno casi negra, esquinas de 4px; SF Pro como letra principal (Inter fuera de Apple), títulos y cifras en negrita con espaciado ajustado.
-STORY: el dueño reconoce su panadería, ve qué atender hoy (insumos, cobros, encargos) y le pregunta al panel en sus palabras; el pedido de WhatsApp entra como una etiqueta nueva.
-FIRST VIEWPORT: menú a la izquierda como tiras de la carta, la sección activa sale de la carta en su color; arriba, seis muestras grandes con la cifra en su campo de color y la etiqueta blanca debajo; debajo, gráficos y alertas como muestras que se sacan. La acción principal, la muestra negra "Pregúntale a tu negocio", en el menú.
-FORM: etiquetas de vitrina (antes carta de colores; mismo esqueleto, mundo de panadería).
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
--->
 <div class="panel">
   <aside class="lateral">
-    <a class="marca" href="index.html"><span class="logo" data-icono="logo"></span><span><b>Panadería El Trigal</b><small>Panel del negocio</small></span></a>
-    <nav class="carta" id="nav" aria-label="Secciones del panel">
-      <button data-vista="inicio" data-chip="corteza" class="activo"><span class="cuadro" aria-hidden="true"></span><span data-icono="inicio"></span><span class="txt">Inicio</span></button>
-      <button data-vista="ventas" data-chip="anil"><span class="cuadro" aria-hidden="true"></span><span data-icono="ventas"></span><span class="txt">Ventas</span></button>
-      <button data-vista="inventario" data-chip="trigo"><span class="cuadro" aria-hidden="true"></span><span data-icono="inventario"></span><span class="txt">Insumos y menú</span></button>
-      <button data-vista="cobros" data-chip="guayaba"><span class="cuadro" aria-hidden="true"></span><span data-icono="clientes"></span><span class="txt">Clientes y cobros</span></button>
-      <button data-vista="pedidos" data-chip="menta"><span class="cuadro" aria-hidden="true"></span><span data-icono="pedidos"></span><span class="txt">Pedidos</span> <span class="contador oculto" id="contador-pedidos"></span></button>
-      <button data-vista="alertas" data-chip="cereza"><span class="cuadro" aria-hidden="true"></span><span data-icono="alertas"></span><span class="txt">Alertas</span> <span class="contador oculto" id="contador-alertas"></span></button>
+    <a class="marca" href="index.html"><span class="logo" data-icono="logo"></span>Panadería El Trigal</a>
+    <nav class="nav" id="nav" aria-label="Secciones del panel">
+      <button data-vista="inicio" class="activo"><span data-icono="inicio"></span>Inicio</button>
+      <button data-vista="ventas"><span data-icono="ventas"></span>Ventas</button>
+      <button data-vista="inventario"><span data-icono="inventario"></span>Insumos y menú</button>
+      <button data-vista="cobros"><span data-icono="clientes"></span>Clientes y cobros</button>
+      <button data-vista="pedidos"><span data-icono="pedidos"></span>Pedidos <span class="contador oculto" id="contador-pedidos"></span></button>
+      <button data-vista="alertas"><span data-icono="alertas"></span>Alertas <span class="contador urgente oculto" id="contador-alertas"></span></button>
     </nav>
-    <button class="boton-ia" id="abrir-asistente" type="button"><span class="campo"><span data-icono="chispa"></span>Pregúntale a tu negocio</span><span class="rotulo">Responde con las cifras del panel</span></button>
-    <div class="pie">Empresa y datos ficticios, creados para una demostración. Cualquier parecido con una empresa real es coincidencia.</div>
+    <button class="preguntar" id="abrir-asistente" type="button"><span data-icono="chispa"></span>Pregúntale a tu negocio</button>
   </aside>
 
-  <main class="principal" id="principal" data-chip="corteza">
+  <main class="principal">
     <div class="barra">
-      <span class="muestra-seccion" aria-hidden="true"></span>
-      <div><h1 id="titulo">Inicio</h1><div class="fecha" id="fecha"></div></div>
-      <div class="espacio"></div>
+      <h1 id="titulo">Inicio</h1>
       <span class="ficticio">Datos ficticios</span>
     </div>
     <div class="contenido" id="vista"></div>
   </main>
 </div>
 
-<section class="asistente" id="asistente" aria-label="Asistente del negocio">
+<section class="asistente" id="asistente" aria-label="Pregúntale a tu negocio">
   <header>
-    <span class="chispa" data-icono="chispa"></span>
-    <div><h2>Pregúntale a tu negocio</h2><small>Responde con las cifras del panel</small></div>
-    <div class="espacio"></div>
+    <h2>Pregúntale a tu negocio</h2>
     <button class="icono-boton" id="asistente-nuevo" title="Nueva conversación" aria-label="Nueva conversación" data-icono="reiniciar"></button>
     <button class="icono-boton" id="asistente-ampliar" title="Ampliar" aria-label="Ampliar" data-icono="ampliar"></button>
     <button class="icono-boton" id="asistente-cerrar" title="Cerrar" aria-label="Cerrar" data-icono="cerrar"></button>
@@ -56,7 +43,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <div class="chat" id="chat"></div>
   <div class="sugerencias" id="sugerencias"></div>
   <form class="entrada" id="formulario">
-    <textarea id="pregunta" rows="1" placeholder="Escriba su pregunta…" aria-label="Pregunta"></textarea>
+    <textarea id="pregunta" rows="1" placeholder="Pregunte en sus palabras…" aria-label="Pregunta"></textarea>
     <button class="boton" type="submit" id="enviar">Preguntar</button>
   </form>
 </section>

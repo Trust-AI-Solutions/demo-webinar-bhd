@@ -11,31 +11,29 @@ const $ = (s, r = document) => r.querySelector(s);
 const TAMANO_MAXIMO_PDF = 4 * 1024 * 1024;
 const LADO_MAXIMO_FOTO = 1600;
 const EJEMPLOS = [
-  { archivo: "ejemplos/orden-de-compra-meson-del-cafe.pdf", nombre: "Orden de compra", detalle: "La Cafetería El Mesón del Café pide pan y salados para la semana" },
-  { archivo: "ejemplos/reporte-de-entregas-ruta-manana.pdf", nombre: "Hoja del repartidor", detalle: "Cómo quedaron las entregas de la ruta de la mañana" },
-  { archivo: "ejemplos/reporte-ventas-la-canasta.pdf", nombre: "Reporte de ventas de La Canasta", detalle: "Lo que vendió cada tienda de los productos en consignación" },
+  { archivo: "ejemplos/orden-de-compra-meson-del-cafe.pdf", nombre: "Orden de compra" },
+  { archivo: "ejemplos/reporte-de-entregas-ruta-manana.pdf", nombre: "Hoja del repartidor" },
+  { archivo: "ejemplos/reporte-ventas-la-canasta.pdf", nombre: "Reporte de ventas de La Canasta" },
 ];
 
 let avisar = () => {};
 export function configurarPedidos({ aviso }) { avisar = aviso; }
 
-export const barraPedidos = () => `
-  <div class="acciones-pedidos">
-    <button class="boton" type="button" id="nuevo-pedido">+ Nuevo pedido</button>
+export const botonesPedidos = () => `
+  <div class="acciones">
+    <button class="boton" type="button" id="nuevo-pedido">Nuevo pedido</button>
     <button class="boton secundario" type="button" id="importar-documento">Importar PDF o foto</button>
-    <span class="ayuda">Un pedido de mostrador o teléfono, una orden de compra o la hoja del repartidor.</span>
   </div>`;
 
-export function conectarBarra(raiz) {
+export function conectarBotones(raiz) {
   $("#nuevo-pedido", raiz)?.addEventListener("click", abrirNuevoPedido);
   $("#importar-documento", raiz)?.addEventListener("click", abrirImportar);
 }
 
-function hoja(titulo, chip) {
+function hoja(titulo) {
   const d = document.createElement("dialog");
   d.className = "hoja";
-  d.dataset.chip = chip;
-  d.innerHTML = `<div class="hoja-franja"><h2>${titulo}</h2><button type="button" class="icono-boton cerrar-hoja" aria-label="Cerrar">×</button></div><div class="hoja-cuerpo"></div>`;
+  d.innerHTML = `<div class="hoja-cabecera"><h2>${titulo}</h2><button type="button" class="icono-boton cerrar-hoja" aria-label="Cerrar">×</button></div><div class="hoja-cuerpo"></div>`;
   document.body.appendChild(d);
   const cerrar = () => { d.close(); d.remove(); };
   $(".cerrar-hoja", d).addEventListener("click", cerrar);
@@ -51,25 +49,25 @@ const codigoDe = (texto) => (String(texto).toUpperCase().match(/^\s*([A-Z]{3}-\d
 
 export function abrirNuevoPedido() {
   const d = N.datos();
-  const { d: dialogo, cuerpo, cerrar } = hoja("Nuevo pedido", "trigo");
+  const { d: dialogo, cuerpo, cerrar } = hoja("Nuevo pedido");
   cuerpo.innerHTML = `
     <form class="formulario-pedido" novalidate>
       <datalist id="lista-clientes">${d.clientes.map((c) => `<option value="${escapar(c.nombre)}"></option>`).join("")}</datalist>
       <datalist id="lista-productos">${d.productos.map((p) => `<option value="${escapar(etiquetaProducto(p))}"></option>`).join("")}</datalist>
       <div class="rejilla">
-        <label class="ancho">Cliente<input name="cliente" list="lista-clientes" autocomplete="off" placeholder="Escriba el nombre: si ya es cliente, aparece en la lista" required></label>
-        <label>Teléfono<input name="telefono" inputmode="tel" autocomplete="off" placeholder="809-555-0000"></label>
+        <label class="ancho">Cliente<input name="cliente" list="lista-clientes" autocomplete="off" required></label>
+        <label>Teléfono<input name="telefono" inputmode="tel" autocomplete="off"></label>
         <label>Canal<select name="canal"><option>Mostrador</option><option>Teléfono</option><option>Correo</option></select></label>
         <label>Sucursal<select name="sucursal"><option value="gazcue">Gazcue</option><option value="los-prados">Los Prados</option></select></label>
         <label>Entrega<select name="entrega"><option value="retiro en tienda">Retira en tienda</option><option value="envío">Envío</option></select></label>
         <label class="ancho direccion" hidden>Dirección de entrega<input name="direccion" autocomplete="off"></label>
         <label>Forma de pago<select name="forma_pago"><option>efectivo</option><option>transferencia</option><option>tarjeta</option><option>crédito a 15 días</option></select></label>
-        <label>Para cuándo<input name="para_cuando" autocomplete="off" placeholder="Hoy, o la fecha y hora del encargo"></label>
+        <label>Para cuándo<input name="para_cuando" autocomplete="off"></label>
       </div>
       <h3>Productos</h3>
       <div class="lineas-pedido"></div>
       <button class="boton secundario pequeno" type="button" id="agregar-linea">+ Agregar producto</button>
-      <label class="ancho">Nota<input name="nota" autocomplete="off" placeholder="Opcional: mensaje en el bizcocho, quién recibe…"></label>
+      <label class="ancho">Nota<input name="nota" autocomplete="off"></label>
       <dl class="totales"></dl>
       <p class="error" role="alert" hidden></p>
       <div class="acciones-hoja"><button class="boton secundario" type="button" data-cancelar>Cancelar</button><button class="boton" type="submit">Guardar pedido</button></div>
@@ -80,7 +78,7 @@ export function abrirNuevoPedido() {
   const agregarLinea = () => {
     const fila = document.createElement("div");
     fila.className = "linea-pedido";
-    fila.innerHTML = `<input class="producto" list="lista-productos" autocomplete="off" placeholder="Busque el producto: pan de agua, bizcocho, pastelito…" aria-label="Producto"><input class="cantidad" type="number" min="1" step="1" value="1" aria-label="Cantidad"><span class="importe">—</span><button type="button" class="quitar" aria-label="Quitar producto">×</button>`;
+    fila.innerHTML = `<input class="producto" list="lista-productos" autocomplete="off" placeholder="Producto" aria-label="Producto"><input class="cantidad" type="number" min="1" step="1" value="1" aria-label="Cantidad"><span class="importe">—</span><button type="button" class="quitar" aria-label="Quitar producto">×</button>`;
     lineas.appendChild(fila);
     $(".quitar", fila).addEventListener("click", () => { fila.remove(); if (!lineas.children.length) agregarLinea(); recalcular(); });
     $(".producto", fila).focus();
@@ -180,19 +178,17 @@ async function prepararArchivo(archivo) {
 }
 
 export function abrirImportar() {
-  const { d: dialogo, cuerpo, cerrar } = hoja("Importar PDF o foto", "menta");
+  const { d: dialogo, cuerpo, cerrar } = hoja("Importar PDF o foto");
 
   const elegir = (error = "") => {
     cuerpo.innerHTML = `
       <label class="soltar" tabindex="0">
         <input type="file" accept="application/pdf,image/jpeg,image/png,image/webp" hidden>
-        <b>Arrastre aquí un PDF o una foto</b>
-        <span>o haga clic para escogerlo. Una orden de compra, una lista escrita a mano, la hoja del repartidor o el reporte de ventas de una cadena.</span>
+        Arrastre un PDF o una foto, o haga clic para escogerlo
       </label>
       ${error ? `<p class="error" role="alert">${escapar(error)}</p>` : ""}
-      <h3>O pruebe con un ejemplo</h3>
-      <ul class="ejemplos">${EJEMPLOS.map((e, i) => `<li><div><b>${e.nombre}</b><span>${e.detalle}</span></div><a class="boton secundario pequeno" href="${e.archivo}" target="_blank" rel="noopener">Ver PDF</a><button class="boton pequeno" type="button" data-ejemplo="${i}">Leer con IA</button></li>`).join("")}</ul>
-      <p class="pie-hoja">La IA propone; nada cambia en el panel hasta que usted lo apruebe.</p>`;
+      <h3>Ejemplos</h3>
+      <ul class="ejemplos">${EJEMPLOS.map((e, i) => `<li><span>${e.nombre}</span><a class="boton secundario pequeno" href="${e.archivo}" target="_blank" rel="noopener">Ver</a><button class="boton pequeno" type="button" data-ejemplo="${i}">Leer con IA</button></li>`).join("")}</ul>`;
     const entrada = $("input[type=file]", cuerpo);
     const zona = $(".soltar", cuerpo);
     entrada.addEventListener("change", () => entrada.files[0] && leer(entrada.files[0]));
@@ -212,7 +208,7 @@ export function abrirImportar() {
   };
 
   const leer = async (archivo) => {
-    cuerpo.innerHTML = `<div class="leyendo"><span class="punto-carga" aria-hidden="true"></span><div><b>Leyendo ${escapar(archivo.name)}…</b><span>La IA compara cada línea con el menú y los pedidos. Toma entre 10 y 40 segundos.</span></div></div>`;
+    cuerpo.innerHTML = `<div class="leyendo"><span class="punto-carga" aria-hidden="true"></span><span>Leyendo <b>${escapar(archivo.name)}</b>…</span></div>`;
     try {
       const preparado = await prepararArchivo(archivo);
       if (preparado.vista) cuerpo.insertAdjacentHTML("beforeend", `<img class="vista-foto" src="${preparado.vista}" alt="Foto que se está leyendo">`);
@@ -241,15 +237,13 @@ export function abrirImportar() {
       const c = items.length ? calcularLineas(items) : { subtotal: 0, itbis: 0, total: 0 };
       const entrega = p.entrega === "envío" ? "envío" : "retiro en tienda";
       const envio = costoEnvio(c.subtotal, entrega);
-      const sinCatalogo = lineas.filter((l) => !l.prod).length;
       cuerpo.innerHTML = `${cabecera}
         <dl class="datos-cliente"><div><dt>Cliente</dt><dd>${escapar(p.cliente)}</dd></div><div><dt>Teléfono</dt><dd>${escapar(p.telefono || "—")}</dd></div><div><dt>Entrega</dt><dd>${escapar(entrega)}${p.direccion ? `: ${escapar(p.direccion)}` : ""}</dd></div><div><dt>Pago</dt><dd>${escapar(p.forma_pago || "por confirmar")}</dd></div>${p.para_cuando ? `<div><dt>Para</dt><dd>${escapar(p.para_cuando)}</dd></div>` : ""}${p.referencia ? `<div><dt>Referencia</dt><dd>${escapar(p.referencia)}</dd></div>` : ""}</dl>
         <div class="tabla-envoltura"><table class="tabla-documento"><thead><tr><th>En el documento</th><th>En el menú</th><th class="n">Cant.</th><th class="n">Importe</th></tr></thead><tbody>
-        ${lineas.map((l) => `<tr class="${l.prod ? "" : "sin-catalogo"}"><td>${escapar(l.texto_original)}</td><td>${l.prod ? `${escapar(l.prod.nombre)}<span class="detalle">${l.prod.codigo} · ${rd(l.prod.precio)}/${escapar(l.prod.unidad)}</span>` : `<span class="insignia alta">No está en el menú</span>`}</td><td class="n">${num(l.cantidad)}</td><td class="n">${l.prod ? rd(l.prod.precio * l.cantidad) : "—"}</td></tr>`).join("")}
+        ${lineas.map((l) => `<tr class="${l.prod ? "" : "sin-catalogo"}"><td>${escapar(l.texto_original)}</td><td>${l.prod ? escapar(l.prod.nombre) : `<span class="insignia alta">No está en el menú</span>`}</td><td class="n">${num(l.cantidad)}</td><td class="n">${l.prod ? rd(l.prod.precio * l.cantidad) : "—"}</td></tr>`).join("")}
         </tbody></table></div>
         <dl class="totales"><div><dt>Subtotal</dt><dd>${rd(c.subtotal)}</dd></div><div><dt>ITBIS 18 %</dt><dd>${rd(c.itbis)}</dd></div><div><dt>Envío</dt><dd>${entrega === "envío" ? (envio ? rd(envio) : "Gratis") : "—"}</dd></div><div class="total"><dt>Total</dt><dd>${rd(c.total + envio)}</dd></div></dl>
         ${bloqueDudas}
-        ${sinCatalogo ? `<p class="pie-hoja">${sinCatalogo === 1 ? "La línea que no está en el menú no se incluye" : `Las ${sinCatalogo} líneas que no están en el menú no se incluyen`}; queda anotada en el pedido para cotizarla aparte.</p>` : ""}
         <div class="acciones-hoja"><button class="boton secundario" type="button" data-otro>Leer otro</button><button class="boton" type="button" data-aplicar ${items.length ? "" : "disabled"}>Crear el pedido</button></div>`;
       $("[data-aplicar]", cuerpo).addEventListener("click", () => {
         const faltantes = lineas.filter((l) => !l.prod).map((l) => `${l.cantidad} × ${l.texto_original}`);
@@ -294,7 +288,6 @@ export function abrirImportar() {
         }).join("")}
         </tbody></table></div>
         ${bloqueDudas}
-        <p class="pie-hoja">Las cifras en rojo no cuadran: la cadena reporta más de lo que se le entregó. Se guardan igual y quedan como alerta para revisarlas.</p>
         <div class="acciones-hoja"><button class="boton secundario" type="button" data-otro>Leer otro</button><button class="boton" type="button" data-aplicar ${validas.length ? "" : "disabled"}>Guardar el reporte</button></div>`;
       $("[data-aplicar]", cuerpo).addEventListener("click", () => {
         const noReconocidas = filas.filter((f) => !f.p && f.t).map((f) => `${f.t.nombre}: ${f.texto_original} (${f.unidades})`);
@@ -303,7 +296,7 @@ export function abrirImportar() {
         avisar(`Reporte de ventas guardado: ${g.guardadas} líneas. La consignación está en Ventas.`);
       });
     } else {
-      cuerpo.innerHTML = `${cabecera}${bloqueDudas}<p class="pie-hoja">No es una orden de compra, un reporte de entregas ni un reporte de ventas, así que no hay nada que aplicar.</p><div class="acciones-hoja"><button class="boton" type="button" data-otro>Leer otro</button></div>`;
+      cuerpo.innerHTML = `${cabecera}${bloqueDudas}<div class="acciones-hoja"><button class="boton" type="button" data-otro>Leer otro</button></div>`;
     }
     $("[data-otro]", cuerpo)?.addEventListener("click", () => elegir());
   };

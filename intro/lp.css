@@ -1,5 +1,5 @@
-/* Intro de Panadería El Trigal: el mundo "Etiquetas de vitrina" (cintas de
-   color con su tarjeta blanca) sobre el papel de estraza de la página. La página es
+/* Intro de Panadería El Trigal: el mismo diseño sobrio del panel (blanco,
+   tinta casi negra, un color de marca) sobre el fondo de la página. La página es
    el fondo: sin placa. Un margen de 40px. */
 @font-face {
   font-family: "Inter Intro";
@@ -10,33 +10,22 @@
 }
 
 .lp {
-  --lp-corteza: #8a4a1f;
-  --lp-anil: #2e4f8f;
-  --lp-guayaba: #b0364f;
-  --lp-menta: #1b6b5c;
-  --lp-cereza: #9e2424;
-  --lp-trigo: #ebbb4c;
-  --lp-tinta: #241c17;
-  --lp-tinta-2: #54473e;
-  --lp-linea: #e4d9ca;
+  --lp-marca: #8a4a1f;
+  --lp-tinta: #1c1917;
+  --lp-tinta-2: #57524c;
+  --lp-linea: #ebe7e1;
+  --lp-suave: #f3f1ed;
   --lp-wa: #128c4a;
 }
 
 .lp .ss-stage {
   --gutter: 40px;
-  --ss-accent: var(--lp-corteza);
+  --ss-accent: var(--lp-marca);
   --ss-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Intro", "Segoe UI", system-ui, sans-serif;
   font-family: var(--ss-font);
   overflow: hidden;
   background: transparent;
 }
-
-.lp [data-chip="corteza"] { --chip: var(--lp-corteza); --chip-ink: #fff; }
-.lp [data-chip="anil"] { --chip: var(--lp-anil); --chip-ink: #fff; }
-.lp [data-chip="guayaba"] { --chip: var(--lp-guayaba); --chip-ink: #fff; }
-.lp [data-chip="menta"] { --chip: var(--lp-menta); --chip-ink: #fff; }
-.lp [data-chip="cereza"] { --chip: var(--lp-cereza); --chip-ink: #fff; }
-.lp [data-chip="trigo"] { --chip: var(--lp-trigo); --chip-ink: var(--lp-tinta); }
 
 /* ---------- El panel: arriba a la izquierda, sale por abajo ---------- */
 .lp .lp-window {
@@ -54,56 +43,37 @@
   background: #fff;
 }
 
-.lp .lp-carta {
+.lp .lp-nav {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
   flex: none;
   width: 168px;
-  padding: 16px 0 16px 14px;
+  padding: 16px 10px;
   border-right: 1px solid var(--lp-linea);
-  background: #faf6ef;
 }
 
 .lp .lp-marca {
-  margin: 0 14px 12px 2px;
+  margin: 0 6px 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--lp-tinta);
 }
 
-.lp .lp-tira {
+.lp .lp-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--lp-linea);
-  border-right: 0;
-  border-radius: 4px 0 0 4px;
-  background: #fff;
-}
-
-.lp .lp-tira[data-on] {
-  background: var(--chip);
-  border-color: transparent;
-  transform: translateX(10px);
-  box-shadow: 0 1px 0 rgba(43, 30, 24, 0.06), 0 10px 18px -10px rgba(43, 30, 24, 0.35);
-}
-
-.lp .lp-tira__txt {
-  color: #fff;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
   font-size: 13px;
-  font-weight: 700;
 }
 
-.lp .lp-swatch {
-  flex: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  background: var(--chip);
+.lp .lp-item[data-on] {
+  background: var(--lp-suave);
+  color: var(--lp-tinta);
+  font-weight: 500;
 }
 
 .lp .lp-main {
@@ -124,24 +94,12 @@
 
 .lp .lp-answer {
   margin-top: 10px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #fff;
-  border: 1px solid var(--lp-linea);
-}
-
-.lp .lp-answer__band {
-  padding: 7px 14px;
-  background: var(--lp-corteza);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .lp .lp-answer__body {
-  padding: 12px 14px 14px;
+  padding: 4px 2px;
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--lp-tinta);
 }
 
@@ -149,65 +107,54 @@
   color: var(--lp-tinta-2);
 }
 
-/* Muestras: campo de color y etiqueta blanca */
+/* Cifras: el nombre arriba, la cifra debajo */
 .lp .lp-kpis {
   display: grid;
-  /* La etiqueta con palabras ("Pedidos abiertos") es la más ancha: el texto nunca toca el borde */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  border: 1px solid var(--lp-linea);
+  border-radius: 8px;
+  background: #fff;
 }
 
 .lp .lp-kpi {
-  overflow: hidden;
-  border-radius: 4px;
-  background: #fff;
-  box-shadow: 0 1px 0 rgba(43, 30, 24, 0.06), 0 10px 18px -10px rgba(43, 30, 24, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  height: 78px;
+  padding: 12px 14px;
+  border-left: 1px solid var(--lp-linea);
 }
 
-.lp .lp-kpi__campo {
-  display: flex;
-  align-items: flex-end;
-  height: 66px;
-  padding: 12px;
-  background: var(--chip);
-  color: var(--chip-ink);
+.lp .lp-kpi:first-child {
+  border-left: 0;
 }
 
 .lp .lp-kpi__ph {
   display: block;
-  height: 12px;
+  height: 14px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--lp-suave);
 }
 
 .lp .lp-kpi__valor {
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1;
-}
-
-.lp .lp-kpi__etiqueta {
-  display: flex;
-  align-items: center;
-  height: 34px;
-  padding: 0 12px;
-  border: 1px solid var(--lp-linea);
-  border-top: 0;
-  border-radius: 0 0 4px 4px;
+  color: var(--lp-tinta);
 }
 
 .lp .lp-kpi__nombre {
   font-size: 12px;
-  font-weight: 700;
-  color: var(--lp-tinta);
+  color: var(--lp-tinta-2);
   white-space: nowrap;
 }
 
 /* Lista de pedidos */
 .lp .lp-card {
   border: 1px solid var(--lp-linea);
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fff;
 }
 
@@ -220,7 +167,7 @@
 
 .lp .lp-card__title {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--lp-tinta);
 }
 
@@ -241,16 +188,8 @@
 .lp .lp-row--new {
   position: relative;
   border-top: 0;
-  border-radius: 4px;
-  background: #e9f6ee;
-}
-
-.lp .lp-band {
-  flex: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  background: var(--lp-wa);
+  border-radius: 6px;
+  background: #eef8f2;
 }
 
 .lp .lp-row__id {
@@ -267,22 +206,23 @@
 
 .lp .lp-tag {
   flex: none;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: var(--lp-wa);
-  color: #fff;
-  font-size: 10.5px;
-  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid #b7e4c7;
+  background: #e9f7ef;
+  color: #0b6b38;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .lp .lp-pill {
   margin-left: auto;
   padding: 3px 8px;
-  border-radius: 3px;
+  border-radius: 999px;
   background: var(--lp-tinta);
   color: #fff;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -298,7 +238,7 @@
 .lp .lp-pill--chip {
   display: inline-block;
   margin: 0;
-  box-shadow: 0 10px 22px -8px rgba(43, 30, 24, 0.5);
+  box-shadow: 0 10px 22px -8px rgba(28, 25, 23, 0.5);
 }
 
 /* ---------- WhatsApp en el teléfono: cruza el borde derecho del panel ---------- */
@@ -323,7 +263,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: var(--lp-corteza);
+  background: var(--lp-marca);
 }
 
 .lp .lp-wa-name {
