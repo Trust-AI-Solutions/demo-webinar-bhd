@@ -1,0 +1,593 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T04:52:46.359319+00:00",
+  "title": "Design System: Panadería El Trigal · Demo",
+  "extensions": {
+    "colorMeta": {
+      "suspiro": {
+        "role": "neutral",
+        "displayName": "Suspiro",
+        "canonical": "#fff6f8",
+        "tonalRamp": [
+          "#4c0011",
+          "#85001d",
+          "#bd002a",
+          "#f50036",
+          "#ff2e5c",
+          "#ff6688",
+          "#ffa3b8",
+          "#ffe5eb"
+        ]
+      },
+      "superficie": {
+        "role": "neutral",
+        "displayName": "Superficie",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#424242",
+          "#5e5e5e",
+          "#7a7a7a",
+          "#969696",
+          "#b2b2b2",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "suave": {
+        "role": "neutral",
+        "displayName": "Suave",
+        "canonical": "#fdecf1",
+        "tonalRamp": [
+          "#450719",
+          "#780d2c",
+          "#ab123f",
+          "#dd1752",
+          "#eb4274",
+          "#f07599",
+          "#f6acc2",
+          "#fde8ee"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta de chocolate",
+        "canonical": "#3a1f19",
+        "tonalRamp": [
+          "#351d17",
+          "#5d3228",
+          "#844639",
+          "#ab5b4a",
+          "#c07c6d",
+          "#d19f94",
+          "#e3c5bf",
+          "#f7efed"
+        ]
+      },
+      "tinta-2": {
+        "role": "neutral",
+        "displayName": "Tinta 2",
+        "canonical": "#66463d",
+        "tonalRamp": [
+          "#30211d",
+          "#533932",
+          "#765147",
+          "#99695c",
+          "#b1887c",
+          "#c6a89f",
+          "#ddcbc6",
+          "#f5f0ef"
+        ]
+      },
+      "tinta-3": {
+        "role": "neutral",
+        "displayName": "Tinta 3",
+        "canonical": "#7a5a51",
+        "tonalRamp": [
+          "#2e221f",
+          "#503b35",
+          "#71544b",
+          "#936d62",
+          "#ac8b81",
+          "#c2aaa3",
+          "#daccc8",
+          "#f5f1f0"
+        ]
+      },
+      "linea": {
+        "role": "neutral",
+        "displayName": "Línea",
+        "canonical": "#f4dfe6",
+        "tonalRamp": [
+          "#391420",
+          "#632238",
+          "#8c304f",
+          "#b63f66",
+          "#ca6385",
+          "#d88da6",
+          "#e8bbca",
+          "#f8ecf0"
+        ]
+      },
+      "linea-2": {
+        "role": "neutral",
+        "displayName": "Línea 2",
+        "canonical": "#e9c8d3",
+        "tonalRamp": [
+          "#371621",
+          "#5f2639",
+          "#873651",
+          "#af4669",
+          "#c36a88",
+          "#d392a8",
+          "#e5bdcb",
+          "#f8edf0"
+        ]
+      },
+      "chocolate": {
+        "role": "primary",
+        "displayName": "Chocolate",
+        "canonical": "#4a2419",
+        "tonalRamp": [
+          "#391c13",
+          "#633021",
+          "#8d4530",
+          "#b7593e",
+          "#ca7a63",
+          "#d89e8d",
+          "#e8c5ba",
+          "#f9efec"
+        ]
+      },
+      "fresa": {
+        "role": "secondary",
+        "displayName": "Glaseado fresa",
+        "canonical": "#f8a7c1",
+        "tonalRamp": [
+          "#47061b",
+          "#7b0a2e",
+          "#af0e42",
+          "#e31255",
+          "#f03d77",
+          "#f4719b",
+          "#f8aac3",
+          "#fde7ee"
+        ]
+      },
+      "cielo": {
+        "role": "secondary",
+        "displayName": "Glaseado cielo",
+        "canonical": "#a9d8f5",
+        "tonalRamp": [
+          "#082d45",
+          "#0e4f77",
+          "#1470a9",
+          "#1991db",
+          "#44aae9",
+          "#76c1ef",
+          "#addaf5",
+          "#e8f5fc"
+        ]
+      },
+      "mora": {
+        "role": "secondary",
+        "displayName": "Glaseado mora",
+        "canonical": "#cdb7f0",
+        "tonalRamp": [
+          "#210d3f",
+          "#38176e",
+          "#50219c",
+          "#682acb",
+          "#8752db",
+          "#a780e5",
+          "#cab3ef",
+          "#f0eafb"
+        ]
+      },
+      "caramelo": {
+        "role": "secondary",
+        "displayName": "Glaseado caramelo",
+        "canonical": "#f6be88",
+        "tonalRamp": [
+          "#472605",
+          "#7b4109",
+          "#af5d0d",
+          "#e47811",
+          "#f0953d",
+          "#f4b171",
+          "#f9d0aa",
+          "#fdf2e7"
+        ]
+      },
+      "vainilla": {
+        "role": "secondary",
+        "displayName": "Glaseado vainilla",
+        "canonical": "#fde5a0",
+        "tonalRamp": [
+          "#4b3802",
+          "#826103",
+          "#b98a04",
+          "#f0b305",
+          "#fbc732",
+          "#fcd669",
+          "#fde6a5",
+          "#fef8e6"
+        ]
+      },
+      "pistacho": {
+        "role": "secondary",
+        "displayName": "Glaseado pistacho",
+        "canonical": "#c0e3a1",
+        "tonalRamp": [
+          "#253b12",
+          "#40661e",
+          "#5b912b",
+          "#76bd38",
+          "#93cf5e",
+          "#b0dc89",
+          "#d0eab8",
+          "#f2f9eb"
+        ]
+      },
+      "coco": {
+        "role": "secondary",
+        "displayName": "Coco",
+        "canonical": "#f1e9df",
+        "tonalRamp": [
+          "#352817",
+          "#5c4528",
+          "#836239",
+          "#aa804b",
+          "#bf9b6e",
+          "#d0b695",
+          "#e3d3bf",
+          "#f7f3ed"
+        ]
+      },
+      "fresa-fuerte": {
+        "role": "primary",
+        "displayName": "Fresa fuerte",
+        "canonical": "#d6336c",
+        "tonalRamp": [
+          "#400d1f",
+          "#6e1635",
+          "#9d204b",
+          "#cc2962",
+          "#dc5182",
+          "#e580a3",
+          "#f0b3c8",
+          "#fbeaf0"
+        ]
+      },
+      "rojo": {
+        "role": "tertiary",
+        "displayName": "Rojo urgente",
+        "canonical": "#b3122b",
+        "tonalRamp": [
+          "#460711",
+          "#780c1d",
+          "#ab1129",
+          "#de1635",
+          "#ec415c",
+          "#f17487",
+          "#f7acb7",
+          "#fde8eb"
+        ]
+      },
+      "rojo-suave": {
+        "role": "tertiary",
+        "displayName": "Rojo suave",
+        "canonical": "#ffdfe4",
+        "tonalRamp": [
+          "#4c000c",
+          "#850015",
+          "#bd001d",
+          "#f50026",
+          "#ff2e4f",
+          "#ff667e",
+          "#ffa3b2",
+          "#ffe5e9"
+        ]
+      },
+      "ambar": {
+        "role": "tertiary",
+        "displayName": "Ámbar atender",
+        "canonical": "#8a4300",
+        "tonalRamp": [
+          "#4c2500",
+          "#854000",
+          "#bd5c00",
+          "#f57700",
+          "#ff932e",
+          "#ffb066",
+          "#ffd0a3",
+          "#fff2e5"
+        ]
+      },
+      "ambar-suave": {
+        "role": "tertiary",
+        "displayName": "Ámbar suave",
+        "canonical": "#fff0c9",
+        "tonalRamp": [
+          "#4c3700",
+          "#856000",
+          "#bd8800",
+          "#f5b100",
+          "#ffc52e",
+          "#ffd466",
+          "#ffe5a3",
+          "#fff8e5"
+        ]
+      },
+      "verde": {
+        "role": "tertiary",
+        "displayName": "Verde bien",
+        "canonical": "#22652a",
+        "tonalRamp": [
+          "#133918",
+          "#216329",
+          "#308d3b",
+          "#3eb74c",
+          "#63ca6f",
+          "#8dd896",
+          "#bae8c0",
+          "#ecf9ed"
+        ]
+      },
+      "verde-suave": {
+        "role": "tertiary",
+        "displayName": "Verde suave",
+        "canonical": "#ddf3cf",
+        "tonalRamp": [
+          "#213d0f",
+          "#396a1b",
+          "#529726",
+          "#6ac431",
+          "#89d558",
+          "#a8e085",
+          "#cbedb6",
+          "#f1faeb"
+        ]
+      },
+      "whatsapp": {
+        "role": "tertiary",
+        "displayName": "Verde WhatsApp",
+        "canonical": "#128c4a",
+        "tonalRamp": [
+          "#094424",
+          "#0f753e",
+          "#15a758",
+          "#1cd973",
+          "#46e790",
+          "#77eeae",
+          "#aef5ce",
+          "#e8fcf1"
+        ]
+      },
+      "serie-gazcue": {
+        "role": "tertiary",
+        "displayName": "Mora profunda (Gazcue)",
+        "canonical": "#6b46c1",
+        "tonalRamp": [
+          "#1f1339",
+          "#352163",
+          "#4c2f8d",
+          "#623db7",
+          "#8262cb",
+          "#a38cd9",
+          "#c8bae8",
+          "#f0ecf9"
+        ]
+      },
+      "serie-los-prados": {
+        "role": "tertiary",
+        "displayName": "Caramelo profundo (Los Prados)",
+        "canonical": "#b5560f",
+        "tonalRamp": [
+          "#472206",
+          "#7a3a0a",
+          "#ae530e",
+          "#e26b13",
+          "#ef8a3e",
+          "#f3a972",
+          "#f8cbaa",
+          "#fdf1e7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titular de la portada."
+      },
+      "cifra": {
+        "displayName": "Cifra",
+        "purpose": "Valor dentro del bloque de glaseado."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Título de la barra del panel."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Título de tarjeta."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto, tablas, chat."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Encabezados de tabla, insignias, leyendas, campos. Mínimo absoluto del sitio."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sombra",
+        "value": "0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35)",
+        "purpose": "Reposo: tarjetas, cifras, pedidos, logo."
+      },
+      {
+        "name": "sombra-flotante",
+        "value": "0 22px 48px -18px rgba(74,36,25,.45)",
+        "purpose": "Asistente, ventanas, avisos, caja de portada en hover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "salida",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Única curva de transición: salida exponencial, sin rebote."
+      },
+      {
+        "name": "chispitas",
+        "value": "1.3s cubic-bezier(.2, .7, .3, 1)",
+        "purpose": "Ráfaga de granitos solo cuando llega un pedido de WhatsApp."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Apaga toda animación y transición; las chispitas no se lanzan."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "angosto",
+        "value": "980px"
+      },
+      {
+        "name": "portada",
+        "value": "760px"
+      },
+      {
+        "name": "movil",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal: pastilla de chocolate.",
+      "html": "<button class=\"ds-boton\">Guardar pedido</button>",
+      "css": ".ds-boton{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#4a2419;color:#fff;border:2px solid transparent;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:transform .25s cubic-bezier(.16,1,.3,1),background .15s}.ds-boton:hover{background:#63332a;transform:translateY(-1px)}.ds-boton:focus-visible{outline:3px solid #d6336c;outline-offset:2px}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción secundaria: pastilla blanca con borde.",
+      "html": "<button class=\"ds-boton-sec\">Cancelar</button>",
+      "css": ".ds-boton-sec{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;color:#3a1f19;border:2px solid #e9c8d3;border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;transition:background .15s,border-color .15s}.ds-boton-sec:hover{background:#fdecf1;border-color:#f8a7c1}.ds-boton-sec:focus-visible{outline:3px solid #d6336c;outline-offset:2px}"
+    },
+    {
+      "name": "Cifra de glaseado",
+      "kind": "custom",
+      "refersTo": "kpi-frosting",
+      "description": "Firma del sistema: el valor en un bloque de glaseado que chorrea sobre su nombre.",
+      "html": "<div class=\"ds-cifra\"><div class=\"ds-cifra-valor\">RD$6,916</div><div class=\"ds-cifra-nombre\">Ventas de hoy</div></div>",
+      "css": ".ds-cifra{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;width:180px;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);overflow:hidden}.ds-cifra-valor{position:relative;display:flex;align-items:flex-end;min-height:96px;padding:30px 16px 14px;background:#f8a7c1;color:#3a1f19;font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.ds-cifra-valor::after{content:'';position:absolute;left:0;right:0;top:100%;height:28px;background:#f8a7c1;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px;mask:url(\"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%2728%27%3E%3Crect width=%27240%27 height=%277%27/%3E%3Crect x=%274%27 y=%270%27 width=%2710%27 height=%2719%27 rx=%275%27/%3E%3Crect x=%2747%27 y=%270%27 width=%2712%27 height=%2727%27 rx=%276%27/%3E%3Crect x=%2792%27 y=%270%27 width=%2710%27 height=%2721%27 rx=%275%27/%3E%3Crect x=%27140%27 y=%270%27 width=%2713%27 height=%2725%27 rx=%276.5%27/%3E%3Crect x=%27189%27 y=%270%27 width=%2710%27 height=%2718%27 rx=%275%27/%3E%3C/svg%3E\") repeat-x 0 0/240px 28px}.ds-cifra-nombre{padding:30px 16px 14px;font-size:14px;font-weight:600;color:#66463d}"
+    },
+    {
+      "name": "Tarjeta",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Contenedor blanco; el periodo va en el título.",
+      "html": "<section class=\"ds-tarjeta\"><h2>Ventas por día <span>· 30 días</span></h2></section>",
+      "css": ".ds-tarjeta{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;background:#fff;border-radius:18px;box-shadow:0 1px 1px rgba(74,36,25,.05), 0 8px 20px -14px rgba(74,36,25,.35);padding:18px 20px;color:#3a1f19}.ds-tarjeta h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.ds-tarjeta h2::before{content:'';width:12px;height:5px;border-radius:999px;background:#f8a7c1;transform:rotate(-35deg)}.ds-tarjeta h2 span{color:#7a5a51;font-weight:500}"
+    },
+    {
+      "name": "Insignias de estado",
+      "kind": "chip",
+      "refersTo": "badge-urgente",
+      "description": "Una palabra de estado: urgente, atender, ok.",
+      "html": "<span class=\"ds-insignia ds-alta\">Urgente</span> <span class=\"ds-insignia ds-media\">Atender</span> <span class=\"ds-insignia ds-ok\">Al día</span>",
+      "css": ".ds-insignia{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;display:inline-flex;font-size:13px;font-weight:600;padding:2px 9px;border-radius:999px}.ds-alta{background:#ffdfe4;color:#b3122b}.ds-media{background:#fff0c9;color:#8a4300}.ds-ok{background:#ddf3cf;color:#22652a}"
+    },
+    {
+      "name": "Datos ficticios",
+      "kind": "chip",
+      "refersTo": "pill-ficticio",
+      "description": "Una por página, nunca se quita.",
+      "html": "<span class=\"ds-ficticio\">Datos ficticios</span>",
+      "css": ".ds-ficticio{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;font-size:13px;font-weight:600;color:#3a1f19;background:#fde5a0;padding:4px 11px;border-radius:999px}"
+    },
+    {
+      "name": "Menú del panel",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Pastillas; la activa en el glaseado de su sección.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-activo\">Inicio</button><button>Ventas</button><button>Alertas <span>3</span></button></nav>",
+      "css": ".ds-nav{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;display:flex;flex-direction:column;gap:4px;width:220px}.ds-nav button{display:flex;align-items:center;gap:10px;border:0;background:none;padding:9px 12px;border-radius:999px;font-size:14.5px;font-weight:500;color:#66463d;text-align:left;transition:background .2s,transform .3s cubic-bezier(.16,1,.3,1)}.ds-nav button:hover{background:#fdecf1;color:#3a1f19;transform:translateX(3px)}.ds-nav button:focus-visible{outline:3px solid #d6336c;outline-offset:2px}.ds-nav .ds-activo{background:#f8a7c1;color:#3a1f19;font-weight:700}.ds-nav span{margin-left:auto;font-size:13px;font-weight:700;padding:1px 7px;border-radius:999px;background:#b3122b;color:#fff}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de ventana; foco en fresa fuerte.",
+      "html": "<input class=\"ds-campo\" placeholder=\"Cliente\">",
+      "css": ".ds-campo{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Sitio', 'Segoe UI', system-ui, sans-serif;font-size:14px;color:#3a1f19;border:2px solid #f4dfe6;background:#fff;border-radius:12px;padding:7px 11px}.ds-campo:focus-visible{outline:none;border-color:#d6336c}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Suspiro y chispitas",
+    "overview": "El panel de una panadería dominicana visto como un bizcocho de cumpleaños. Cada cifra es un bloque de glaseado que chorrea sobre su nombre; el fondo es suspiro, la tinta es chocolate y las chispitas de colores aparecen en la portada, en el asistente y cuando llega un pedido por WhatsApp. El dueño tiene que reconocer su negocio, no un producto técnico.\n\nLa densidad es baja y la letra grande: todo se ve a través de una pantalla compartida y comprimida en un webinar. Los glaseados dan alegría y orientación (cada sección tiene el suyo), pero los estados conservan su significado: rojo urgente, ámbar atender, verde bien. Se rechaza el panel de tarjetas grises iguales.",
+    "keyCharacteristics": [
+      "Fondo suspiro, tinta de chocolate, seis glaseados pastel siempre con tinta oscura encima.",
+      "Borde que gotea (máscara SVG `--goteo`) bajo cada bloque de color.",
+      "Todo control es una pastilla redonda.",
+      "Chispitas como textura (portada, botón y cabecera del asistente) y como celebración (pedido de WhatsApp).",
+      "Logo de cupcake sobre una ficha de chocolate inclinada −4°."
+    ],
+    "rules": [
+      {
+        "name": "The Chocolate Ink Rule",
+        "body": "Sobre un glaseado el texto siempre es tinta de chocolate, nunca blanco.",
+        "section": "colors"
+      },
+      {
+        "name": "The States Keep Their Meaning Rule",
+        "body": "Rojo, ámbar y verde se usan solo para estados; un glaseado nunca dice \"urgente\".",
+        "section": "colors"
+      },
+      {
+        "name": "The Chart Series Rule",
+        "body": "Una serie: fresa fuerte (fresa-fuerte). Dos sucursales: mora profunda (serie-gazcue) para Gazcue y caramelo profundo (serie-los-prados) para Los Prados. Los glaseados pastel no son colores de serie.",
+        "section": "colors"
+      },
+      {
+        "name": "The Shared Screen Rule",
+        "body": "Cuerpo de 15px; ningún texto por debajo de 13px. Se lee en una videollamada comprimida.",
+        "section": "typography"
+      },
+      {
+        "name": "The Brand Typeface Rule",
+        "body": "SF Pro en Apple e Inter incluida en lo demás. No se agrega otra familia.",
+        "section": "typography"
+      },
+      {
+        "name": "The Drip Rule",
+        "body": "Un bloque de glaseado termina con el borde que gotea (--goteo, 240×28px, repetido en horizontal), no con una línea recta. Se usa en cifras, cajas de la portada (glaseado blanco sobre color) y cabeceras de ventana.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** poner el periodo en el título de la tarjeta (\"Ventas por día · 30 días\") y la unidad en el encabezado de la columna (\"Días en Gazcue\").",
+      "**Do** mostrar una pastilla \"Datos ficticios\" por página y no quitarla nunca.",
+      "**Do** usar SF Pro en Apple e Inter incluida en lo demás.",
+      "**Do** mantener el cuerpo en 15px y todo texto pequeño en 13px o más.",
+      "**Do** pintar los gráficos de una serie en fresa fuerte y los de dos sucursales en mora profunda (Gazcue) y caramelo profundo (Los Prados).",
+      "**Do** animar solo con salida exponencial (`cubic-bezier(.16, 1, .3, 1)`).",
+      "**Do** apagar todo movimiento con `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** agregar textos de ayuda: ni subtítulos, ni notas bajo las cifras, ni lemas, ni pies de página.",
+      "**Don't** usar rebote ni sobrepaso en ninguna animación.",
+      "**Don't** lanzar chispitas por nada que no sea un pedido de WhatsApp que llega.",
+      "**Don't** aplicar este sistema a la ventana de WhatsApp (`whatsapp.html`, `css/whatsapp.css`): sigue pareciendo WhatsApp.",
+      "**Don't** poner texto blanco sobre un glaseado ni usar un glaseado para un estado."
+    ]
+  }
+}
