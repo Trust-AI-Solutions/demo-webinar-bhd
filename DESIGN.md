@@ -11,7 +11,7 @@ La demo no tiene un sistema propio: cada solución copia el de lo que se constru
 
 ## Minis by Mónica (`public/minis/css/minis.css`)
 
-Del prototipo del panel: encabezado blanco con línea roja de 2 px, rojo de marca `#e02b20` (oscuro `#b31f16`), fondo crema `#fdf6f0`, texto negro `#000` (secundario `#333`; se oscureció para la pantalla compartida). Tarjetas blancas con borde de 1 px y 12 px de radio. Cifras en 22 px / 800 en rojo oscuro. Estados: bien `#2e7d4f`, atender `#a66a00`, urgente `#b3261e`; celdas calculadas por nivel par en azul `#e8f0fe`. La vista de los choferes imita un teléfono con WhatsApp.
+Del panel vigente del piloto (septiembre de 2026, `pymes-rd-agentes/minis-panel`): cabecera vino (`#430A18` → `#77152F`) con "Minis by Mónica 🍒" en Playfair Display, franja cereza y bizcocho de 3 px debajo, y barra lateral fija vino oscuro (`#5B1022` → `#3D0A16`) de 196 px con iconos de línea. Contenido sobre `#F7F5F2`, tarjetas blancas de 9 px de radio, letra Nunito Sans, cifras en 27 px / 800. Cereza `#74142B`, verde tallo `#3E7C4F`. La hoja del panel va primero y casi sin cambios (solo `nav` → `nav.secciones` y `section` → `main>section`, para no pisar la barra para cambiar de solución); al final, lo propio de la demo: cabecera fija debajo de esa barra, texto más oscuro para la pantalla compartida, el teléfono con WhatsApp del chofer y la revisión de lo que lee la IA. Números en formato dominicano (miles con punto, decimales con coma), como lo pidieron en el piloto.
 
 ## Grupo Rodelo (`public/rodelo/css/rodelo.css`)
 

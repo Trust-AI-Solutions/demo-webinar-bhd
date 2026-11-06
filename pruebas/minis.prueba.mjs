@@ -1,12 +1,13 @@
 // Pruebas de Minis by Mónica: datos sembrados, reglas del agente de choferes (la regla de
-// oro), lectura del reporte de la cadena y que las herramientas coincidan con sus definiciones.
+// oro), conciliación, previsión, stock y rutas del panel, lectura del reporte de la cadena y
+// que las herramientas coincidan con sus definiciones.
 
 import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import * as N from "../public/minis/js/negocio.js";
 import { DEFINICIONES } from "../public/minis/js/definiciones.js";
 import { crearEjecutor, mapearReporte, HERRAMIENTAS_CHOFER } from "../public/minis/js/herramientas.js";
-import { leerPegado } from "../public/minis/js/despacho.js";
+import { leerPegado } from "../public/minis/js/respaldo.js";
 import { AGENTES } from "../netlify/functions/ia/minis.mjs";
 
 beforeEach(() => N.estado.restablecer());
@@ -57,17 +58,51 @@ test("regla de oro: no se cierra la visita sin todos los productos", () => {
   assert.match(completo.alertas[0], /Del Sol Piantini quedó con 1 cheesecake bites de chinola/);
 });
 
-test("el despacho usa el par donde hay conteo y repite ventas donde no", () => {
-  const grilla = N.calcularDespacho();
-  const fila = (id) => grilla.flatMap((r) => r.tiendas).find((t) => t.tienda.id === id);
-  const naco = fila(6).celdas.find((c) => c.codigo === "P06");
-  assert.equal(naco.porPar, true);
-  assert.equal(naco.cantidad, 5); // par 6 − stock 1
-  const sinConteo = fila(26).celdas.every((c) => !c.porPar);
-  assert.ok(sinConteo, "Del Sol Baní repite lo vendido");
-  const d = N.confirmarDespacho(grilla);
-  assert.equal(d.entrega, N.sumarDias(N.hoy(), 1));
-  assert.ok(d.lineas.length > 100);
+test("conciliación: lo que cuentan los choferes cuadra con la cadena, salvo los dos errores sembrados", () => {
+  const filas = N.conciliacion(N.sumarDias(N.hoy(), -30), N.hoy());
+  assert.ok(filas.every((r) => N.diaSemana(r.fecha) !== 0), "sin domingos: su venta entra en el tramo del sábado");
+  const diferencias = filas.filter((r) => r.estado === "diferencia");
+  assert.equal(diferencias.length, 2);
+  const detalle = diferencias.flatMap((r) => N.detalleDia(r.fecha).filter((x) => x.tiendas.length).map((x) => [x.tiendas.join(), x.codigo, x.minis - x.informe]));
+  assert.deepEqual(detalle.sort(), [["Caribe Núñez de Cáceres", "P01", -2], ["Caribe Santiago Centro", "P08", 1]]);
+  assert.equal(filas.at(-1).estado, "en-curso", "las visitas de hoy se concilian con la próxima");
+  const porProducto = N.conciliacion(...N.rangoPeriodo("semana-1"), { porDia: false });
+  assert.equal(porProducto.length, 12, "solo los productos del checklist");
+});
+
+test("el stock en tienda cuadra con los movimientos del mes", () => {
+  const naco = N.stockDetalle(6).find((f) => f.producto.codigo === "P06");
+  assert.equal(naco.actual, 1);
+  assert.equal(naco.ajuste, 0);
+  assert.equal(naco.inicial + naco.despachos - naco.ventas - naco.descartes, 1);
+  assert.equal(N.stockDetalle(26).every((f) => f.actual === null), true, "Del Sol Baní sin conteo");
+});
+
+test("previsión: promedio de semanas completas, margen y reparto por día", () => {
+  const semana = N.prevision({ margen: 0.1 });
+  assert.equal(semana.semanas.length, 4);
+  assert.equal(semana.filas.length, 14);
+  for (const f of semana.filas) assert.equal(f.sugerido, Math.ceil(f.promedio * 1.1));
+  assert.ok(semana.filas.some((f) => f.tendencia === "sube") && semana.filas.some((f) => f.tendencia === "baja"));
+  assert.ok(Math.abs(semana.pesos.reduce((s, n) => s + n, 0) - 1) < 1e-9);
+  const sabado = N.prevision({ margen: 0, dia: 5 }).filas[0];
+  assert.ok(sabado.promedio > semana.filas[0].promedio / 6, "el sábado cubre también el domingo");
+});
+
+test("rutas del día: una tienda está en una sola ruta y el agente la usa", () => {
+  assert.equal(N.rutaDe(1).length, 7);
+  N.asignarRuta(2, [...N.rutaHabitual(2), 4]);
+  assert.equal(N.choferDe(4), 2);
+  assert.ok(!N.rutaDe(1).some((t) => t.id === 4), "salió de la ruta de Ramón");
+  assert.equal(crearEjecutor({ chofer: 2 })("buscar_tienda", { texto: "Del Sol Piantini" }).tiendas[0].id, 4);
+});
+
+test("carga manual: queda con su fuente y se puede borrar", () => {
+  N.registrarVentas([{ tienda: 5, producto: "P01", cantidad: 4 }], N.hoy(), "manual");
+  assert.equal(N.ventaDia(5, N.hoy()).P01, 4);
+  assert.equal(N.estado.leer().ventas[0].fuente, "manual");
+  N.borrarVentas(N.hoy(), "manual");
+  assert.equal(N.ventaDia(5, N.hoy()), null);
 });
 
 test("reporte de la cadena: cuadra por código y no adivina lo que no está", () => {

@@ -14,27 +14,33 @@ Las cifras cambian un poco según el día, porque los datos están anclados a ho
 
 ## 1. Minis by Mónica (3 minutos): postres en consignación
 
-**Panel.** "Esto es lo que Minis tiene hoy en las 28 tiendas." Señalar la mercancía en
-consignación, las tiendas visitadas y los dos avisos de los choferes:
+Es el panel vigente del piloto (versión de septiembre): barra lateral con las secciones de gestión.
+
+**Hoy.** "Esto es lo que pasa hoy en las 28 tiendas." Señalar las cuatro cifras (7 de 28 visitas
+completas a esta hora), las rutas de los cuatro choferes y las tiendas con más ventas. Al final de
+la página, los conteos EN VIVO y los dos avisos para la oficina:
 - Caribe Naco quedó con 1 cheesecake bite de chinola (par 6).
 - Caribe 27 de Febrero quedó con 2 mantecaditos (par 15).
 
-En la tabla: Del Sol Moca sin conteo hace 6 días y Del Sol Baní sin conteo nunca.
+**Semana · Conciliación.** "¿Lo que contaron los choferes cuadra con lo que dice la cadena?" Con
+«Últimos 30 días» aparecen dos días con diferencia; un clic en uno dice qué producto y en qué tienda
+(errores del informe de la cadena, sembrados). Opcional: **Previsión** (cuánto enviar la próxima
+semana, con tendencia) y **Stock en tienda** de Caribe Naco (la chinola en ámbar).
 
-**Despacho.** "Las ventas de la cadena llegan en un PDF." Usar el reporte de ejemplo
-(Hiper Las Palmas). Tarda unos 30 a 40 segundos (son unas 110 líneas): mientras lee, contar que antes eran 37 páginas copiadas a mano en Excel. La IA lo transcribe, el código lo empareja con tiendas y productos, y el
-brownie queda marcado porque no es de Minis. **Registrar ventas**: el contador llega a 28 de 28.
-Mostrar la cuadrícula por ruta (en azul, lo calculado por nivel par), confirmar y abrir las hojas
-de reparto y de producción.
+**Datos · Respaldo.** "Las ventas de la cadena llegan en un PDF." Usar **Procesar el informe de
+ejemplo** (Hiper Las Palmas). Tarda unos 30 a 40 segundos (son unas 110 líneas): mientras lee, contar
+que antes eran 37 páginas copiadas a mano en Excel. La IA lo transcribe, el código lo empareja con
+tiendas y productos, y el brownie queda marcado porque no es de Minis. **Registrar ventas**: pasan
+a 23 de 28 tiendas con ventas de hoy. El plan B (digitar o pegar desde Excel) completa las 28.
 
-**Choferes por WhatsApp**, como Ramón:
+**Chofer por WhatsApp** (última opción de la barra lateral), como Ramón:
 1. `Buenas, llegué al Del Sol de Piantini`
 2. Un conteo parcial (usar una de las sugerencias).
 3. `Lo demás está bien`: el agente no cierra la visita y dice exactamente qué falta.
 4. `Mantecaditos 6 y polvorones 1`: muestra el resumen.
 5. `Sí, ciérralo`: la tienda pasa a "Visitada · por WhatsApp" y llega el aviso a la oficina.
 
-Volver al Panel: una tienda visitada más.
+Volver a **Hoy**: 8 de 28 visitas y el conteo "recién llegado" en la tabla EN VIVO.
 
 ## 2. Grupo Rodelo (3 minutos): Rodelo Copilot
 

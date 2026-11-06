@@ -7,7 +7,7 @@ permite ir y volver entre las tres (o Alt+1, Alt+2, Alt+3; Alt+0 vuelve al inici
 
 | Solución | Qué se ve | Agentes de IA |
 |---|---|---|
-| **Minis by Mónica** (`/minis/`) | Panel de consignación (stock por tienda, nivel par), despacho del día por ruta con hojas de reparto y de producción, choferes por WhatsApp | `minis-chofer`: el chofer reporta el conteo de la tienda por WhatsApp; no cierra la visita si falta un producto. `minis-reporte`: lee el reporte de ventas de la cadena en PDF |
+| **Minis by Mónica** (`/minis/`) | El panel vigente del piloto: Hoy, Mes, conciliación contra el informe de la cadena, previsión de despacho, stock en tienda, rutas de choferes, productos, tiendas y datos; más el chofer por WhatsApp | `minis-chofer`: el chofer reporta el conteo de la tienda por WhatsApp; no cierra la visita si falta un producto. `minis-reporte`: lee el reporte de ventas de la cadena en PDF |
 | **Grupo Rodelo** (`/rodelo/`) | Rodelo Copilot: resumen ejecutivo, chat ejecutivo, reportes matinales por gerencia, centro de alertas e indicadores | `rodelo-copiloto`: responde preguntas del negocio con cifras de los datos y termina con una recomendación |
 | **Delidom** (`/delidom/`) | Central de Pedidos: pedidos de hoy por ruta (pendiente → preparación → despachado), nuevo pedido, ticket de 72 mm, historial | `delidom-lector`: transcribe un WhatsApp pegado, una orden de compra en PDF o una foto; el catálogo se asigna en el navegador y una persona confirma |
 
@@ -29,7 +29,7 @@ public/<solución>/ ── conversación + modo ──▶ /api/ia (netlify/funct
 
 - Los datos se generan en el navegador con una semilla fija y anclados al día de hoy
   (`public/<solución>/js/datos.js`). No hay base de datos.
-- Lo que se crea durante la demo (visitas, despachos, pedidos, alertas resueltas) se guarda en el
+- Lo que se crea durante la demo (visitas, ventas cargadas, rutas, pedidos, alertas resueltas) se guarda en el
   navegador, por solución (`public/comun/estado.js`). "Restablecer" en la barra lo borra para esa
   solución; "Restablecer la demo" en la portada, para las tres.
 - La clave de Anthropic solo existe en el servidor. El navegador nunca la ve.
@@ -101,7 +101,7 @@ gastar la clave, y guarda capturas en `pruebas/capturas/`. Para probar con la IA
 ```
 public/index.html            portada con las tres soluciones
 public/comun/                barra para cambiar de solución, conversación con la IA, estado, clave, formato
-public/minis/                Minis by Mónica (panel, despacho, choferes)
+public/minis/                Minis by Mónica (panel de gestión y chofer por WhatsApp)
 public/rodelo/               Grupo Rodelo (Rodelo Copilot)
 public/delidom/              Delidom (Central de Pedidos)
 netlify/functions/ia/        la función que llama a Claude y los agentes de cada solución

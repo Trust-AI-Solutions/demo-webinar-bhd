@@ -13,7 +13,7 @@ Demo en vivo para el webinar de BHD: las soluciones de IA de la fase beta para *
 - Ningún secreto en el repo. La clave de Anthropic y `CLAVE_DEMO` viven en Netlify, en Render y en LastPass.
 - Publicar solo en cuentas de Trust (Render: espacio "Demo AI Solutions"), nunca en el espacio de trabajo de un cliente.
 - Todo lo que ve el público, en español dominicano, sin jerga técnica. El texto del modelo siempre se escapa (`escapar` en `public/comun/formato.js`).
-- Cada solución conserva el aspecto de lo que se construyó para el cliente (ver `DESIGN.md`).
+- Cada solución conserva el aspecto de lo que se construyó para el cliente, en su versión más nueva (ver `DESIGN.md`). Minis sigue el panel de `pymes-rd-agentes/minis-panel`: se copia la forma, nunca sus datos ni su conexión a la base real.
 - Antes de subir: `npm run pruebas` y `npm run navegador` en verde.
 - Commits pequeños en `main`, con la cuenta de Trust de cada persona.
 
@@ -28,6 +28,7 @@ Demo en vivo para el webinar de BHD: las soluciones de IA de la fase beta para *
 | `public/<solución>/js/datos.js` | La empresa y sus datos ficticios, con semilla fija y anclados a hoy; las situaciones sembradas |
 | `public/<solución>/js/definiciones.js` | Cada herramienta de sus agentes, una sola vez: nombre, etiqueta, descripción y parámetros |
 | `public/<solución>/js/herramientas.js` (Delidom: `mapeo.js`) | Lo que hace cada herramienta en el navegador / el emparejamiento con el catálogo |
+| `public/minis/js/` | El panel vigente del piloto: `negocio.js` (cálculos: conciliación, previsión, stock, rutas), una pantalla por módulo (`hoy.js`, `analisis.js`, `gestion.js`, `respaldo.js`) y el chofer por WhatsApp (`choferes.js`) |
 | `netlify/functions/ia/ia.mjs` | La función que llama a Claude |
 | `netlify/functions/ia/modos.mjs` | El registro de agentes; las instrucciones de cada uno en `minis.mjs`, `rodelo.mjs`, `delidom.mjs` y las reglas comunes en `comun.mjs` |
 | `servidor.mjs`, `render.yaml` | La misma demo en Render |

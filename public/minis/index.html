@@ -3,38 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Minis by Mónica · Ventas y reparto</title>
-<meta name="description" content="Demostración del sistema de consignación y reparto de Minis by Mónica, con datos ficticios.">
+<title>Minis by Mónica 🍒 · Ventas y reparto en tiempo real</title>
+<meta name="description" content="Demostración del panel de ventas y reparto de Minis by Mónica, con datos ficticios.">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#e02b20">
+<meta name="theme-color" content="#430A18">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍒</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600;1,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/minis.css">
 </head>
 <body>
-<header class="cabecera no-imprimir">
-  <div class="marca">
-    <span class="logo" aria-hidden="true">M</span>
-    <div>
-      <h1>Minis by Mónica</h1>
-      <p><span class="sub">Sistema de ventas y reparto en tiempo real</span> <span class="pill pill-linea" id="sync">● En línea — datos compartidos</span></p>
-    </div>
-  </div>
-  <nav class="nav" role="tablist" aria-label="Secciones">
-    <button class="tab" role="tab" id="tab-panel" data-vista="panel" aria-selected="true">📊 Panel</button>
-    <button class="tab" role="tab" id="tab-despacho" data-vista="despacho" aria-selected="false">🚚 Despacho</button>
-    <button class="tab" role="tab" id="tab-choferes" data-vista="choferes" aria-selected="false">💬 Choferes<span class="ocultar-movil"> por WhatsApp</span> <span class="contador" id="contador-avisos" hidden></span></button>
-  </nav>
-</header>
 
-<main class="no-imprimir">
-  <section id="vista-panel" role="tabpanel" aria-labelledby="tab-panel"></section>
-  <section id="vista-despacho" role="tabpanel" aria-labelledby="tab-despacho" hidden></section>
-  <section id="vista-choferes" role="tabpanel" aria-labelledby="tab-choferes" hidden></section>
+<header>
+  <div class="marca">
+    <h1>Minis by Mónica 🍒</h1>
+    <span class="sub">Ventas y reparto en tiempo real</span>
+  </div>
+  <div class="lema">La ocasión perfecta es siempre 🍒 · 28 supermercados</div>
+  <div class="estado demo">Modo demostración</div>
+</header>
+<div class="feston"></div>
+
+<nav class="secciones" aria-label="Secciones del panel">
+  <button class="activa" data-seccion="hoy">Hoy</button>
+  <button data-seccion="mes">Mes</button>
+  <button data-seccion="semana">Semana · Conciliación</button>
+  <button data-seccion="prevision">Previsión</button>
+  <button data-seccion="stock">Stock en tienda</button>
+  <button data-seccion="choferes">Choferes</button>
+  <button data-seccion="productos">Productos</button>
+  <button data-seccion="tiendas">Tiendas</button>
+  <button data-seccion="datos">Datos · Respaldo</button>
+  <button class="demo-ia" data-seccion="whatsapp">Chofer por WhatsApp <span class="contador" id="contador-avisos" hidden></span></button>
+</nav>
+
+<main>
+  <div class="kpis" id="kpis"></div>
+  <section id="sec-hoy" class="visible"></section>
+  <section id="sec-mes"></section>
+  <section id="sec-semana"></section>
+  <section id="sec-prevision"></section>
+  <section id="sec-stock"></section>
+  <section id="sec-choferes"></section>
+  <section id="sec-productos"></section>
+  <section id="sec-tiendas"></section>
+  <section id="sec-datos"></section>
+  <section id="sec-whatsapp"></section>
 </main>
 
-<div id="area-impresion" class="solo-imprimir"></div>
-
-<footer class="pie no-imprimir">Piloto — The Trust for the Americas · Demostración: tiendas, cadenas, precios, choferes y cifras son ficticios.</footer>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="minis-toast" id="minisToast" role="status" aria-live="polite"></div>
+<footer>
+  Minis by Mónica 🍒 · Sistema de ventas y reparto en tiempo real · Fase 1: 28 supermercados<br>
+  Piloto <b>IA aplicada a Negocios — PyMEs RD</b> · The Trust for the Americas · MICM · Banco BHD<br>
+  Demostración: tiendas, cadenas, precios, choferes y cifras son ficticios.
+</footer>
 
 <script type="module" src="js/app.js"></script>
 </body>

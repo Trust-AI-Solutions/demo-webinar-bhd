@@ -18,7 +18,8 @@ const $ = (s) => caja.querySelector(s);
 
 // Mensajes sugeridos para el chofer elegido, con la primera tienda pendiente de su ruta.
 function sugerencias() {
-  const pendiente = N.TIENDAS.find((t) => t.chofer === contexto.chofer && !N.visitaDeHoy(t.id)) ?? N.TIENDAS.find((t) => t.chofer === contexto.chofer);
+  const ruta = N.rutaDe(contexto.chofer);
+  const pendiente = ruta.find((t) => !N.visitaDeHoy(t.id)) ?? ruta[0] ?? N.TIENDAS[0];
   const lugar = pendiente.nombre.replace(/^Caribe /, "al Caribe de ").replace(/^Del Sol /, "al Del Sol de ").replace(/^Las Palmas /, "a Las Palmas de ");
   return [
     `Buenas, llegué ${lugar}`,
@@ -93,10 +94,11 @@ export function alRestablecer() {
 export function actualizarRuta() {
   if (!caja || !montada) return;
   const c = N.chofer(contexto.chofer);
-  const tiendas = N.TIENDAS.filter((t) => t.chofer === c.id);
+  const tiendas = N.rutaDe(c.id);
   const hechas = tiendas.filter((t) => N.visitaDeHoy(t.id)).length;
   $("#ruta").innerHTML = `
     <div class="cabeza"><h3>Ruta de hoy · ${escapar(c.nombre)}</h3><span class="pill ${hechas === tiendas.length ? "pill-ok" : "pill-warn"}">${hechas} de ${tiendas.length} tiendas visitadas</span></div>
+    ${tiendas.length ? "" : '<p class="ayuda">Sin ruta asignada hoy: se asigna en <b>Choferes</b>.</p>'}
     <table class="tabla ruta-tiendas"><thead><tr><th>Tienda</th><th>Estado</th><th class="num">Unidades</th></tr></thead><tbody>
     ${tiendas.map((t) => {
       const v = N.visitaDeHoy(t.id);
@@ -134,7 +136,7 @@ export function pintar(contenedor) {
         <div class="card selector-chofer">
           <label for="chofer"><b>El teléfono es de:</b></label>
           <select id="chofer">${N.CHOFERES.map((c) => `<option value="${c.id}"${c.id === contexto.chofer ? " selected" : ""}>${escapar(c.nombre)} · ${escapar(c.ruta)}</option>`).join("")}</select>
-          <p class="ayuda" style="flex-basis:100%">El chofer reporta por WhatsApp lo que quedaba en cada exhibidor. El asistente no cierra la visita hasta tener todos los productos, y el panel se actualiza al instante.</p>
+          <p class="ayuda" style="flex-basis:100%">El chofer reporta por WhatsApp lo que encontró en cada exhibidor. El asistente no cierra la visita hasta tener todos los productos del checklist, y el panel (Hoy, Stock en tienda, Conciliación) se actualiza al instante.</p>
         </div>
         <div class="card" id="ruta"></div>
         <div class="card" id="avisos"></div>
