@@ -11,7 +11,7 @@ La demo no tiene un sistema propio: cada solución copia el de lo que se constru
 
 ## Minis by Mónica (`public/minis/css/minis.css`)
 
-Del prototipo del panel: encabezado blanco con línea roja de 2 px, rojo de marca `#e02b20` (oscuro `#b31f16`), fondo crema `#fdf6f0`, tinta `#3a2e35`. Tarjetas blancas con borde de 1 px y 12 px de radio. Cifras en 22 px / 800 en rojo oscuro. Estados: bien `#2e7d4f`, atender `#a66a00`, urgente `#b3261e`; celdas calculadas por nivel par en azul `#e8f0fe`. La vista de los choferes imita un teléfono con WhatsApp.
+Del prototipo del panel: encabezado blanco con línea roja de 2 px, rojo de marca `#e02b20` (oscuro `#b31f16`), fondo crema `#fdf6f0`, texto negro `#000` (secundario `#333`; se oscureció para la pantalla compartida). Tarjetas blancas con borde de 1 px y 12 px de radio. Cifras en 22 px / 800 en rojo oscuro. Estados: bien `#2e7d4f`, atender `#a66a00`, urgente `#b3261e`; celdas calculadas por nivel par en azul `#e8f0fe`. La vista de los choferes imita un teléfono con WhatsApp.
 
 ## Grupo Rodelo (`public/rodelo/css/rodelo.css`)
 
