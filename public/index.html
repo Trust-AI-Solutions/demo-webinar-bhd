@@ -17,16 +17,13 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body { min-height: 100dvh; display: flex; flex-direction: column; background: var(--fondo); color: var(--tinta); font: 16px/1.45 var(--letra); -webkit-font-smoothing: antialiased; }
-  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 32px; background: #fff; border-bottom: 3px solid var(--marino); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 32px; background: #fff; border-bottom: 3px solid var(--marino); }
   .marca { display: flex; align-items: center; gap: 18px; min-width: 0; }
   .logos { display: flex; align-items: center; gap: 24px; font-size: 52px; }
-  .logos img, .logos .micm { display: block; height: 1em; }
+  .logos img { display: block; height: 1em; }
   .logos .trust { width: auto; }
   .logos .bhd { height: 1.32em; margin: -.16em -.06em; }
-  .logos .micm { display: flex; align-items: center; gap: .14em; }
-  .logos .micm span { height: 1em; background: url("logos/micm.png") no-repeat; }
-  .logos .micm .cupula { width: 1.077em; background-size: 2.308em auto; background-position: -.615em 0; }
-  .logos .micm .texto { width: 2.462em; background-size: 2.462em auto; background-position: 0 -1.138em; }
+  .logos .micm { height: 1.55em; }
   .logos .separa { width: 1px; height: 1em; background: var(--linea); }
   .nombre { font-weight: 800; letter-spacing: -.01em; font-size: 17px; color: var(--marino); white-space: nowrap; padding-left: 18px; border-left: 2px solid var(--naranja); }
   .ficticio { font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: rgba(240, 132, 36, .14); color: #a2520a; white-space: nowrap; }
@@ -73,7 +70,7 @@
       <span class="separa" aria-hidden="true"></span>
       <img class="bhd" src="logos/bhd.png" alt="BHD">
       <span class="separa" aria-hidden="true"></span>
-      <span class="micm" role="img" aria-label="Ministerio de Industria, Comercio y Mipymes"><span class="cupula"></span><span class="texto"></span></span>
+      <img class="micm" src="logos/micm.png" alt="Gobierno de la República Dominicana · Industria, Comercio y Mipymes">
     </div>
     <span class="nombre">IA para Pymes</span>
   </div>
