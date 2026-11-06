@@ -953,6 +953,56 @@ tr.elegida td{background:#f8ecef}
 #sec-datos>.tarjeta:nth-child(2){grid-column:2;grid-row:1}
 #sec-datos>.tarjeta:nth-child(3){grid-column:1/-1;grid-row:2}
 @media (max-width:1120px){#sec-datos>.tarjeta:nth-child(n){grid-column:1;grid-row:auto}}
+/* ===== Demo: letra más grande para la pantalla compartida (la del piloto es de 9 a 13 px) ===== */
+:root{--panel-lateral:224px}
+body{font-size:16px}
+header h1{font-size:30px}
+header .sub{font-size:11.5px}
+nav.secciones button{font-size:14px;min-height:46px}
+nav.secciones::before{font-size:10.5px}
+.kpi .etiqueta{font-size:11.5px}
+.kpi .valor,.kpi.destacada .valor{font-size:32px}
+.kpi .detalle{font-size:13.5px}
+h2{font-size:21px}
+.nota{font-size:14.5px;line-height:1.55}
+.controles,.controles label,.controles select,.controles input,.boton,.multi-tiendas>button{font-size:14px}
+.controles select,.controles input{padding:8px 10px}
+table{font-size:14.5px}
+th{font-size:11.5px;padding:11px 12px}
+td{padding:11px 12px}
+.pastilla{font-size:12.5px}
+.multi-tiendas .panel-tiendas label{font-size:14px}
+.mini-rutas-cab span,.mini-chart-cab span,.mini-donut-etiqueta{font-size:10.5px}
+.mini-rutas-cab h3,.mini-chart-cab h3{font-size:15px}
+.mini-rutas-cab>b,.mini-chart-cab>b{font-size:12.5px}
+.mini-ruta-identidad b{font-size:13px}
+.mini-ruta-identidad span{font-size:11.5px}
+.mini-ruta-metrica{font-size:11.5px}
+.mini-ruta-metrica b{font-size:14px}
+.mini-ruta-avatar,.mini-ruta-identidad .mini-ruta-avatar{width:34px;height:34px;font-size:12px}
+.mini-ruta-identidad{grid-template-columns:34px minmax(0,1fr)}
+.mini-barra-fila{grid-template-columns:150px minmax(65px,1fr) 34px;gap:9px}
+.mini-barra-nombre,.mini-barra-fila b{font-size:12px}
+.mini-barra-pista{height:8px}
+.mini-donut-card{grid-template-columns:100px 1fr}
+.mini-donut{width:96px;height:96px}
+.mini-donut b{font-size:22px}
+.mini-donut span{font-size:10.5px}
+.mini-donut-card p{font-size:13px}
+#sec-hoy>.tarjeta{grid-template-columns:minmax(0,1.5fr) minmax(360px,.8fr)}
+#sec-hoy>#cardConteosVivo{display:block}
+.mini-ruta-metrica{white-space:nowrap}
+.chofer h3{font-size:15px}
+.chofer .ruta,.ruta-progreso>div:first-child{font-size:13px}
+.chofer .visitas span{font-size:18px}
+.rejilla-asignar label{font-size:14px}
+.resumen-rutas span{font-size:13.5px}
+.avisos-oficina li{font-size:14.5px}
+.avisos-oficina .hora{font-size:12.5px}
+.mini-editar{font-size:12.5px}
+.zona-carga p{font-size:15px}
+.minis-toast{font-size:14px;max-width:420px}
+footer{font-size:12.5px}
 @media (max-width:900px){
   nav.secciones button.demo-ia{white-space:nowrap}
   header{position:relative;top:auto}
