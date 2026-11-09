@@ -905,6 +905,11 @@ td{padding:9px 10px}
 :root{--tinta:#000;--suave:#333;--rosa:#74142B;--rosa-oscuro:#430B18;--borde:#E2DAD1;--ok:#2e7d4f;--ok-fondo:#e3f4ea;--alerta:#8f5b00;--alerta-fondo:#fdf1d8;--error:#b3261e;--error-fondo:#fbe9e7;--azul-fondo:#e8f0fe;--azul:#2357b8;--tallo:#3D7A4F;color-scheme:light}
 body{padding-top:0;color:#1d1416}
 header{position:sticky;top:var(--alto-cambiador,0px)}
+/* Fondo de la cabecera a prueba de fallas: color sólido debajo y un solo degradado, en su
+   propia capa. Con el degradado radial encima, a veces el navegador no pintaba el vino y la
+   cabecera quedaba en blanco (con el texto blanco invisible). */
+header{background-color:#5A0F22;background-image:linear-gradient(106deg,#430A18 0%,#681126 54%,#77152F 100%);transform:translateZ(0);backface-visibility:hidden}
+.feston{background-color:#A82D4D;transform:translateZ(0)}
 .feston{position:sticky;top:calc(var(--alto-cambiador,0px) + var(--cabecera-panel))}
 nav.secciones{top:calc(var(--alto-cambiador,0px) + var(--cabecera-panel) + 3px)}
 nav.secciones button.demo-ia{position:relative;padding-right:36px;white-space:normal}
