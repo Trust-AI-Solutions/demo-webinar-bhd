@@ -61,16 +61,17 @@
     .soluciones .ir kbd { display: none; }
   }
   /* Testimonio en video: lo primero que se ve al abrir la portada; se cierra y queda la portada. */
-  .testimonio { width: min(960px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: 16px; background: #0b1424; color: #fff; box-shadow: 0 30px 80px rgba(0, 0, 0, .45); overflow: auto; }
+  .testimonio { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: #0b1424; color: #fff; overflow: hidden; }
+  .testimonio[open] { display: flex; flex-direction: column; }
   .testimonio::backdrop { background: rgba(10, 20, 36, .82); backdrop-filter: blur(3px); }
-  .testimonio .cabeza { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; }
+  .testimonio .cabeza { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; flex: none; }
   .testimonio .cabeza p { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #ffc489; font-weight: 700; }
   .testimonio .cabeza h2 { margin: 2px 0 0; font-size: 20px; letter-spacing: -.01em; }
   .testimonio .x { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .25); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
   .testimonio .x:hover { background: rgba(255, 255, 255, .1); }
-  .testimonio .video { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .testimonio .video { position: relative; flex: 1; min-height: 0; background: #000; }
   .testimonio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .testimonio .pie-video { display: flex; justify-content: flex-end; padding: 14px 18px; }
+  .testimonio .pie-video { display: flex; justify-content: flex-end; padding: 12px 20px; flex: none; }
   .testimonio .seguir { border: 0; border-radius: 10px; padding: 12px 20px; background: var(--naranja); color: #fff; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; }
   .testimonio .seguir:hover { filter: brightness(1.06); }
   .ver-testimonio { border: 1px solid var(--linea); background: #fff; border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 700; color: var(--marino); cursor: pointer; white-space: nowrap; }
