@@ -12,6 +12,14 @@ de arriba (o Alt+1, Alt+2, Alt+3) cambia de una a otra en cualquier momento.
 
 Las cifras cambian un poco según el día, porque los datos están anclados a hoy; las situaciones no.
 
+## 0. Portada (1 minuto): el testimonio de Minis
+
+Al abrir la portada sale primero el video de Mónica Quiñones (Minis by Mónica). Darle play con la
+pantalla compartida (y el audio del navegador compartido). Al terminar, **Cerrar y ver las
+soluciones** (o Esc): queda la portada con los tres casos. Sale una vez por sesión del navegador;
+el botón **▶ Testimonio de Minis**, arriba a la derecha, lo vuelve a abrir. Para ensayar sin el
+video: abrir la portada con `?sin-video` al final de la dirección.
+
 ## 1. Minis by Mónica (3 minutos): postres en consignación
 
 Es el panel vigente del piloto (versión de septiembre): barra lateral con las secciones de gestión.

@@ -60,6 +60,21 @@
     .soluciones a { min-height: 0; }
     .soluciones .ir kbd { display: none; }
   }
+  /* Testimonio en video: lo primero que se ve al abrir la portada; se cierra y queda la portada. */
+  .testimonio { width: min(960px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: 16px; background: #0b1424; color: #fff; box-shadow: 0 30px 80px rgba(0, 0, 0, .45); overflow: auto; }
+  .testimonio::backdrop { background: rgba(10, 20, 36, .82); backdrop-filter: blur(3px); }
+  .testimonio .cabeza { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; }
+  .testimonio .cabeza p { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #ffc489; font-weight: 700; }
+  .testimonio .cabeza h2 { margin: 2px 0 0; font-size: 20px; letter-spacing: -.01em; }
+  .testimonio .x { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .25); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+  .testimonio .x:hover { background: rgba(255, 255, 255, .1); }
+  .testimonio .video { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .testimonio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .testimonio .pie-video { display: flex; justify-content: flex-end; padding: 14px 18px; }
+  .testimonio .seguir { border: 0; border-radius: 10px; padding: 12px 20px; background: var(--naranja); color: #fff; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; }
+  .testimonio .seguir:hover { filter: brightness(1.06); }
+  .ver-testimonio { border: 1px solid var(--linea); background: #fff; border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 700; color: var(--marino); cursor: pointer; white-space: nowrap; }
+  .ver-testimonio:hover { border-color: var(--naranja); }
 </style>
 </head>
 <body>
@@ -74,7 +89,10 @@
     </div>
     <span class="nombre">IA para Pymes</span>
   </div>
-  <span class="ficticio">Datos ficticios</span>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="ver-testimonio" id="ver-testimonio" type="button">▶ Testimonio de Minis</button>
+    <span class="ficticio">Datos ficticios</span>
+  </div>
 </header>
 <main>
   <div>
@@ -86,7 +104,7 @@
       <span class="logo" aria-hidden="true">M</span>
       <div><h2>Minis by Mónica</h2><p class="rubro">Repostería que abastece 28 supermercados</p></div>
       <dl class="caso"><div><dt>El problema</dt><dd>Un reporte diario de ventas de 37 páginas copiado a mano en Excel, y cuatro choferes reportando el inventario de cada tienda en un grupo de WhatsApp.</dd></div><div><dt>La solución que entregamos</dt><dd>Panel de gestión, asistente de WhatsApp para los choferes y lector automático del reporte diario del supermercado, en uso diario.</dd></div></dl>
-      <p class="resultado"><strong>540 horas al año</strong>recuperadas, según la dueña</p>
+      <p class="resultado"><strong>700 horas al año</strong>recuperadas, según la dueña</p>
       <span class="ir">Ver la demo <span aria-hidden="true">→</span><kbd>Alt 1</kbd></span>
     </a>
     <a href="rodelo/" style="--c:#f5c542; --fondo-logo:#0a2342; --tinta-logo:#f5c542">
@@ -109,6 +127,14 @@
   <span>Los casos son reales. Dentro de cada demo, tiendas, clientes, productos, montos y personas son ficticios.</span>
   <button id="restablecer" type="button">Restablecer la demo</button>
 </footer>
+<dialog class="testimonio" id="testimonio" aria-labelledby="titulo-testimonio">
+  <div class="cabeza">
+    <div><p>Testimonio</p><h2 id="titulo-testimonio">Mónica Quiñones · Minis by Mónica</h2></div>
+    <button class="x" type="button" data-cerrar aria-label="Cerrar el video">×</button>
+  </div>
+  <div class="video"><iframe id="video-testimonio" title="Testimonio de Mónica Quiñones, Minis by Mónica" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+  <div class="pie-video"><button class="seguir" type="button" data-cerrar>Cerrar y ver las soluciones →</button></div>
+</dialog>
 <script type="module">
   import { restablecerTodo } from "./comun/estado.js";
   const boton = document.getElementById("restablecer");
@@ -117,6 +143,18 @@
     boton.textContent = "Listo";
     setTimeout(() => { boton.textContent = "Restablecer la demo"; }, 2000);
   });
+  // El testimonio sale primero, una vez por sesión del navegador; el botón de arriba lo vuelve a abrir.
+  const VIDEO = "https://www.youtube-nocookie.com/embed/IG67CtMPNTw?rel=0&modestbranding=1&playsinline=1";
+  const dialogo = document.getElementById("testimonio");
+  const marco = document.getElementById("video-testimonio");
+  const abrir = (autoplay) => { marco.src = VIDEO + (autoplay ? "&autoplay=1" : ""); if (!dialogo.open) dialogo.showModal(); };
+  dialogo.addEventListener("close", () => { marco.src = "about:blank"; try { sessionStorage.setItem("testimonio-visto", "1"); } catch {} });
+  dialogo.addEventListener("click", (e) => { if (e.target === dialogo || e.target.closest("[data-cerrar]")) dialogo.close(); });
+  document.getElementById("ver-testimonio").addEventListener("click", () => abrir(true));
+  let visto = false;
+  try { visto = sessionStorage.getItem("testimonio-visto") === "1"; } catch {}
+  if (!visto && !new URLSearchParams(location.search).has("sin-video")) abrir(false);
+
   const destinos = ["minis/", "rodelo/", "delidom/"];
   document.addEventListener("keydown", (e) => {
     if (!e.altKey || e.ctrlKey || e.metaKey) return;

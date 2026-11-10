@@ -21,7 +21,7 @@ Demo en vivo para el webinar de BHD: las soluciones de IA de la fase beta para *
 
 | Ruta | Qué hay |
 |---|---|
-| `public/index.html` | Portada con las tres soluciones y "Restablecer la demo" |
+| `public/index.html` | Portada: primero el video del testimonio de Minis (YouTube, una vez por sesión), luego las tres soluciones y "Restablecer la demo" |
 | `public/comun/cambiador.js` | La barra fija para cambiar de solución (y los atajos Alt+0…3). Cada solución la monta primero; su encabezado fijo va en `top: var(--alto-cambiador)` |
 | `public/comun/ia.js` | `Conversacion` (agentes de chat con herramientas) y `leerDocumento` (agentes lectores: PDF, foto o texto pegado) contra `/api/ia` |
 | `public/comun/estado.js` | `crearEstado(solución, vacío)`: lo creado en la demo, en `localStorage`, compartido entre ventanas |
